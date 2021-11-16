@@ -32,7 +32,15 @@
 %	15/10/2021
 %
 %
-% Extensao do predicado entrega: estafeta, veiculo, tipoEncomenda, pesoEnc, volEnc?, prazo, velocidade, cliente, classificacao, rua, dia?.
+% Extensao do predicado entrega: estafeta, veiculo, tipoEncomenda, pesoEnc, volEnc?, prazo, velocidade, cliente, classificacao, rua, dia.
 
 entrega(manuel, bicicleta, comida, 2, ?, 1, 10, maria, 4, avenida da liberdade, 11/10/2021).
 entrega(jose, bicicleta, comida, 4, ?, 1, 10, ana, 5, rua direita, 11/10/2021).
+entrega(fabio, mota, roupa, 12, ?, 24, 35, filipa, 5, rua de campelo, 11/10/2021).
+entrega(marco, carro, movel, 80, ?, 48, 25, cristina, 3, travessa da igreja, 11/10/2021).
+
+entrega(manuel, bicicleta, comida, 1, ?, 1, 10, ana, 5, rua direita , 11/10/2021).
+entrega(manuel, mota, roupa, 10, ?, 18, 35, maria, 3, avenida da liberdade, 12/10/2021).
+entrega(manuel, mota, comida, 3, ?, 0.5, 35, cristina, 4, travessa da igreja, 12/10/2021).
+entrega(manuel, carro, movel, 74, ?, 30, 25, filipa, 5, rua de campelo, 13/10/2021).
+entrega(manuel, carro, comida, 3, ?, 0.5, 25, cristina, 4, travessa da igreja, 15/10/2021).
