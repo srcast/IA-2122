@@ -33,45 +33,16 @@
 %
 %
 
-
-
-% Extensao do predicado veiculo: veiculo, peso, velocidade -> {V,F}
-veiculo(bicicleta, P, V) :-
-	P <= 5, 
-	V == 10.
-veiculo(mota, P, V) :-
-	P <= 20,
-	V == 35.
-veiculo(carro, P, V) :-
-	P <= 100,
-	V == 25.
-
-
-% Extensao do predicado classificacao: classificacao -> {V,F}
-
-classificacao(C) :-
-	pertence(C, [0,1,2,3,4,5]).
-
-
-% Extensao do predicado morada: cliente, rua -> {V, F}
-
-morada(maria, 'avenida da liberdade, braga').
-morada(ana, 'rua direita, barcelos').
-morada(filipa, 'rua de campelo, guimaraes').
-morada(cristina, 'travessa da igreja, famalicao').
-
-
-
-
-
-
-
-
 % Extensao do predicado entrega: estafeta, veiculo, tipoEncomenda, pesoEnc, volEnc?, prazo, velocidade, cliente, rua, classificacao, dia.
 entrega(manuel, bicicleta, comida, 2, 1, 10, maria, 'avenida da liberdade, braga', 4, 11/10/2021).
 entrega(jose, bicicleta, comida, 4, 1, 10, ana, 'rua direita, barcelos', 5, 11/10/2021).
 entrega(fabio, mota, roupa, 12, 24, 35, filipa, 'rua de campelo, guimaraes', 5, 11/10/2021).
 entrega(marco, carro, movel, 80, 48, 25, cristina, 'travessa da igreja, famalicao', 3, 11/10/2021).
+
+entrega(jose, bicicleta, comida, 4, 1, 10, ana, 'rua direita, barcelos', 5, 11/10/2021).
+entrega(manuel, bicicleta, comida, 1, 1, 10, ana, 'rua direita, barcelos', 5, 11/10/2021).
+entrega(fabio, bicicleta, comida, 2, 1, 10, ana, 'rua direita, barcelos', 3, 12/10/2021).
+
 
 entrega(manuel, bicicleta, comida, 1, 1, 10, ana, 'rua direita, barcelos', 5, 11/10/2021).
 entrega(manuel, mota, roupa, 10, 18, 35, maria, 'avenida da liberdade, braga', 3, 12/10/2021).
@@ -100,10 +71,32 @@ entrega(marco, carro, movel, 89, 23, 25, cristina, 'travessa da igreja, famalica
 
 
 
-entrega(E, V, T, P, Pr, Vel, C, R, Clas, D) :-
-	veiculo(V, P, Vel),
-	classificacao(Clas),
-	morada(C, R).
+
+% Extensao do predicado veiculo: veiculo, peso, velocidade -> {V,F}
+veiculo(bicicleta, P, V) :-
+	P =< 5, 
+	V == 10.
+veiculo(mota, P, V) :-
+	P =< 20,
+	V == 35.
+veiculo(carro, P, V) :-
+	P =< 100,
+	V == 25.
+
+
+% Extensao do predicado classificacao: classificacao -> {V,F}
+
+classificacao(C) :-
+	pertence(C, [0,1,2,3,4,5]).
+
+
+% Extensao do predicado morada: cliente, rua -> {V, F}
+
+morada(maria, 'avenida da liberdade, braga').
+morada(ana, 'rua direita, barcelos').
+morada(filipa, 'rua de campelo, guimaraes').
+morada(cristina, 'travessa da igreja, famalicao').
+
 
 
 
@@ -111,10 +104,44 @@ entrega(E, V, T, P, Pr, Vel, C, R, Clas, D) :-
 
 % 1) Extensao do predicado estafetaMaisVezesTransp: Veiculo, Estafeta -> {V,F}
 
-estafetaMaisVezesTransp(Veiculo, Estafeta) :- 
+
+estafetaMaisVezesTransp(V, R) :- findall(E, entrega(E, V, _, _, _, _, _, _, _, _), L),
+								contaEstafetas(L, [], R).
+
+contaEstafetas([], [], nenhum). %talvez não seja necessário
+
+contaEstafetas([H|T], [], R) :- contaEstafetas(T, [(H, 1)], R).
+
+contaEstafetas([H|T], [(HC, NC)|TC], R) :- pertenceC(H, [(HC, N)|TC]),
+											atualizaEstafeta(H, [(HC, N)|TC], A).
+											contaEstafetas(T, A, R). %%%%%%%%%%%%%
+
+contaEstafetas([H|T], [(HC, NC)|TC], R) :- nao(pertenceC(H, [(HC, N)|TC])),
+											contaEstafetas(T, [(H, 1),(HC, NC)|TC], R).
+
+
+contaEstafetas([], [(HC, NC)|TC], [(HC, NC)|TC]) .
+%:- maiorEstafeta((HC, NC), TC, R).
+
+
+atualizaEstafeta(H, [], []).
+atualizaEstafeta(H, [(H, NC)|TC], [(H, N)|TC]) :- N is NC + 1.
+atualizaEstafeta(H, [(HC, NC)|TC], [(HC, NC)|A]) :- H \= HC, 
+										atualizaEstafeta(H, TC, A).
 
 
 
+
+maiorEstafeta((H, N), [], H).
+maiorEstafeta((H, N), [(H2, N2)|T], R) :- N2 > N,
+									maiorEstafeta((H2, N2), T, R).
+
+maiorEstafeta((H, N), [(H2, N2)|T], R) :- maiorEstafeta((H, N), T, R).
+
+pertenceC( X,[(X, N)|L] ).
+pertenceC( X,[(Y, N)|L] ) :-
+    X \= Y,
+    pertenceC( X,L ).
 
 
 
@@ -291,3 +318,11 @@ pertence( X,[X|L] ).
 pertence( X,[Y|L] ) :-
     X \= Y,
     pertence( X,L ).
+
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Extensao do meta-predicado nao: Questao -> {V,F}
+
+nao( Questao ) :-
+    Questao, !, fail.
+nao( Questao ).
