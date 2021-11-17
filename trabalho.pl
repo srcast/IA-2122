@@ -53,12 +53,12 @@ classificacao(C) :-
 	pertence(C, [0,1,2,3,4,5]).
 
 
-% Extensao do predicado morada: cliente, morada -> {V, F}
+% Extensao do predicado morada: cliente, rua -> {V, F}
 
 morada(maria, 'avenida da liberdade, braga').
 morada(ana, 'rua direita, barcelos').
 morada(filipa, 'rua de campelo, guimaraes').
-morada(cristina, 'travessa da igreja, famalicao')
+morada(cristina, 'travessa da igreja, famalicao').
 
 
 
@@ -111,7 +111,7 @@ entrega(E, V, T, P, Pr, Vel, C, R, Clas, D) :-
 
 % 1) Extensao do predicado estafetaMaisVezesTransp: Veiculo, Estafeta -> {V,F}
 
-estafetaMaisVezesTransp(Veiculo, Estafeta) :- findall(, , )
+estafetaMaisVezesTransp(Veiculo, Estafeta) :- 
 
 
 
