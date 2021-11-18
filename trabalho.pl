@@ -108,7 +108,7 @@ morada(cristina, 'travessa da igreja, famalicao').
 estafetaMaisVezesTransp(V, R) :- findall(E, entrega(E, V, _, _, _, _, _, _, _, _), L),
 								contaEstafetas(L, [], R).
 
-contaEstafetas([], [], nenhum). %talvez não seja necessário
+%contaEstafetas([], [], nenhum). %talvez não seja necessário
 
 contaEstafetas([H|T], [], R) :- contaEstafetas(T, [(H, 1)], R).
 
@@ -124,8 +124,11 @@ contaEstafetas([], [(HC, NC)|TC], [(HC, NC)|TC]) .
 %:- maiorEstafeta((HC, NC), TC, R).
 
 
+% atualizaEstafeta(ana, [(andre, 1), (bruno, 2), (ana, 4), (maria, 1)], R)
+
 atualizaEstafeta(H, [], []).
-atualizaEstafeta(H, [(H, NC)|TC], [(H, N)|TC]) :- N is NC + 1.
+atualizaEstafeta(H, [(H, NC)|TC], [(H, N)|TC]) :- N is NC + 1,
+												atualizaEstafeta(H, TC, TC).
 atualizaEstafeta(H, [(HC, NC)|TC], [(HC, NC)|A]) :- H \= HC, 
 										atualizaEstafeta(H, TC, A).
 
