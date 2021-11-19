@@ -24,7 +24,7 @@
 %	...		
 %
 %
-% dia:
+% data:
 %	11/10/2021
 %	12/10/2021
 %	13/10/2021
@@ -33,7 +33,23 @@
 %
 %
 
-% Extensao do predicado entrega: estafeta, veiculo, tipoEncomenda, pesoEnc, volEnc?, prazo, velocidade, cliente, rua, classificacao, dia.
+
+
+
+% Extensao do predicado entrega: estafeta, veiculo, tipoEncomenda, pesoEnc, volEnc?, prazo, velocidade, cliente, rua, classificacao, data.
+
+
+entrega(manuel, bicicleta, comida, 2, 1, 10, maria, 'avenida da liberdade, braga', 4, 11/10/2021).
+entrega(manuel, bicicleta, comida, 2, 1, 10, maria, 'avenida da liberdade, braga', 4, 11/10/2021).
+entrega(manuel, bicicleta, comida, 2, 1, 10, maria, 'avenida da liberdade, braga', 4, 11/10/2021).
+
+
+
+
+
+
+
+
 entrega(manuel, bicicleta, comida, 2, 1, 10, maria, 'avenida da liberdade, braga', 4, 11/10/2021).
 entrega(jose, bicicleta, comida, 4, 1, 10, ana, 'rua direita, barcelos', 5, 11/10/2021).
 entrega(fabio, mota, roupa, 12, 24, 35, filipa, 'rua de campelo, guimaraes', 5, 11/10/2021).
@@ -69,12 +85,14 @@ entrega(marco, carro, movel, 74, 30, 25, filipa, 'rua de campelo, guimaraes', 5,
 entrega(marco, carro, movel, 89, 23, 25, cristina, 'travessa da igreja, famalicao', 5, 15/10/2021).
 
 
-
-
+%entrega(E, V, T, P, Pr, Vel, C, R, Cla, D) :-
+%	veiculo(V, P, Vel),
+%	classificacao(Cla),
+%	morada(C, R).
 
 % Extensao do predicado veiculo: veiculo, peso, velocidade -> {V,F}
 veiculo(bicicleta, P, V) :-
-	P =< 5, 
+	integer(P) =< 5, 
 	V == 10.
 veiculo(mota, P, V) :-
 	P =< 20,
@@ -100,6 +118,39 @@ morada(cristina, 'travessa da igreja, famalicao').
 
 
 
+%data, mes, ano, hora
+data(D/2/A/H) :-
+    A >= 0,
+	A mod 4 =:= 0,
+	D >= 1,
+	D =< 29,
+	hora(H).
+data(D/M/A/H) :-
+	A >= 0,
+    pertence(M, [1,3,5,7,8,10,12]),
+	D >= 1,
+	D =< 31,
+	hora(H).
+data(D/M/A/H) :-
+	A >= 0,
+    pertence(M, [4,6,9,11]),
+	D >= 1,
+	D =< 30,
+	hora(H).
+data(D/2/A/H) :-
+	A >= 0,
+    A mod 4 =\= 0, 
+	D >= 1,
+	D =< 28,
+	hora(H).
+
+
+%predicado auxiliar hora
+
+hora(H) :-
+	H >= 0,
+	H <= 23.
+
 
 % 1) identificar o estafeta que utilizou mais vezes um meio de transporte mais ecológico;
 
@@ -107,17 +158,17 @@ morada(cristina, 'travessa da igreja, famalicao').
 
 
 estafetaMaisVezesTransp(V, R) :- findall(E, entrega(E, V, _, _, _, _, _, _, _, _), L),
-								contaEstafetas(L, [], R).
+								contaEstafetas(L, [(nenhum, 0)], R).
 
 %contaEstafetas([], [], nenhum). %talvez não seja necessário
 
-contaEstafetas([H|T], [], R) :- contaEstafetas(T, [(H, 1)], R).
+%contaEstafetas([H|T], [], R) :- contaEstafetas(T, [(H, 1)], R).
 
-contaEstafetas([H|T], [(HC, NC)|TC], R) :- pertenceC(H, [(HC, N)|TC]),
-											atualizaEstafeta(H, [(HC, N)|TC], R).
-											%contaEstafetas(T, A, R). %%%%%%%%%%%%%
+contaEstafetas([H|T], [(HC, NC)|TC], R) :- pertenceC(H, [(HC, NC)|TC]),
+											atualizaEstafeta(H, [(HC, NC)|TC], A).
+											contaEstafetas(T, A, R). 
 
-contaEstafetas([H|T], [(HC, NC)|TC], R) :- nao(pertenceC(H, [(HC, N)|TC])),
+contaEstafetas([H|T], [(HC, NC)|TC], R) :- nao(pertenceC(H, [(HC, NC)|TC])),
 											contaEstafetas(T, [(H, 1),(HC, NC)|TC], R).
 
 
@@ -127,8 +178,8 @@ contaEstafetas([], [(HC, NC)|TC], R) :- maiorEstafeta((HC, NC), TC, R).
 % atualizaEstafeta(ana, [(andre, 1), (bruno, 2), (ana, 4), (maria, 1)], R)
 
 atualizaEstafeta(H, [], []).
-atualizaEstafeta(H, [(H, NC)|TC], [(H, N)|TC]) :- N is NC + 1,
-												atualizaEstafeta(H, TC, TC).
+atualizaEstafeta(H, [(H, NC)|TC], [(H, N)|A]) :- N is NC + 1,
+												atualizaEstafeta(H, TC, A).
 atualizaEstafeta(H, [(HC, NC)|TC], [(HC, NC)|A]) :- H \= HC, 
 										atualizaEstafeta(H, TC, A).
 
@@ -152,12 +203,39 @@ pertenceC( X,[(Y, N)|L] ) :-
 
 
 
-% 2) Extensao do predicado
+% 2) identificar que estafetas entregaram determinada(s) encomenda(s) a um determinado cliente;
+
+% Extensao do predicado estafetasEntregasCliente: Cliente, Lista encomendas, Lista de estafetas -> {V,F}
 
 
+% -------------- se consideramos apenas um tipo de encomenda -------------------------- 
 
 
+estafetasEntregaClienteValida(C, T, E) :- entrega(E, _, T, _, _, _, C, _, _, _).
 
+
+estafetasEntregaCliente(C, T, R) :- findall(E, estafetasEntregaClienteValida(C, T, E), L),
+									retiraDup(L, [], R).
+
+todasEntregasDup(C, [], []) :- !.
+
+todasEntregasDup(C, [T|Tail], R) :- estafetasEntregaCliente(C, T, Temp),
+								concatenar(Temp, Temp1, R),
+								todasEntregasDup(C, Tail, Temp1).
+
+%executar esta
+todasEntregas(C, T, R) :- todasEntregasDup(C, T, D),
+						retiraDup(D, [], R).
+
+retiraDup([], [], nenhum).
+retiraDup([H|T], [], R) :- retiraDup(T, [H], R).
+
+retiraDup([H|T], A, R) :- pertence(H, A),
+						retiraDup(T, A, R).
+
+retiraDup([H|T], [HA|TA], R) :- retiraDup(T, [H, HA|TA], R).
+
+retiraDup([], L, L).
 
 
 
@@ -246,15 +324,14 @@ pertenceC( X,[(Y, N)|L] ) :-
 
 
 
-% identificar o número total de entregas pelos diferentes meios de transporte, 
-num determinado intervalo de tempo;
+% identificar o número total de entregas pelos diferentes meios de transporte, num determinado intervalo de tempo;
 % 7) Extensao do predicado
 
-estafetas= [manuel, fabio, marco,jose]
+%estafetas= [manuel, fabio, marco,jose]
 
-totalDifEntrega(Data1,Data2,N):- calculaDifEntrega(Data1,Data2,N, estafetas).
+%totalDifEntrega(Data1,Data2,N):- calculaDifEntrega(Data1,Data2,N, estafetas).
  
-calculaDifEntrega(Data1,Data2, N , Estafetas) :- findall(X,(entrega(E, _ , _  _ , _ , _ , _ , _ , _ , D), D => Data1 , D =< Data2),L) , len(L,N).
+%calculaDifEntrega(Data1,Data2, N , Estafetas) :- findall(X,(entrega(E, _ , _  _ , _ , _ , _ , _ , _ , D), D => Data1 , D =< Data2),L) , len(L,N).
 
 
 
@@ -316,10 +393,16 @@ calculaDifEntrega(Data1,Data2, N , Estafetas) :- findall(X,(entrega(E, _ , _  _ 
 
 
 
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Extensao do predicado concatenar: Lista1,Lista2,Resultado -> {V,F}
+
+concatenar(L1, [], L1).
+concatenar([], L2, L2).
+concatenar([H1|T1], [H2|T2], [H1|L]) :-
+	concatenar(T1, [H2|T2], L).
 
 
-
-
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Extensao do predicado pertence: Elemento,Lista -> {V,F}
 
 pertence( X,[X|L] ).
