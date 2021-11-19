@@ -101,8 +101,9 @@ morada(cristina, 'travessa da igreja, famalicao').
 
 
 
+% 1) identificar o estafeta que utilizou mais vezes um meio de transporte mais ecológico;
 
-% 1) Extensao do predicado estafetaMaisVezesTransp: Veiculo, Estafeta -> {V,F}
+% Extensao do predicado estafetaMaisVezesTransp: Veiculo, Estafeta -> {V,F}
 
 
 estafetaMaisVezesTransp(V, R) :- findall(E, entrega(E, V, _, _, _, _, _, _, _, _), L),
@@ -113,15 +114,14 @@ estafetaMaisVezesTransp(V, R) :- findall(E, entrega(E, V, _, _, _, _, _, _, _, _
 contaEstafetas([H|T], [], R) :- contaEstafetas(T, [(H, 1)], R).
 
 contaEstafetas([H|T], [(HC, NC)|TC], R) :- pertenceC(H, [(HC, N)|TC]),
-											atualizaEstafeta(H, [(HC, N)|TC], A).
-											contaEstafetas(T, A, R). %%%%%%%%%%%%%
+											atualizaEstafeta(H, [(HC, N)|TC], R).
+											%contaEstafetas(T, A, R). %%%%%%%%%%%%%
 
 contaEstafetas([H|T], [(HC, NC)|TC], R) :- nao(pertenceC(H, [(HC, N)|TC])),
 											contaEstafetas(T, [(H, 1),(HC, NC)|TC], R).
 
 
-contaEstafetas([], [(HC, NC)|TC], [(HC, NC)|TC]) .
-%:- maiorEstafeta((HC, NC), TC, R).
+contaEstafetas([], [(HC, NC)|TC], R) :- maiorEstafeta((HC, NC), TC, R).
 
 
 % atualizaEstafeta(ana, [(andre, 1), (bruno, 2), (ana, 4), (maria, 1)], R)
