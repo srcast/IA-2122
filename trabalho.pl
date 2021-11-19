@@ -246,10 +246,15 @@ pertenceC( X,[(Y, N)|L] ) :-
 
 
 
-
+% identificar o número total de entregas pelos diferentes meios de transporte, 
+num determinado intervalo de tempo;
 % 7) Extensao do predicado
 
+estafetas= [manuel, fabio, marco,jose]
 
+totalDifEntrega(Data1,Data2,N):- calculaDifEntrega(Data1,Data2,N, estafetas).
+ 
+calculaDifEntrega(Data1,Data2, N , Estafetas) :- findall(X,(entrega(E, _ , _  _ , _ , _ , _ , _ , _ , D), D => Data1 , D =< Data2),L) , len(L,N).
 
 
 
