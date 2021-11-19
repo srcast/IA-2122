@@ -1,7 +1,13 @@
 %----------------------------------------------------------------------------------------------
 %--------------------- Inteligência Artificial -> Parte I -----------------------------
 %----------------------------------------------------------------------------------------------
-%
+
+%----------------Elementos do Grupo -----------------------------
+%------- Ricardo Miguel Santos Gomes, A93785
+%-------
+%-------
+%-------
+%-----------------------------------------------------------------
 %
 % estafetas:					veiculos:
 %	manuel							bicicleta --------> no máximo 5 kg, a 10 km/h
@@ -147,9 +153,7 @@ data(D/2/A/H) :-
 
 %predicado auxiliar hora
 
-hora(H) :-
-	H >= 0,
-	H <= 23.
+hora(H) :- pertence(H, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]).
 
 
 % 1) identificar o estafeta que utilizou mais vezes um meio de transporte mais ecológico;
@@ -244,21 +248,13 @@ retiraDup([], L, L).
 
 
 
-% 3) Extensao do predicado
+% 3) identificar os clientes servidos por um determinado estafeta
+
+% Extensao do predicado clientesServidosEstafeta: Estafeta, Lista Clientes -> {V,F}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+clientesServidosEstafeta(E, Clientes) :- findall(C, entrega(E, _, _, _, _, _, C, _, _, _), L),
+										retiraDup(L, [], Clientes).
 
 
 
