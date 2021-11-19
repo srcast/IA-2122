@@ -99,13 +99,13 @@ entrega(marco, carro, movel, 89, 23, 25, cristina, 'travessa da igreja, famalica
 % Extensao do predicado veiculo: veiculo, peso, velocidade -> {V,F}
 veiculo(bicicleta, P, V) :-
 	integer(P) =< 5, 
-	V == 10.
+	V =:= 10.
 veiculo(mota, P, V) :-
 	P =< 20,
-	V == 35.
+	V =:= 35.
 veiculo(carro, P, V) :-
 	P =< 100,
-	V == 25.
+	V =:= 25.
 
 
 % Extensao do predicado classificacao: classificacao -> {V,F}
@@ -221,7 +221,7 @@ estafetasEntregaClienteValida(C, T, E) :- entrega(E, _, T, _, _, _, C, _, _, _).
 estafetasEntregaCliente(C, T, R) :- findall(E, estafetasEntregaClienteValida(C, T, E), L),
 									retiraDup(L, [], R).
 
-todasEntregasDup(C, [], []) :- !.
+todasEntregasDup(C, [], []).
 
 todasEntregasDup(C, [T|Tail], R) :- estafetasEntregaCliente(C, T, Temp),
 								concatenar(Temp, Temp1, R),
