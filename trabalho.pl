@@ -158,7 +158,7 @@ data(D/2/A/H) :-
 
 % Extensao do predicado estafetaMaisVezesTransp: Veiculo, Estafeta -> {V,F}
 
-%aux(V, E) :- entrega(E, V, _, _, _, _, _, _, _, _).
+aux(V, E) :- entrega(E, V, _, _, _, _, _, _, _, _).
 
 estafetaMaisVezesTransp(V, R) :- findall(E, entrega(E, V, _, _, _, _, _, _, _, _), [H|T]),
 								%contaEstafetas(L, [], R).
@@ -169,11 +169,11 @@ maior(Nome, N, [], Nome).
 
 maior(Nome, N, [H|T], R) :- quantosIguais([H|T], N1),
 							N >= N1,
-							maior(Nome, N, T, R).
+							maior(Nome, N, T, R), !.
 
 maior(H, N1, [H|T], R) :- quantosIguais([H|T], N1),
 							N < N1,
-							maior(H, N1, T, R).
+							maior(H, N1, T, R), !.
 
 
 
