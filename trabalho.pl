@@ -102,10 +102,10 @@ veiculo(bicicleta, P, V) :-
 	integer(P) =< 5, 
 	V =:= 10.
 veiculo(mota, P, V) :-
-	P =< 20,
+	integer(P) =< 20,
 	V =:= 35.
 veiculo(carro, P, V) :-
-	P =< 100,
+	integer(P) =< 100,
 	V =:= 25.
 
 
@@ -158,6 +158,7 @@ data(D/2/A/H) :-
 
 % Extensao do predicado estafetaMaisVezesTransp: Veiculo, Estafeta -> {V,F}
 
+%aux(V, E) :- entrega(E, V, _, _, _, _, _, _, _, _).
 
 estafetaMaisVezesTransp(V, R) :- findall(E, entrega(E, V, _, _, _, _, _, _, _, _), [H|T]),
 								%contaEstafetas(L, [], R).
