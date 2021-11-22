@@ -159,40 +159,59 @@ data(D/2/A/H) :-
 % Extensao do predicado estafetaMaisVezesTransp: Veiculo, Estafeta -> {V,F}
 
 
-estafetaMaisVezesTransp(V, R) :- findall(E, entrega(E, V, _, _, _, _, _, _, _, _), L),
-								contaEstafetas(L, [], R).
+estafetaMaisVezesTransp(V, R) :- findall(E, entrega(E, V, _, _, _, _, _, _, _, _), [H|T]),
+								%contaEstafetas(L, [], R).
+								maior(H, 1, [H|T], R).
+
+
+maior(Nome, N, [], Nome).
+
+maior(Nome, N, [H|T], R) :- quantosIguais([H|T], N1),
+							N >= N1,
+							maior(Nome, N, T, R).
+
+maior(H, N1, [H|T], R) :- quantosIguais([H|T], N1),
+							N < N1,
+							maior(H, N1, T, R).
+
+
+
+
+
+
 
 %contaEstafetas([], [], nenhum). %talvez não seja necessário
 
 %contaEstafetas([H|T], [], R) :- contaEstafetas(T, [(H, 1)], R).
 
-contaEstafetas([H|T], [(HC, NC)|TC], R) :- pertenceC(H, [(HC, NC)|TC]),
-											atualizaEstafeta(H, [(HC, NC)|TC], A).
+%contaEstafetas([H|T], [(HC, NC)|TC], R) :- pertenceC(H, [(HC, NC)|TC]),1
+%											%atualizaEstafeta(H, [(HC, NC)|TC], A).
+%											NC is N + 1, 
 											contaEstafetas(T, A, R). 
 
-contaEstafetas([H|T], [(HC, NC)|TC], R) :- nao(pertenceC(H, [(HC, NC)|TC])),
-											contaEstafetas(T, [(H, 1),(HC, NC)|TC], R).
+%contaEstafetas([H|T], [(HC, NC)|TC], R) :- nao(pertenceC(H, [(HC, NC)|TC])),
+%											contaEstafetas(T, [(H, 1),(HC, NC)|TC], R).
 
 
-contaEstafetas([], [(HC, NC)|TC], R) :- maiorEstafeta((HC, NC), TC, R).
+%contaEstafetas([], [(HC, NC)|TC], R) :- maiorEstafeta((HC, NC), TC, R).
 
 
-% atualizaEstafeta(ana, [(andre, 1), (bruno, 2), (ana, 4), (maria, 1)], R)
+%atualizaEstafeta(ana, [(andre, 1), (bruno, 2), (ana, 4), (maria, 1)], R)
 
-atualizaEstafeta(H, [], []).
-atualizaEstafeta(H, [(H, NC)|TC], [(H, N)|A]) :- N is NC + 1,
-												atualizaEstafeta(H, TC, A).
-atualizaEstafeta(H, [(HC, NC)|TC], [(HC, NC)|A]) :- H \= HC, 
-										atualizaEstafeta(H, TC, A).
-
-
+%atualizaEstafeta(H, [], []).
+%atualizaEstafeta(H, [(H, NC)|TC], [(H, N)|A]) :- N is NC + 1,
+%												atualizaEstafeta(H, TC, A).
+%atualizaEstafeta(H, [(HC, NC)|TC], [(HC, NC)|A]) :- H \= HC, 
+%										atualizaEstafeta(H, TC, A).
 
 
-maiorEstafeta((H, N), [], H).
-maiorEstafeta((H, N), [(H2, N2)|T], R) :- N2 > N,
-									maiorEstafeta((H2, N2), T, R).
 
-maiorEstafeta((H, N), [(H2, N2)|T], R) :- maiorEstafeta((H, N), T, R).
+
+%maiorEstafeta((H, N), [], H).
+%maiorEstafeta((H, N), [(H2, N2)|T], R) :- N2 > N,
+%									maiorEstafeta((H2, N2), T, R).
+
+%maiorEstafeta((H, N), [(H2, N2)|T], R) :- maiorEstafeta((H, N), T, R).
 
 pertenceC( X,[(X, N)|L] ).
 pertenceC( X,[(Y, N)|L] ) :-
@@ -411,3 +430,24 @@ pertence( X,[Y|L] ) :-
 nao( Questao ) :-
     Questao, !, fail.
 nao( Questao ).
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Extensao do predicado quantos iguais: Lista,Comprimento -> {V,F}
+
+
+quantosIguais([], 0).
+quantosIguais([H|T], N) :- pertence(H,T),
+	quantosIguais(T,N1),
+	N is N1 + 1.
+quantosIguais([H|T], 1).
+
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Extensao do predicado apagatudo: Elemento,Lista,Resultado -> {V,F}
+
+apagatudo(X, [], []).
+apagatudo(X, [X|R], L) :-
+	apagatudo(X, R, L).
+apagatudo(X, [Y|R], [Y|L]) :-
+	X \= Y,
+	apagatudo(X, R, L).
