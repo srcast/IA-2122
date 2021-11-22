@@ -247,7 +247,7 @@ todasEntregasDup(C, [T|Tail], R) :- estafetasEntregaCliente(C, T, Temp),
 
 %executar esta
 todasEntregas(C, T, R) :- todasEntregasDup(C, T, D),
-						retiraDup(D, [], R).
+						retiraDup(D, [], R), !.
 
 retiraDup([], [], nenhum).
 retiraDup([H|T], [], R) :- retiraDup(T, [H], R).
@@ -272,7 +272,7 @@ retiraDup([], L, L).
 
 
 clientesServidosEstafeta(E, Clientes) :- findall(C, entrega(E, _, _, _, _, _, C, _, _, _), L),
-										retiraDup(L, [], Clientes).
+										retiraDup(L, [], Clientes), !.
 
 
 
