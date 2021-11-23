@@ -323,11 +323,20 @@ clientesServidosEstafeta(E, Clientes) :- findall(C, entrega(E, _, _, _, _, _, C,
 % identificar o número total de entregas pelos diferentes meios de transporte, num determinado intervalo de tempo;
 % 7) Extensao do predicado
 
-%estafetas= [manuel, fabio, marco,jose]
+%veiculos= [bicicleta, moto, carro]
 
-%totalDifEntrega(Data1,Data2,N):- calculaDifEntrega(Data1,Data2,N, estafetas).
+%totalDifEntrega(Data1,Data2,Nentregas):- calculaDifEntrega(Data1,Data2,[[]],veiculos, Nentregas).
  
-%calculaDifEntrega(Data1,Data2, N , Estafetas) :- findall(X,(entrega(E, _ , _  _ , _ , _ , _ , _ , _ , D), D => Data1 , D =< Data2),L) , len(L,N).
+%calculaDifEntrega(_,_,N,[Vult],Nentregas):- data(Data1),data(Data2), 
+											 Nentregas = [[Vult,X]|N],
+											 calculaVentrega(Vult,X).
+											 
+%calculaDifEntrega(Data1,Data2, N , [Vatual,Vprox|Outros] , Nentregas) :- data(Data1),data(Data2),
+																		  N = [[Vatual,X]|N],
+																		  calculaVentrega(Vatual,X,Data1,Data2),
+																		  calculaDifEntrega(Data1,Data2,N,[Vprox|Outros],Nentregas).
+
+%calculaVentrega(Veiculo,N,D1,D2):- findall(_,(entrega(_,Veiculo,_,_,_,_,_,_,_,D),checkData(D1,D2,D)),L), len(L,N).
 
 
 
@@ -338,16 +347,25 @@ clientesServidosEstafeta(E, Clientes) :- findall(C, entrega(E, _, _, _, _, _, C,
 
 
 
-
-
-
-
-
-
-
+%identificar o número total de entregas pelos estafetas, num determinado intervalo de tempo;
 % 8) Extensao do predicado
 
 
+
+%estafetas= [manuel, jose, fabio , marco]
+
+%totalEntregasEstafetas(Data1,Data2,Nentregas):- calculaEntregas(Data1,Data2,[[]],estafetas, Nentregas).
+ 
+%calculaEntregas(_,_,N,[Eult],Nentregas):- data(Data1),data(Data2), 
+											Nentregas = [[Vult,X]|N],
+											calculaEentrega(Vult,X).
+											 
+%calculaEntregas(Data1,Data2, N , [Eatual,Eprox|Outros] , Nentregas) :- data(Data1),data(Data2),
+																		  N = [[Eatual,X]|N],
+																		  calculaEentrega(Eatual,X,Data1,Data2),
+																		  calculaEntregas(Data1,Data2,N,[Eprox|Outros],Nentregas).
+
+%calculaEentrega(E,N,D1,D2):- findall(_,(entrega(E,_,_,_,_,_,_,_,_,D),checkData(D1,D2,D)),L), len(L,N).
 
 
 
@@ -413,3 +431,21 @@ pertence( X,[Y|L] ) :-
 nao( Questao ) :-
     Questao, !, fail.
 nao( Questao ).
+
+
+%-----------------------------------------------
+% Extensao do predicado checkData que verifica se uma data pertence à um período de tempo: Data1,Data2,Data -> {V,F}.
+checkData(D1/M1/A1,D2/M1/A1,D/M/A):- A =:= A1 , M =:= M1 , D >= D1 , D =< D2, !.
+checkData(D1/M1/A1,D2/M2/A1,D/M/A):- A =:= A1 , M >= M1 , M =< M2, !.
+checkData(D1/M1/A1,D2/M2/A2,D/M2/A2) :- D =< D2, !.
+checkData(D1/M1/A1,D2/M2/A2,D/M/A2) :- M =< M2, !.
+checkData(D1/M1/A1,D2/M2/A2,D/M/A1) :- D >= M1, !.
+checkData(D1/M1/A1,D2/M2/A2,D/M/A1) :- M >= M1, !.
+checkData(D1/M1/A1,D2/M2/A2,D/M/A):- A >= A1, A =< A2.
+
+
+
+%-----------------------------------------------
+% Extensao do predicado len , que calcula o comprimento de uma lista : Lista, Comprimento 
+len([], 0).
+len([H|T], N) :- N is N1+1, len(T, N1).
