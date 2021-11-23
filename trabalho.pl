@@ -56,55 +56,56 @@ entrega(manuel, bicicleta, comida, 2, 1, 10, maria, 'avenida da liberdade, braga
 
 
 
-entrega(manuel, bicicleta, comida, 2, 1, 10, maria, 'avenida da liberdade, braga', 4, 11/10/2021).
-entrega(jose, bicicleta, comida, 4, 1, 10, ana, 'rua direita, barcelos', 5, 11/10/2021).
-entrega(fabio, mota, roupa, 12, 24, 35, filipa, 'rua de campelo, guimaraes', 5, 11/10/2021).
-entrega(marco, carro, movel, 80, 48, 25, cristina, 'travessa da igreja, famalicao', 3, 11/10/2021).
+entrega(manuel, bicicleta, comida, 2, 1, 10, maria, 'avenida da liberdade, braga', 4, 11/10/2021/12).
+entrega(jose, bicicleta, comida, 4, 1, 10, ana, 'rua direita, barcelos', 5, 11/10/2021/12).
+entrega(fabio, mota, roupa, 12, 24, 35, filipa, 'rua de campelo, guimaraes', 5, 11/10/2021/17).
+entrega(marco, carro, movel, 80, 48, 25, cristina, 'travessa da igreja, famalicao', 3, 11/10/2021/17).
 
-entrega(jose, bicicleta, comida, 4, 1, 10, ana, 'rua direita, barcelos', 5, 11/10/2021).
-entrega(manuel, bicicleta, comida, 1, 1, 10, ana, 'rua direita, barcelos', 5, 11/10/2021).
-entrega(fabio, bicicleta, comida, 2, 1, 10, ana, 'rua direita, barcelos', 3, 12/10/2021).
+entrega(jose, bicicleta, comida, 4, 1, 10, ana, 'rua direita, barcelos', 5, 11/10/2021/20).
+entrega(manuel, bicicleta, comida, 1, 1, 10, ana, 'rua direita, barcelos', 5, 11/10/2021/19).
+entrega(fabio, bicicleta, comida, 2, 1, 10, ana, 'rua direita, barcelos', 3, 12/10/2021/21).
 
 
-entrega(manuel, bicicleta, comida, 1, 1, 10, ana, 'rua direita, barcelos', 5, 11/10/2021).
-entrega(manuel, mota, roupa, 10, 18, 35, maria, 'avenida da liberdade, braga', 3, 12/10/2021).
-entrega(manuel, mota, comida, 3, 0.5, 35, cristina, 'travessa da igreja, famalicao', 4, 12/10/2021).
-entrega(manuel, carro, movel, 74, 30, 25, filipa, 'rua de campelo, guimaraes', 5, 13/10/2021).
-entrega(manuel, carro, comida, 3, 0.5, 25, cristina, 'travessa da igreja, famalicao', 4, 15/10/2021).
+entrega(manuel, bicicleta, comida, 1, 1, 10, ana, 'rua direita, barcelos', 5, 11/10/2021/13).
+entrega(manuel, mota, roupa, 10, 18, 35, maria, 'avenida da liberdade, braga', 3, 12/10/2021/11).
+entrega(manuel, mota, comida, 3, 0.5, 35, cristina, 'travessa da igreja, famalicao', 4, 12/10/2021/14).
+entrega(manuel, carro, movel, 74, 30, 25, filipa, 'rua de campelo, guimaraes', 5, 13/10/2021/14).
+entrega(manuel, carro, comida, 3, 0.5, 25, cristina, 'travessa da igreja, famalicao', 4, 15/10/2021/18).
 
-entrega(jose, carro, roupa, 17, 4, 25, ana, 'rua direita, barcelos', 2, 15/10/2021).
-entrega(jose, mota, comida, 2, 1, 35, maria, 'avenida da liberdade, braga', 3, 14/10/2021).
-entrega(jose, mota, comida, 3, 0.5, 35, filipa, 'rua de campelo, guimaraes', 1, 12/10/2021).
-entrega(jose, carro, movel, 74, 30, 25, filipa, 'rua de campelo, guimaraes', 5, 13/10/2021).
-entrega(jose, carro, movel, 60, 5, 25, ana, 'rua direita, barcelos', 3, 14/10/2021).
+entrega(jose, carro, roupa, 17, 4, 25, ana, 'rua direita, barcelos', 2, 15/10/2021/18).
+entrega(jose, mota, comida, 2, 1, 35, maria, 'avenida da liberdade, braga', 3, 14/10/2021/11).
+entrega(jose, mota, comida, 3, 0.5, 35, filipa, 'rua de campelo, guimaraes', 1, 12/10/2021/10).
+entrega(jose, carro, movel, 74, 30, 25, filipa, 'rua de campelo, guimaraes', 5, 13/10/2021/9).
+entrega(jose, carro, movel, 60, 5, 25, ana, 'rua direita, barcelos', 3, 14/10/2021/15).
 
-entrega(fabio, carro, movel, 45, 17, 25, ana, 'rua direita, barcelos', 2, 15/10/2021).
-entrega(fabio, mota, roupa, 9, 5, 35, maria, 'avenida da liberdade, braga', 3, 12/10/2021).
-entrega(fabio, mota, comida, 4, 2, 35, filipa, 'rua de campelo, guimaraes', 1, 12/10/2021).
-entrega(fabio, carro, movel, 53, 25, 25, cristina, 'travessa da igreja, famalicao', 2, 13/10/2021).
-entrega(fabio, bicicleta, comida, 2, 1, 10, ana, 'rua direita, barcelos', 3, 12/10/2021).
+entrega(fabio, carro, movel, 45, 17, 25, ana, 'rua direita, barcelos', 2, 15/10/2021/15).
+entrega(fabio, mota, roupa, 9, 5, 35, maria, 'avenida da liberdade, braga', 3, 12/10/2021/16).
+entrega(fabio, mota, comida, 4, 2, 35, filipa, 'rua de campelo, guimaraes', 1, 12/10/2021/21).
+entrega(fabio, carro, movel, 53, 25, 25, cristina, 'travessa da igreja, famalicao', 2, 13/10/2021/4).
+entrega(fabio, bicicleta, comida, 2, 1, 10, ana, 'rua direita, barcelos', 3, 12/10/2021/13).
 
-entrega(marco, bicicleta, roupa, 3, 1, 10, ana, 'rua direita, barcelos', 2, 14/10/2021).
-entrega(marco, mota, comida, 4, 0.5, 35, maria, 'avenida da liberdade, braga', 4, 12/10/2021).
-entrega(marco, mota, comida, 3, 0.5, 35, cristina, 'travessa da igreja, famalicao', 5, 12/10/2021).
-entrega(marco, carro, movel, 74, 30, 25, filipa, 'rua de campelo, guimaraes', 5, 13/10/2021).
-entrega(marco, carro, movel, 89, 23, 25, cristina, 'travessa da igreja, famalicao', 5, 15/10/2021).
+entrega(marco, bicicleta, roupa, 3, 1, 10, ana, 'rua direita, barcelos', 2, 14/10/202/9).
+entrega(marco, mota, comida, 4, 0.5, 35, maria, 'avenida da liberdade, braga', 4, 12/10/2021/10).
+entrega(marco, mota, comida, 3, 0.5, 35, cristina, 'travessa da igreja, famalicao', 5, 12/10/2021/11).
+entrega(marco, carro, movel, 74, 30, 25, filipa, 'rua de campelo, guimaraes', 5, 13/10/2021/11).
+entrega(marco, carro, movel, 89, 23, 25, cristina, 'travessa da igreja, famalicao', 5, 15/10/2021/14).
 
 
 %entrega(E, V, T, P, Pr, Vel, C, R, Cla, D) :-
 %	veiculo(V, P, Vel),
 %	classificacao(Cla),
 %	morada(C, R).
+%	data(D).
 
 % Extensao do predicado veiculo: veiculo, peso, velocidade -> {V,F}
 veiculo(bicicleta, P, V) :-
 	integer(P) =< 5, 
 	V =:= 10.
 veiculo(mota, P, V) :-
-	P =< 20,
+	integer(P) =< 20,
 	V =:= 35.
 veiculo(carro, P, V) :-
-	P =< 100,
+	integer(P) =< 100,
 	V =:= 25.
 
 
@@ -130,71 +131,88 @@ data(D/2/A/H) :-
 	A mod 4 =:= 0,
 	D >= 1,
 	D =< 29,
-	hora(H).
+	pertence(H, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]).
 data(D/M/A/H) :-
 	A >= 0,
     pertence(M, [1,3,5,7,8,10,12]),
 	D >= 1,
 	D =< 31,
-	hora(H).
+	pertence(H, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]).
 data(D/M/A/H) :-
 	A >= 0,
     pertence(M, [4,6,9,11]),
 	D >= 1,
 	D =< 30,
-	hora(H).
+	pertence(H, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]).
 data(D/2/A/H) :-
 	A >= 0,
     A mod 4 =\= 0, 
 	D >= 1,
 	D =< 28,
-	hora(H).
+	pertence(H, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]).
 
 
-%predicado auxiliar hora
-
-hora(H) :- pertence(H, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]).
 
 
 % 1) identificar o estafeta que utilizou mais vezes um meio de transporte mais ecológico;
 
 % Extensao do predicado estafetaMaisVezesTransp: Veiculo, Estafeta -> {V,F}
 
+aux(V, E) :- entrega(E, V, _, _, _, _, _, _, _, _).
 
-estafetaMaisVezesTransp(V, R) :- findall(E, entrega(E, V, _, _, _, _, _, _, _, _), L),
-								contaEstafetas(L, [(nenhum, 0)], R).
+estafetaMaisVezesTransp(V, R) :- findall(E, entrega(E, V, _, _, _, _, _, _, _, _), [H|T]),
+								%contaEstafetas(L, [], R).
+								maior(H, 1, [H|T], R).
+
+
+maior(Nome, N, [], Nome).
+
+maior(Nome, N, [H|T], R) :- quantosIguais([H|T], N1),
+							N >= N1,
+							maior(Nome, N, T, R), !.
+
+maior(H, N1, [H|T], R) :- quantosIguais([H|T], N1),
+							N < N1,
+							maior(H, N1, T, R), !.
+
+
+
+
+
+
 
 %contaEstafetas([], [], nenhum). %talvez não seja necessário
 
 %contaEstafetas([H|T], [], R) :- contaEstafetas(T, [(H, 1)], R).
 
-contaEstafetas([H|T], [(HC, NC)|TC], R) :- pertenceC(H, [(HC, NC)|TC]),
-											atualizaEstafeta(H, [(HC, NC)|TC], A).
+%contaEstafetas([H|T], [(HC, NC)|TC], R) :- pertenceC(H, [(HC, NC)|TC]),1
+%											%atualizaEstafeta(H, [(HC, NC)|TC], A).
+%											NC is N + 1, 
 											contaEstafetas(T, A, R). 
 
-contaEstafetas([H|T], [(HC, NC)|TC], R) :- nao(pertenceC(H, [(HC, NC)|TC])),
-											contaEstafetas(T, [(H, 1),(HC, NC)|TC], R).
+%contaEstafetas([H|T], [(HC, NC)|TC], R) :- nao(pertenceC(H, [(HC, NC)|TC])),
+%											contaEstafetas(T, [(H, 1),(HC, NC)|TC], R).
 
 
-contaEstafetas([], [(HC, NC)|TC], R) :- maiorEstafeta((HC, NC), TC, R).
+%contaEstafetas([], [(HC, NC)|TC], R) :- maiorEstafeta((HC, NC), TC, R).
 
 
-% atualizaEstafeta(ana, [(andre, 1), (bruno, 2), (ana, 4), (maria, 1)], R)
+%atualizaEstafeta(ana, [(andre, 1), (bruno, 2), (ana, 4), (maria, 1)], R)
 
-atualizaEstafeta(H, [], []).
-atualizaEstafeta(H, [(H, NC)|TC], [(H, N)|A]) :- N is NC + 1,
-												atualizaEstafeta(H, TC, A).
-atualizaEstafeta(H, [(HC, NC)|TC], [(HC, NC)|A]) :- H \= HC, 
-										atualizaEstafeta(H, TC, A).
-
-
+%atualizaEstafeta(H, [], []).
+%atualizaEstafeta(H, [(H, NC)|TC], [(H, N)|A]) :- N is NC + 1,
+%												atualizaEstafeta(H, TC, A).
+%atualizaEstafeta(H, [(HC, NC)|TC], [(HC, NC)|A]) :- H \= HC, 
+%										atualizaEstafeta(H, TC, A).
 
 
-maiorEstafeta((H, N), [], H).
-maiorEstafeta((H, N), [(H2, N2)|T], R) :- N2 > N,
-									maiorEstafeta((H2, N2), T, R).
 
-maiorEstafeta((H, N), [(H2, N2)|T], R) :- maiorEstafeta((H, N), T, R).
+
+%maiorEstafeta((H, N), [], H).
+%maiorEstafeta((H, N), [(H2, N2)|T], R) :- N2 > N,
+%									maiorEstafeta((H2, N2), T, R).
+
+%maiorEstafeta((H, N), [(H2, N2)|T], R) :- maiorEstafeta((H, N), T, R).
 
 pertenceC( X,[(X, N)|L] ).
 pertenceC( X,[(Y, N)|L] ) :-
@@ -229,7 +247,7 @@ todasEntregasDup(C, [T|Tail], R) :- estafetasEntregaCliente(C, T, Temp),
 
 %executar esta
 todasEntregas(C, T, R) :- todasEntregasDup(C, T, D),
-						retiraDup(D, [], R).
+						retiraDup(D, [], R), !.
 
 retiraDup([], [], nenhum).
 retiraDup([H|T], [], R) :- retiraDup(T, [H], R).
@@ -254,7 +272,7 @@ retiraDup([], L, L).
 
 
 clientesServidosEstafeta(E, Clientes) :- findall(C, entrega(E, _, _, _, _, _, C, _, _, _), L),
-										retiraDup(L, [], Clientes).
+										retiraDup(L, [], Clientes), !.
 
 
 
@@ -447,5 +465,28 @@ checkData(D1/M1/A1,D2/M2/A2,D/M/A):- A >= A1, A =< A2.
 
 %-----------------------------------------------
 % Extensao do predicado len , que calcula o comprimento de uma lista : Lista, Comprimento 
+
 len([], 0).
 len([H|T], N) :- N is N1+1, len(T, N1).
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+
+% Extensao do predicado quantos iguais: Lista,Comprimento -> {V,F}
+
+
+quantosIguais([], 0).
+quantosIguais([H|T], N) :- pertence(H,T),
+	quantosIguais(T,N1),
+	N is N1 + 1.
+quantosIguais([H|T], 1).
+
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Extensao do predicado apagatudo: Elemento,Lista,Resultado -> {V,F}
+
+apagatudo(X, [], []).
+apagatudo(X, [X|R], L) :-
+	apagatudo(X, R, L).
+apagatudo(X, [Y|R], [Y|L]) :-
+	X \= Y,
+	apagatudo(X, R, L).
