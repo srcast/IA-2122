@@ -4,7 +4,7 @@
 
 %----------------Elementos do Grupo -----------------------------
 %------- Ricardo Miguel Santos Gomes, A93785
-%-------
+%------- Pedro Aquino Martins de Araújo, A90614
 %-------
 %-------
 %-----------------------------------------------------------------
@@ -508,25 +508,36 @@ nao( Questao ).
 
 %-----------------------------------------------
 % Extensao do predicado checkData que verifica se uma data pertence à um período de tempo: Data1,Data2,Data -> {V,F}.
-checkData(D1/M1/A1,D2/M1/A1,D/M/A):- A =:= A1 , M =:= M1 , D >= D1 , D =< D2, !.
-checkData(D1/M1/A1,D2/M2/A1,D/M/A):- A =:= A1 , M >= M1 , M =< M2, !.
-checkData(D1/M1/A1,D2/M2/A2,D/M2/A2) :- D =< D2, !.
-checkData(D1/M1/A1,D2/M2/A2,D/M/A2) :- M =< M2, !.
-checkData(D1/M1/A1,D2/M2/A2,D/M/A1) :- D >= M1, !.
-checkData(D1/M1/A1,D2/M2/A2,D/M/A1) :- M >= M1, !.
-checkData(D1/M1/A1,D2/M2/A2,D/M/A):- A >= A1, A =< A2.
+checkData( D1/M1/A1/H1 , D1/M1/A1/H2 , D1/M1/A1/H ):- !,H >= H1,!,H =< H2, !.
 
+checkData( _ , D2/M1/A1/H2 , D2/M1/A1/H ):- !,H =< H2,!. 
+checkData( D1/M1/A1/H1 , _ , D1/M1/A1/H ):- !,H >= H1,!. 
 
+checkData( D1/M1/A1/H1 , D2/M1/A1/H2 , D/M1/A1/H ):- !,D >= D1,!,D =< D2,!. 
+
+checkData( _ , D2/M1/A1/H2 , D/M1/A1/H ):- !,D =< D2,!. 
+checkData( D1/M1/A1/H1 , _ , D/M1/A1/H ):- !,D >= D1,!. 
+
+checkData( D1/M1/A1/H1 , D2/M2/A1/H2 , D/M/A1/H ):- !,M >= M1,!,M =< M2,!. 
+
+checkData( _ , D2/M1/A1/H2 , D/M/A1/H ):- !,M =< M2,!. 
+checkData( D1/M1/A1/H1 , _ , D/M/A1/H ):- !,M >= M1,!. 
+
+checkData( D1/M1/A1/H1 , D2/M2/A2/H2 , D/M/A/H ):- !,A >= A1,!,A =< A2,!. 
 
 %-----------------------------------------------
 % Extensao do predicado len , que calcula o comprimento de uma lista : Lista, Comprimento 
 
-len([], 0).
-len([H|T], N) :- N is N1+1, len(T, N1).
+len(Xs,L) :- len(Xs,0,L) .
+len( []     , L , L ) .
+len( [_|Xs] , T , L ) :-
+  T1 is T+1 ,
+  len(Xs,T1,L).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 
 % Extensao do predicado quantos iguais: Lista,Comprimento -> {V,F}
+
 
 
 quantosIguais([], 0).
