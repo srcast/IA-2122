@@ -42,7 +42,7 @@
 
 
 
-% Extensao do predicado entrega: estafeta, veiculo, tipoEncomenda, pesoEnc, volEnc?, prazo, velocidade, cliente, rua, classificacao, data.
+% Extensao do predicado entrega: estafeta, veiculo, tipoEncomenda, pesoEnc, prazo, velocidade, cliente, rua, classificacao, data.
 
 
 entrega(manuel, bicicleta, comida, 2, 1, 10, maria, 'avenida da liberdade, braga', 4, 11/10/2021).
@@ -214,10 +214,7 @@ maior(H, N1, [H|T], R) :- quantosIguais([H|T], N1),
 
 %maiorEstafeta((H, N), [(H2, N2)|T], R) :- maiorEstafeta((H, N), T, R).
 
-pertenceC( X,[(X, N)|L] ).
-pertenceC( X,[(Y, N)|L] ) :-
-    X \= Y,
-    pertenceC( X,L ).
+
 
 
 
@@ -346,13 +343,13 @@ clientesServidosEstafeta(E, Clientes) :- findall(C, entrega(E, _, _, _, _, _, C,
 %totalDifEntrega(Data1,Data2,Nentregas):- calculaDifEntrega(Data1,Data2,[[]],veiculos, Nentregas).
  
 %calculaDifEntrega(_,_,N,[Vult],Nentregas):- data(Data1),data(Data2), 
-											 Nentregas = [[Vult,X]|N],
-											 calculaVentrega(Vult,X).
+%											 Nentregas = [[Vult,X]|N],
+%											 calculaVentrega(Vult,X).
 											 
 %calculaDifEntrega(Data1,Data2, N , [Vatual,Vprox|Outros] , Nentregas) :- data(Data1),data(Data2),
-																		  N = [[Vatual,X]|N],
-																		  calculaVentrega(Vatual,X,Data1,Data2),
-																		  calculaDifEntrega(Data1,Data2,N,[Vprox|Outros],Nentregas).
+%																		  N = [[Vatual,X]|N],
+%																		  calculaVentrega(Vatual,X,Data1,Data2),
+%																		  calculaDifEntrega(Data1,Data2,N,[Vprox|Outros],Nentregas).
 
 %calculaVentrega(Veiculo,N,D1,D2):- findall(_,(entrega(_,Veiculo,_,_,_,_,_,_,_,D),checkData(D1,D2,D)),L), len(L,N).
 
@@ -375,13 +372,13 @@ clientesServidosEstafeta(E, Clientes) :- findall(C, entrega(E, _, _, _, _, _, C,
 %totalEntregasEstafetas(Data1,Data2,Nentregas):- calculaEntregas(Data1,Data2,[[]],estafetas, Nentregas).
  
 %calculaEntregas(_,_,N,[Eult],Nentregas):- data(Data1),data(Data2), 
-											Nentregas = [[Vult,X]|N],
-											calculaEentrega(Vult,X).
+%											Nentregas = [[Vult,X]|N],
+%											calculaEentrega(Vult,X).
 											 
 %calculaEntregas(Data1,Data2, N , [Eatual,Eprox|Outros] , Nentregas) :- data(Data1),data(Data2),
-																		  N = [[Eatual,X]|N],
-																		  calculaEentrega(Eatual,X,Data1,Data2),
-																		  calculaEntregas(Data1,Data2,N,[Eprox|Outros],Nentregas).
+%																		  N = [[Eatual,X]|N],
+%																		  calculaEentrega(Eatual,X,Data1,Data2),
+%																		  calculaEntregas(Data1,Data2,N,[Eprox|Outros],Nentregas).
 
 %calculaEentrega(E,N,D1,D2):- findall(_,(entrega(E,_,_,_,_,_,_,_,_,D),checkData(D1,D2,D)),L), len(L,N).
 
@@ -413,8 +410,66 @@ clientesServidosEstafeta(E, Clientes) :- findall(C, entrega(E, _, _, _, _, _, C,
 
 
 
-% 10) Extensao do predicado
+% 10) calcular o peso total transportado por estafeta num determinado dia
 
+
+pesoTransEstafeta(D/M/A/_, (E, P)) :- entrega(E,_,_,P,_,_,_,_,_,D/M/A/_).
+									
+pesoTransEstafetaDia(D/M/A/_, R) :- findall((E, P), pesoTransEstafeta(D/M/A/_, (E, P)), L).
+									agrupa(L, [], R).
+
+
+
+agrupa([], R, R).
+agrupa([H|T], [], R) :- agrupa(T, [H], R), !.
+
+agrupa([H1|T1], [H2|T2], R) :- pertenceC(H1, [H2|T2]),
+								atualizaPesos(H1, [H2|T2], A),
+								agrupa(T1, A, R), !.
+
+agrupa([H1|T1], [H2|T2], R) :- agrupa(T1, [H1, H2|T2], R), !.
+
+
+
+
+atualizaPesos(X, [], []).
+atualizaPesos((Nome1, Peso1), [(Nome1, Peso2)|T2], [(Nome1, PesoTotal)|A]) :-  PesoTotal is Peso1 + Peso2,
+																				atualizaPesos((Nome1, Peso1), T2, A), !.
+
+atualizaPesos((Nome1, Peso1), [(Nome2, Peso2)|T2], [(Nome2, Peso2)|A]) :- Nome1 \= Nome2,
+																			atualizaPesos((Nome1, Peso1), T2, A), !.
+
+
+
+
+
+
+
+
+
+
+%atualizaEstafeta(ana, [(andre, 1), (bruno, 2), (ana, 4), (maria, 1)], R)
+
+%atualizaEstafeta(H, [], []).
+%atualizaEstafeta(H, [(H, NC)|TC], [(H, N)|A]) :- N is NC + 1,
+%												atualizaEstafeta(H, TC, A).
+%atualizaEstafeta(H, [(HC, NC)|TC], [(HC, NC)|A]) :- H \= HC, 
+%										atualizaEstafeta(H, TC, A).
+
+
+
+
+somaValores([], 0).
+somaValores([H|T], R) :- somaValores(T, R1),
+						R is H + R1.
+
+
+
+
+pertenceC( (X, P),[(X, N)|L] ).
+pertenceC( (X, P),[(Y, N)|L] ) :-
+    X \= Y,
+    pertenceC( X,L ).
 
 
 
