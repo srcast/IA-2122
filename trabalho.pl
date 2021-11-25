@@ -42,7 +42,7 @@
 
 
 
-% Extensao do predicado entrega: estafeta, veiculo, tipoEncomenda, pesoEnc, prazo, velocidade, cliente, rua, classificacao, data encomenda, data entrega.
+% Extensao do predicado entrega: estafeta, veiculo, tipoEncomenda, pesoEnc, prazo, velocidade, cliente, rua, classificacao, data encomenda, data entrega, preco
 
 
 entrega(manuel, bicicleta, comida, 2, 1, 10, maria, 'avenida da liberdade, braga', 4, 11/10/2021/10, 11/10/2021/11).
@@ -91,10 +91,10 @@ entrega(marco, carro, movel, 74, 30, 25, filipa, 'rua de campelo, guimaraes', 5,
 entrega(marco, carro, movel, 89, 23, 25, cristina, 'travessa da igreja, famalicao', 5, 15/10/2021/14, 19/10/2021/10).
 
 
-%entrega(E, V, T, P, Pr, Vel, C, R, Cla, Denc, Dent) :-
+%entregaValida(E, V, T, P, Pr, Vel, C, R, Cla, Denc, Dent) :-
 %	veiculo(V, P, Vel),
 %	classificacao(Cla),
-%	morada(C, R).
+%	morada(C, R),
 %	data(Denc),
 %	data(Dent).
 
@@ -392,10 +392,15 @@ calculaDifEntrega(Data1,Data2, N , [Vatual,Vprox|Outros] , Nentregas) :- Novo = 
 
 
 
-% 9) Extensao do predicado
+% 9)  calcular o número de encomendas entregues e não entregues pela Green Distribution, num determinado período de tempo;
 
 
 
+verificaPeriodo(D1, D2, (P, DEnc, D/M/A/H)) :- entrega((_,_,_,P,_,_,_,_,_, DEnc, D/M/A/H)),
+												checkData(D1, D2, D/M/A/H).
+
+
+numEncomendas(D1, D2, Ent, NEnt) :- 
 
 
 
