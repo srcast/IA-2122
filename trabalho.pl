@@ -84,7 +84,7 @@ entrega(fabio, mota, comida, 4, 2, 35, filipa, 'rua de campelo, guimaraes', 1, 1
 entrega(fabio, carro, movel, 53, 25, 25, cristina, 'travessa da igreja, famalicao', 2, 13/10/2021/4).
 entrega(fabio, bicicleta, comida, 2, 1, 10, ana, 'rua direita, barcelos', 3, 12/10/2021/13).
 
-entrega(marco, bicicleta, roupa, 3, 1, 10, ana, 'rua direita, barcelos', 2, 14/10/202/9).
+entrega(marco, bicicleta, roupa, 3, 1, 10, ana, 'rua direita, barcelos', 2, 14/10/2021/9).
 entrega(marco, mota, comida, 4, 0.5, 35, maria, 'avenida da liberdade, braga', 4, 12/10/2021/10).
 entrega(marco, mota, comida, 3, 0.5, 35, cristina, 'travessa da igreja, famalicao', 5, 12/10/2021/11).
 entrega(marco, carro, movel, 74, 30, 25, filipa, 'rua de campelo, guimaraes', 5, 13/10/2021/11).
@@ -247,12 +247,12 @@ todasEntregas(C, T, R) :- todasEntregasDup(C, T, D),
 						retiraDup(D, [], R), !.
 
 retiraDup([], [], nenhum).
-retiraDup([H|T], [], R) :- retiraDup(T, [H], R).
+retiraDup([H|T], [], R) :- retiraDup(T, [H], R), !.
 
 retiraDup([H|T], A, R) :- pertence(H, A),
-						retiraDup(T, A, R).
+						retiraDup(T, A, R), !.
 
-retiraDup([H|T], [HA|TA], R) :- retiraDup(T, [H, HA|TA], R).
+retiraDup([H|T], [HA|TA], R) :- retiraDup(T, [H, HA|TA], R), !.
 
 retiraDup([], L, L).
 
@@ -415,7 +415,7 @@ clientesServidosEstafeta(E, Clientes) :- findall(C, entrega(E, _, _, _, _, _, C,
 
 pesoTransEstafeta(D/M/A/_, (E, P)) :- entrega(E,_,_,P,_,_,_,_,_,D/M/A/_).
 									
-pesoTransEstafetaDia(D/M/A/_, R) :- findall((E, P), pesoTransEstafeta(D/M/A/_, (E, P)), L).
+pesoTransEstafetaDia(D/M/A/_, R) :- findall((E, P), pesoTransEstafeta(D/M/A/_, (E, P)), L),
 									agrupa(L, [], R).
 
 
@@ -443,25 +443,13 @@ atualizaPesos((Nome1, Peso1), [(Nome2, Peso2)|T2], [(Nome2, Peso2)|A]) :- Nome1 
 
 
 
+estafetas(R) :- findall(E, entrega(E,_,_,_,_,_,_,_,_,_), L),
+				retiraDup(L, [], R).
 
 
-
-
-
-%atualizaEstafeta(ana, [(andre, 1), (bruno, 2), (ana, 4), (maria, 1)], R)
-
-%atualizaEstafeta(H, [], []).
-%atualizaEstafeta(H, [(H, NC)|TC], [(H, N)|A]) :- N is NC + 1,
-%												atualizaEstafeta(H, TC, A).
-%atualizaEstafeta(H, [(HC, NC)|TC], [(HC, NC)|A]) :- H \= HC, 
-%										atualizaEstafeta(H, TC, A).
-
-
-
-
-somaValores([], 0).
-somaValores([H|T], R) :- somaValores(T, R1),
-						R is H + R1.
+%somaValores(E, [], 0).
+%somaValores(E, [H|T], (E, R)) :- somaValores(E, T, R1),
+%						R is H + R1.
 
 
 
@@ -469,7 +457,7 @@ somaValores([H|T], R) :- somaValores(T, R1),
 pertenceC( (X, P),[(X, N)|L] ).
 pertenceC( (X, P),[(Y, N)|L] ) :-
     X \= Y,
-    pertenceC( X,L ).
+    pertenceC( (X, P),L ).
 
 
 
