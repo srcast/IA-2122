@@ -341,7 +341,7 @@ clientesServidosEstafeta(E, Clientes) :- findall(C, entrega(E, _, _, _, _, _, C,
 
 %veiculos(R) :- findall(V, entrega(,V,_,_,_,_,_,_,_,_), L), retiraDup(L, [], R).
 
-%totalDifEntrega(Data1,Data2,Nentregas):- data(Data1),data(Data2),veiculos(Veiculos),calculaDifEntrega(Data1,Data2,[],Veiculos, Nentregas).
+%totalDifEntrega(Data1,Data2,Nentregas):- data(Data1),data(Data2),checkPeriodo(Data1,Data2),veiculos(Veiculos),calculaDifEntrega(Data1,Data2,[],Veiculos, Nentregas).
  
 calculaDifEntrega(Data1,Data2,N,[Vult],Nentregas):- Nentregas= [(Vult,X)|N],calculaVentrega(Vult,X,Data1,Data2).
 
@@ -349,7 +349,7 @@ calculaDifEntrega(Data1,Data2, N , [Vatual,Vprox|Outros] , Nentregas) :- Novo = 
 						                         						 calculaVentrega(Vatual,X,Data1,Data2),
                                                                          calculaDifEntrega(Data1,Data2,Novo,[Vprox|Outros],Nentregas).
 
-%calculaVentrega(Veiculo,N,D1,D2):- findall(_,(entrega(_,Veiculo,_,_,_,_,_,_,_,D),checkData(D1,D2,D)),L), len(L,N).
+%calculaVentrega(Veiculo,N,D1,D2):- findall(_,(entrega(_,Veiculo,_,_,_,_,_,_,_,D),checkData(D1,D2,D)),L), length(L,N).
 
 
 
@@ -367,18 +367,18 @@ calculaDifEntrega(Data1,Data2, N , [Vatual,Vprox|Outros] , Nentregas) :- Novo = 
 
 %estafetas(R) :- findall(E, entrega(E,_,_,_,_,_,_,_,_,_), L), retiraDup(L, [], R).
 
-%totalEntregasEstafetas(Data1,Data2,Nentregas):- estafetas(Estafetas), calculaEntregas(Data1,Data2,[[]],Estafetas, Nentregas).
+%totalEntregasEstafetas(Data1,Data2,Nentregas):- data(Data1),data(Data2), checkPeriodo(Data1,Data2),estafetas(Estafetas), calculaEntregas(Data1,Data2,[[]],Estafetas, Nentregas).
  
-%calculaEntregas(Data1,Data2,N,[Eult],Nentregas):- data(Data1),data(Data2), 
+%calculaEntregas(Data1,Data2,N,[Eult],Nentregas):-  
 %											Nentregas = [[Vult,X]|N],
-%											calculaEentrega(Vult,X).
+%											calculaEentrega(Vult,X,Data1,Data2).
 											 
-%calculaEntregas(Data1,Data2, N , [Eatual,Eprox|Outros] , Nentregas) :- data(Data1),data(Data2),
+%calculaEntregas(Data1,Data2, N , [Eatual,Eprox|Outros] , Nentregas) :- 
 %																		  N = [[Eatual,X]|N],
 %																		  calculaEentrega(Eatual,X,Data1,Data2),
 %																		  calculaEntregas(Data1,Data2,N,[Eprox|Outros],Nentregas).
 
-%calculaEentrega(E,N,D1,D2):- findall(_,(entrega(E,_,_,_,_,_,_,_,_,D),checkData(D1,D2,D)),L), len(L,N).
+%calculaEentrega(E,N,D1,D2):- findall(_,(entrega(E,_,_,_,_,_,_,_,_,D),checkData(D1,D2,D)),L), length(L,N).
 
 
 
@@ -517,13 +517,12 @@ checkData( _/M1/A1/_ , _ , _/M/A1/_ ):- !,M >= M1,!.
 checkData( _/_/A1/_ , _/_/A2/_ , _/_/A/_ ):- !,A >= A1,!,A =< A2,!. 
 
 %-----------------------------------------------
-% Extensao do predicado len , que calcula o comprimento de uma lista : Lista, Comprimento 
+% Extensao do predicado checkPeriodo , que verifica se o periodo é válido: Data1,Data2 -> {V,F}
+checkPeriodo(D1/M1/A1/H1 , D1/M1/A1/H2) :- !,H1 =< H2,!.
+checkPeriodo(D1/M1/A1/_ , D2/M1/A1/_) :- !,D1 < D2,!.
+checkPeriodo(_/M1/A1/_ , _/M2/A1/_) :- !,M1 < M2,!.
+checkPeriodo(_/_/A1/_ , _/_/A2/_) :- !,A1 < A2,!.
 
-len(Xs,L) :- len(Xs,0,L) .
-len( []     , L , L ) .
-len( [_|Xs] , T , L ) :-
-  T1 is T+1 ,
-  len(Xs,T1,L).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 
