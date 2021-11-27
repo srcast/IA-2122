@@ -42,59 +42,66 @@
 
 
 
-% Extensao do predicado entrega: estafeta, veiculo, tipoEncomenda, pesoEnc, prazo, velocidade, cliente, rua, classificacao, data encomenda, data entrega, preco
+% Extensao do predicado entrega: estafeta, veiculo, km, tipoEncomenda, pesoEnc, prazo, velocidade, cliente, rua, classificacao, data encomenda, data entrega, preco
 
 
-entrega(manuel, bicicleta, comida, 2, 1, 10, maria, 'avenida da liberdade, braga', 4, 11/10/2021/10, 11/10/2021/11).
-entrega(manuel, bicicleta, comida, 2, 1, 10, maria, 'avenida da liberdade, braga', 4, 11/10/2021/13, 11/10/2021/14).
-entrega(manuel, bicicleta, comida, 2, 1, 10, maria, 'avenida da liberdade, braga', 4, 11/10/2021/16, 11/10/2021/18).
+entrega(manuel, bicicleta, 12, comida, 2, 1, 10, maria, 'avenida da liberdade, braga', 4, 11/10/2021/10, 11/10/2021/11).
+entrega(manuel, bicicleta, 12, comida, 2, 1, 10, maria, 'avenida da liberdade, braga', 4, 11/10/2021/13, 11/10/2021/14).
+entrega(manuel, bicicleta, 12, comida, 2, 1, 10, maria, 'avenida da liberdade, braga', 4, 11/10/2021/16, 11/10/2021/18).
+
+entrega(manuel, bicicleta, 12, comida, 2, 1, 10, maria, 'avenida da liberdade, braga', 4, 11/10/2021/12, 11/10/2021/13).
+entrega(jose, bicicleta, 15, comida, 4, 1, 10, ana, 'rua direita, barcelos', 5, 11/10/2021/12, 11/10/2021/13).
+entrega(fabio, mota, 20, roupa, 12, 24, 35, filipa, 'rua de campelo, guimaraes', 5, 12/10/2021/13, 12/10/2021/19).
+entrega(marco, carro, 23, movel, 80, 48, 25, cristina, 'travessa da igreja, famalicao', 3, 11/10/2021/17, 14/10/2021/10).
+
+entrega(jose, bicicleta, 15, comida, 4, 1, 10, ana, 'rua direita, barcelos', 5, 11/10/2021/20, 11/10/2021/21).
+entrega(manuel, bicicleta, 15, comida, 1, 1, 10, ana, 'rua direita, barcelos', 5, 11/10/2021/19, 11/10/2021/20).
+entrega(fabio, bicicleta, 15, comida, 2, 1, 10, ana, 'rua direita, barcelos', 3, 12/10/2021/21, 12/10/2021/22).
+
+
+entrega(manuel, bicicleta, 15, comida, 1, 1, 10, ana, 'rua direita, barcelos', 5, 11/10/2021/13, 11/10/2021/15).
+entrega(manuel, mota, 12, roupa, 10, 18, 35, maria, 'avenida da liberdade, braga', 3, 12/10/2021/11, 13/10/2021/10).
+entrega(manuel, mota, 23, comida, 3, 0.5, 35, cristina, 'travessa da igreja, famalicao', 4, 12/10/2021/14, 12/10/2021/15).
+entrega(manuel, carro, 20, movel, 74, 30, 25, filipa, 'rua de campelo, guimaraes', 5, 13/10/2021/14, 16/10/2021/10).
+entrega(manuel, carro, 23, comida, 3, 0.5, 25, cristina, 'travessa da igreja, famalicao', 4, 15/10/2021/18, 15/10/2021/19).
+
+entrega(jose, carro, 15, roupa, 17, 4, 25, ana, 'rua direita, barcelos', 2, 15/10/2021/18, 17/10/2021/10).
+entrega(jose, mota, 12, comida, 2, 1, 35, maria, 'avenida da liberdade, braga', 3, 14/10/2021/11, 14/10/2021/12).
+entrega(jose, mota, 20, comida, 3, 0.5, 35, filipa, 'rua de campelo, guimaraes', 1, 12/10/2021/10, 12/10/2021/12).
+entrega(jose, carro, 20, movel, 74, 30, 25, filipa, 'rua de campelo, guimaraes', 5, 13/10/2021/9, 16/10/2021/10).
+entrega(jose, carro, 15, movel, 60, 5, 25, ana, 'rua direita, barcelos', 3, 14/10/2021/15, 15/10/2021/10).
+
+entrega(fabio, carro, 15, movel, 45, 17, 25, ana, 'rua direita, barcelos', 2, 15/10/2021/15, 18/10/2021/10).
+entrega(fabio, mota, 12, roupa, 9, 5, 35, maria, 'avenida da liberdade, braga', 3, 12/10/2021/16, 14/10/2021/10).
+entrega(fabio, mota, 20, comida, 4, 2, 35, filipa, 'rua de campelo, guimaraes', 1, 12/10/2021/21, 12/10/2021/22).
+entrega(fabio, carro, 23, movel, 53, 25, 25, cristina, 'travessa da igreja, famalicao', 2, 13/10/2021/4, 15/10/2021/10).
+entrega(fabio, bicicleta, 15, comida, 2, 1, 10, ana, 'rua direita, barcelos', 3, 12/10/2021/13, 12/10/2021/14).
+
+entrega(marco, bicicleta, 15, roupa, 3, 1, 10, ana, 'rua direita, barcelos', 2, 14/10/2021/9, 14/10/2021/18).
+entrega(marco, mota, 12, comida, 4, 0.5, 35, maria, 'avenida da liberdade, braga', 4, 12/10/2021/10, 12/10/2021/12).
+entrega(marco, mota, 23, comida, 3, 0.5, 35, cristina, 'travessa da igreja, famalicao', 5, 12/10/2021/11, 12/10/2021/12).
+entrega(marco, carro, 20, movel, 74, 30, 25, filipa, 'rua de campelo, guimaraes', 5, 13/10/2021/11, 16/10/2021/10).
+entrega(marco, carro, 23, movel, 89, 23, 25, cristina, 'travessa da igreja, famalicao', 5, 15/10/2021/14, 19/10/2021/10).
+
+
+
+:-dynamic estafetaRanking/2. 
+
+%classificação dos estafetas na empresa ----> serve para as penalizações
+estafetaRanking(jose, 4.3).
+estafetaRanking(marco, 4.1).
+estafetaRanking(fabio, 3.8).
+estafetaRanking(manuel, 4.5).
 
 
 
 
 
 
-
-
-entrega(manuel, bicicleta, comida, 2, 1, 10, maria, 'avenida da liberdade, braga', 4, 11/10/2021/12, 11/10/2021/13).
-entrega(jose, bicicleta, comida, 4, 1, 10, ana, 'rua direita, barcelos', 5, 11/10/2021/12, 11/10/2021/13).
-entrega(fabio, mota, roupa, 12, 24, 35, filipa, 'rua de campelo, guimaraes', 5, 12/10/2021/13, 12/10/2021/19).
-entrega(marco, carro, movel, 80, 48, 25, cristina, 'travessa da igreja, famalicao', 3, 11/10/2021/17, 14/10/2021/10).
-
-entrega(jose, bicicleta, comida, 4, 1, 10, ana, 'rua direita, barcelos', 5, 11/10/2021/20, 11/10/2021/21).
-entrega(manuel, bicicleta, comida, 1, 1, 10, ana, 'rua direita, barcelos', 5, 11/10/2021/19, 11/10/2021/20).
-entrega(fabio, bicicleta, comida, 2, 1, 10, ana, 'rua direita, barcelos', 3, 12/10/2021/21, 12/10/2021/22).
-
-
-entrega(manuel, bicicleta, comida, 1, 1, 10, ana, 'rua direita, barcelos', 5, 11/10/2021/13, 11/10/2021/15).
-entrega(manuel, mota, roupa, 10, 18, 35, maria, 'avenida da liberdade, braga', 3, 12/10/2021/11, 13/10/2021/10).
-entrega(manuel, mota, comida, 3, 0.5, 35, cristina, 'travessa da igreja, famalicao', 4, 12/10/2021/14, 12/10/2021/15).
-entrega(manuel, carro, movel, 74, 30, 25, filipa, 'rua de campelo, guimaraes', 5, 13/10/2021/14, 16/10/2021/10).
-entrega(manuel, carro, comida, 3, 0.5, 25, cristina, 'travessa da igreja, famalicao', 4, 15/10/2021/18, 15/10/2021/19).
-
-entrega(jose, carro, roupa, 17, 4, 25, ana, 'rua direita, barcelos', 2, 15/10/2021/18, 17/10/2021/10).
-entrega(jose, mota, comida, 2, 1, 35, maria, 'avenida da liberdade, braga', 3, 14/10/2021/11, 14/10/2021/12).
-entrega(jose, mota, comida, 3, 0.5, 35, filipa, 'rua de campelo, guimaraes', 1, 12/10/2021/10, 12/10/2021/12).
-entrega(jose, carro, movel, 74, 30, 25, filipa, 'rua de campelo, guimaraes', 5, 13/10/2021/9, 16/10/2021/10).
-entrega(jose, carro, movel, 60, 5, 25, ana, 'rua direita, barcelos', 3, 14/10/2021/15, 15/10/2021/10).
-
-entrega(fabio, carro, movel, 45, 17, 25, ana, 'rua direita, barcelos', 2, 15/10/2021/15, 18/10/2021/10).
-entrega(fabio, mota, roupa, 9, 5, 35, maria, 'avenida da liberdade, braga', 3, 12/10/2021/16, 14/10/2021/10).
-entrega(fabio, mota, comida, 4, 2, 35, filipa, 'rua de campelo, guimaraes', 1, 12/10/2021/21, 12/10/2021/22).
-entrega(fabio, carro, movel, 53, 25, 25, cristina, 'travessa da igreja, famalicao', 2, 13/10/2021/4, 15/10/2021/10).
-entrega(fabio, bicicleta, comida, 2, 1, 10, ana, 'rua direita, barcelos', 3, 12/10/2021/13, 12/10/2021/14).
-
-entrega(marco, bicicleta, roupa, 3, 1, 10, ana, 'rua direita, barcelos', 2, 14/10/2021/9, 14/10/2021/18).
-entrega(marco, mota, comida, 4, 0.5, 35, maria, 'avenida da liberdade, braga', 4, 12/10/2021/10, 12/10/2021/12).
-entrega(marco, mota, comida, 3, 0.5, 35, cristina, 'travessa da igreja, famalicao', 5, 12/10/2021/11, 12/10/2021/12).
-entrega(marco, carro, movel, 74, 30, 25, filipa, 'rua de campelo, guimaraes', 5, 13/10/2021/11, 16/10/2021/10).
-entrega(marco, carro, movel, 89, 23, 25, cristina, 'travessa da igreja, famalicao', 5, 15/10/2021/14, 19/10/2021/10).
-
-
-%entregaValida(E, V, T, P, Pr, Vel, C, R, Cla, Denc, Dent) :-
+%entregaValida(E, V, KM, T, P, Pr, Vel, C, R, Cla, Denc, Dent) :-
 %	veiculo(V, P, Vel),
 %	classificacao(Cla),
-%	morada(C, R),
+%	morada(C, R, KM),
 %	data(Denc),
 %	data(Dent).
 
@@ -118,10 +125,10 @@ classificacao(C) :-
 
 % Extensao do predicado morada: cliente, rua -> {V, F}
 
-morada(maria, 'avenida da liberdade, braga').
-morada(ana, 'rua direita, barcelos').
-morada(filipa, 'rua de campelo, guimaraes').
-morada(cristina, 'travessa da igreja, famalicao').
+morada(maria, 'avenida da liberdade, braga', 12).
+morada(ana, 'rua direita, barcelos', 15).
+morada(filipa, 'rua de campelo, guimaraes', 20).
+morada(cristina, 'travessa da igreja, famalicao', 23).
 
 
 
@@ -159,9 +166,9 @@ data(D/2/A/H) :-
 
 % Extensao do predicado estafetaMaisVezesTransp: Veiculo, Estafeta -> {V,F}
 
-aux(V, E) :- entrega(E, V, _, _, _, _, _, _, _, _, _).
+aux(V, E) :- entrega(E, V, _, _, _, _, _, _, _, _, _, _).
 
-estafetaMaisVezesTransp(V, R) :- findall(E, entrega(E, V, _, _, _, _, _, _, _, _, _), [H|T]),
+estafetaMaisVezesTransp(V, R) :- findall(E, entrega(E, V, _, _, _, _, _, _, _, _, _, _), [H|T]),
 								%contaEstafetas(L, [], R).
 								maior(H, 1, [H|T], R).
 
@@ -231,7 +238,7 @@ maior(H, N1, [H|T], R) :- quantosIguais([H|T], N1),
 % -------------- se consideramos apenas um tipo de encomenda -------------------------- 
 
 
-estafetasEntregaClienteValida(C, T, E) :- entrega(E, _, T, _, _, _, C, _, _, _, _).
+estafetasEntregaClienteValida(C, T, E) :- entrega(E, _, _, T, _, _, _, C, _, _, _, _).
 
 
 estafetasEntregaCliente(C, T, R) :- findall(E, estafetasEntregaClienteValida(C, T, E), L),
@@ -269,17 +276,37 @@ retiraDup([], L, L).
 % Extensao do predicado clientesServidosEstafeta: Estafeta, Lista Clientes -> {V,F}
 
 
-clientesServidosEstafeta(E, Clientes) :- findall(C, entrega(E, _, _, _, _, _, C, _, _, _, _), L),
+clientesServidosEstafeta(E, Clientes) :- findall(C, entrega(E, _, _, _, _, _, _, C, _, _, _, _), L),
 										retiraDup(L, [], Clientes), !.
 
 
 
 
-% 4) Extensao do predicado
+% 4) calcular o valor faturado pela Green Distribution num determinado dia
 
 
+%custo de 2/Kg para transportar de bicicleta + 0.15/km
+custoTransporte(bicicleta, P, KM, Custo) :- Custo is ((2 * P) + (0.20 * KM)).
+
+%custo de 4/Kg para transportar de bicicleta + 0.35/km
+custoTransporte(mota, P, KM, Custo) :- Custo is ((4 * P) + (0.35 * KM)).
+
+%custo de 8/Kg para transportar de bicicleta + 0.50/km
+custoTransporte(carro, P, KM, Custo) :- Custo is ((8 * P) + (0.50 * KM)).
 
 
+encontraValores(D/M/A/_, (V, P, KM)) :- entrega(_, V, KM, _, P, _, _, _, _, _, _, D/M/A/_).
+
+
+%executar
+valorFaturado(D/M/A/_, R) :- findall((V, P, KM), encontraValores(D/M/A/_, (V, P, KM)), L),
+							calculaValor(L, R).
+
+
+calculaValor([], 0).
+calculaValor([(V, P, KM)|T], R) :- custoTransporte(V, P, KM, Custo),
+									calculaValor(T, Custo2),
+									R is Custo + Custo2, !.
 
 
 
@@ -318,11 +345,21 @@ clientesServidosEstafeta(E, Clientes) :- findall(C, entrega(E, _, _, _, _, _, C,
 
 
 
-% 6) Extensao do predicado
+% 6) calcular a classificação média de satisfação de cliente para um determinado estafeta
+
+classificacaoMedia(E, R) :- findall(Class, entrega(E, _, _, _, _, _, _, _, _, Class, _, _), L),
+							calculaMedia(L, R).
 
 
+calculaMedia(L, R) :- somatorio(L, S),
+						comprimento(L, C),
+						C > 0,
+						R1 is S / C, 
+						round(R1, R, 1).
 
 
+%arredonda para D casas decimais
+round(X,Y,D) :- Z is X * 10^D, round(Z, ZA), Y is ZA / 10^D.
 
 
 
@@ -396,11 +433,38 @@ calculaDifEntrega(Data1,Data2, N , [Vatual,Vprox|Outros] , Nentregas) :- Novo = 
 
 
 
-verificaPeriodo(D1, D2, (P, DEnc, D/M/A/H)) :- entrega((_,_,_,P,_,_,_,_,_, DEnc, D/M/A/H)),
-												checkData(D1, D2, D/M/A/H).
+%verificaPeriodo(D1, D2, (P, DEnc, DEnt)) :- entrega((_,_,_,_,P,_,_,_,_,_, DEnc, DEnt)),
+%												checkData(D1, D2, DEnt).
 
 
-numEncomendas(D1, D2, Ent, NEnt) :- 
+%numEncomendas(D1, D2, Ent, NEnt) :- findall((P, DEnc, DEnt), verificaPeriodo(D1, D2, (P, DEnc, DEnt)), L),
+%									contaEncomendas(L, Ent, NEnt).
+
+
+%entrega dentro de prazo
+%verificaPrazos((P, D1/M1/A1/H1, D2/M1/A1/H2), Ent, NEnt) :- Ndias is P // 24,
+%															D1 + Ndias =< D2,
+%															Nhoras is P mod 24,
+%															H1 + Nhoras <= H2
+%															Ent is 0 + 1,
+%															NEnt is 0 + 0.
+
+%entega fora de prazo
+%verificaPrazos((P, D1/M1/A1/H1, D2/M1/A1/H2), Ent, NEnt) :- Ent is 0 + 0,
+%															NEnt is 0 + 1.
+
+
+%verificaPrazos((P, D1/M1/A1/H1, D2/M2/A1/H2), Ent, NEnt) :- Ndias is P // 24,
+
+
+
+
+%contaEncomendas([H|T], Ent, NEnt) :- 
+
+
+
+
+
 
 
 
@@ -416,7 +480,7 @@ numEncomendas(D1, D2, Ent, NEnt) :-
 % 10) calcular o peso total transportado por estafeta num determinado dia
 
 
-pesoTransEstafeta(D/M/A/_, (E, P)) :- entrega(E,_,_,P,_,_,_,_,_, _, D/M/A/_).
+pesoTransEstafeta(D/M/A/_, (E, P)) :- entrega(E,_,_,_,P,_,_,_,_,_, _, D/M/A/_).
 									
 pesoTransEstafetaDia(D/M/A/_, R) :- findall((E, P), pesoTransEstafeta(D/M/A/_, (E, P)), L),
 									agrupa(L, [], R).
@@ -446,7 +510,7 @@ atualizaPesos((Nome1, Peso1), [(Nome2, Peso2)|T2], [(Nome2, Peso2)|A]) :- Nome1 
 
 
 
-estafetas(R) :- findall(E, entrega(E,_,_,_,_,_,_,_,_,_), L),
+estafetas(R) :- findall(E, entrega(E,_,_,_,_,_,_,_,_,_,_), L),
 				retiraDup(L, [], R).
 
 
@@ -463,12 +527,20 @@ pertenceC( (X, P),[(Y, N)|L] ) :-
     pertenceC( (X, P),L ).
 
 
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Extensao do predicado somatorio: Lista,Somatorio -> {V,F}
 
+somatorio([], 0).
+somatorio([H|T], R) :- somatorio(T, R2),
+						R is H + R2.
 
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Extensao do predicado comprimento: Lista,Comprimento -> {V,F}
 
-
-
-
+comprimento( [],0 ).
+comprimento( [X|L],N ) :-
+    comprimento( L,N1 ),
+    N is N1+1.
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
