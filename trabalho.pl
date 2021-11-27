@@ -339,7 +339,7 @@ clientesServidosEstafeta(E, Clientes) :- findall(C, entrega(E, _, _, _, _, _, C,
 % identificar o número total de entregas pelos diferentes meios de transporte, num determinado intervalo de tempo;
 % 7) Extensao do predicado
 
-%veiculos(R) :- findall(V, entrega(,V,_,_,_,_,_,_,_,_), L), retiraDup(L, [], R).
+%veiculos(R) :- findall(V, entrega(_,V,_,_,_,_,_,_,_,_), L), retiraDup(L, [], R).
 
 %totalDifEntrega(Data1,Data2,Nentregas):- data(Data1),data(Data2),checkPeriodo(Data1,Data2),veiculos(Veiculos),calculaDifEntrega(Data1,Data2,[],Veiculos, Nentregas).
  
@@ -367,16 +367,16 @@ calculaDifEntrega(Data1,Data2, N , [Vatual,Vprox|Outros] , Nentregas) :- Novo = 
 
 %estafetas(R) :- findall(E, entrega(E,_,_,_,_,_,_,_,_,_), L), retiraDup(L, [], R).
 
-%totalEntregasEstafetas(Data1,Data2,Nentregas):- data(Data1),data(Data2), checkPeriodo(Data1,Data2),estafetas(Estafetas), calculaEntregas(Data1,Data2,[[]],Estafetas, Nentregas).
+%totalEntregasEstafetas(Data1,Data2,Nentregas):- data(Data1),data(Data2), checkPeriodo(Data1,Data2),estafetas(Estafetas), calculaEntregas(Data1,Data2,[],Estafetas, Nentregas).
  
 %calculaEntregas(Data1,Data2,N,[Eult],Nentregas):-  
-%											Nentregas = [[Vult,X]|N],
-%											calculaEentrega(Vult,X,Data1,Data2).
+%											Nentregas = [(Eult,X)|N],
+%											calculaEentrega(Eult,X,Data1,Data2).
 											 
 %calculaEntregas(Data1,Data2, N , [Eatual,Eprox|Outros] , Nentregas) :- 
-%																		  N = [[Eatual,X]|N],
+%																		  Novo = [(Eatual,X)|N],
 %																		  calculaEentrega(Eatual,X,Data1,Data2),
-%																		  calculaEntregas(Data1,Data2,N,[Eprox|Outros],Nentregas).
+%																		  calculaEntregas(Data1,Data2,Novo,[Eprox|Outros],Nentregas).
 
 %calculaEentrega(E,N,D1,D2):- findall(_,(entrega(E,_,_,_,_,_,_,_,_,D),checkData(D1,D2,D)),L), length(L,N).
 
