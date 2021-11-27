@@ -49,13 +49,6 @@ entrega(manuel, bicicleta, 12, comida, 2, 1, 10, maria, 'avenida da liberdade, b
 entrega(manuel, bicicleta, 12, comida, 2, 1, 10, maria, 'avenida da liberdade, braga', 4, 11/10/2021/13, 11/10/2021/14).
 entrega(manuel, bicicleta, 12, comida, 2, 1, 10, maria, 'avenida da liberdade, braga', 4, 11/10/2021/16, 11/10/2021/18).
 
-
-
-
-
-
-
-
 entrega(manuel, bicicleta, 12, comida, 2, 1, 10, maria, 'avenida da liberdade, braga', 4, 11/10/2021/12, 11/10/2021/13).
 entrega(jose, bicicleta, 15, comida, 4, 1, 10, ana, 'rua direita, barcelos', 5, 11/10/2021/12, 11/10/2021/13).
 entrega(fabio, mota, 20, roupa, 12, 24, 35, filipa, 'rua de campelo, guimaraes', 5, 12/10/2021/13, 12/10/2021/19).
