@@ -376,20 +376,17 @@ round(X,Y,D) :- Z is X * 10^D, round(Z, ZA), Y is ZA / 10^D.
 % identificar o número total de entregas pelos diferentes meios de transporte, num determinado intervalo de tempo;
 % 7) Extensao do predicado
 
-%veiculos= [bicicleta, moto, carro]
+%veiculos(R) :- findall(V, entrega(,V,_,_,_,_,_,_,_,_), L), retiraDup(L, [], R).
 
-%totalDifEntrega(Data1,Data2,Nentregas):- calculaDifEntrega(Data1,Data2,[[]],veiculos, Nentregas).
+%totalDifEntrega(Data1,Data2,Nentregas):- data(Data1),data(Data2),checkPeriodo(Data1,Data2),veiculos(Veiculos),calculaDifEntrega(Data1,Data2,[],Veiculos, Nentregas).
  
-%calculaDifEntrega(_,_,N,[Vult],Nentregas):- data(Data1),data(Data2), 
-%											 Nentregas = [[Vult,X]|N],
-%											 calculaVentrega(Vult,X).
-											 
-%calculaDifEntrega(Data1,Data2, N , [Vatual,Vprox|Outros] , Nentregas) :- data(Data1),data(Data2),
-%																		  N = [[Vatual,X]|N],
-%																		  calculaVentrega(Vatual,X,Data1,Data2),
-%																		  calculaDifEntrega(Data1,Data2,N,[Vprox|Outros],Nentregas).
+calculaDifEntrega(Data1,Data2,N,[Vult],Nentregas):- Nentregas= [(Vult,X)|N],calculaVentrega(Vult,X,Data1,Data2).
 
-%calculaVentrega(Veiculo,N,D1,D2):- findall(_,(entrega(_,Veiculo,_,_,_,_,_,_,_,D),checkData(D1,D2,D)),L), len(L,N).
+calculaDifEntrega(Data1,Data2, N , [Vatual,Vprox|Outros] , Nentregas) :- Novo = [(Vatual,X)|N],
+						                         						 calculaVentrega(Vatual,X,Data1,Data2),
+                                                                         calculaDifEntrega(Data1,Data2,Novo,[Vprox|Outros],Nentregas).
+
+%calculaVentrega(Veiculo,N,D1,D2):- findall(_,(entrega(_,Veiculo,_,_,_,_,_,_,_,D),checkData(D1,D2,D)),L), length(L,N).
 
 
 
@@ -405,20 +402,20 @@ round(X,Y,D) :- Z is X * 10^D, round(Z, ZA), Y is ZA / 10^D.
 
 
 
-%estafetas= [manuel, jose, fabio , marco]
+%estafetas(R) :- findall(E, entrega(E,_,_,_,_,_,_,_,_,_), L), retiraDup(L, [], R).
 
-%totalEntregasEstafetas(Data1,Data2,Nentregas):- calculaEntregas(Data1,Data2,[[]],estafetas, Nentregas).
+%totalEntregasEstafetas(Data1,Data2,Nentregas):- data(Data1),data(Data2), checkPeriodo(Data1,Data2),estafetas(Estafetas), calculaEntregas(Data1,Data2,[[]],Estafetas, Nentregas).
  
-%calculaEntregas(_,_,N,[Eult],Nentregas):- data(Data1),data(Data2), 
+%calculaEntregas(Data1,Data2,N,[Eult],Nentregas):-  
 %											Nentregas = [[Vult,X]|N],
-%											calculaEentrega(Vult,X).
+%											calculaEentrega(Vult,X,Data1,Data2).
 											 
-%calculaEntregas(Data1,Data2, N , [Eatual,Eprox|Outros] , Nentregas) :- data(Data1),data(Data2),
+%calculaEntregas(Data1,Data2, N , [Eatual,Eprox|Outros] , Nentregas) :- 
 %																		  N = [[Eatual,X]|N],
 %																		  calculaEentrega(Eatual,X,Data1,Data2),
 %																		  calculaEntregas(Data1,Data2,N,[Eprox|Outros],Nentregas).
 
-%calculaEentrega(E,N,D1,D2):- findall(_,(entrega(E,_,_,_,_,_,_,_,_,D),checkData(D1,D2,D)),L), len(L,N).
+%calculaEentrega(E,N,D1,D2):- findall(_,(entrega(E,_,_,_,_,_,_,_,_,D),checkData(D1,D2,D)),L), length(L,N).
 
 
 
@@ -576,29 +573,28 @@ nao( Questao ).
 % Extensao do predicado checkData que verifica se uma data pertence à um período de tempo: Data1,Data2,Data -> {V,F}.
 checkData( D1/M1/A1/H1 , D1/M1/A1/H2 , D1/M1/A1/H ):- !,H >= H1,!,H =< H2, !.
 
-checkData( _ , D2/M1/A1/H2 , D2/M1/A1/H ):- !,H =< H2,!. 
-checkData( D1/M1/A1/H1 , _ , D1/M1/A1/H ):- !,H >= H1,!. 
+checkData( _ , D2/M1/A1/H2 , D2/M1/A1/H ):- !,H =< H2,!.
+checkData( D1/M1/A1/H1 , _ , D1/M1/A1/H ):- !,H >= H1,!.
 
-checkData( D1/M1/A1/H1 , D2/M1/A1/H2 , D/M1/A1/H ):- !,D >= D1,!,D =< D2,!. 
+checkData( D1/M1/A1/_ , D2/M1/A1/_ , D/M1/A1/_ ):- !,D >= D1,!,D =< D2,!.
 
-checkData( _ , D2/M1/A1/H2 , D/M1/A1/H ):- !,D =< D2,!. 
-checkData( D1/M1/A1/H1 , _ , D/M1/A1/H ):- !,D >= D1,!. 
+checkData( _ , D2/M1/A1/_ , D/M1/A1/_ ):- !,D =< D2,!.
+checkData( D1/M1/A1/_ , _ , D/M1/A1/_ ):- !,D >= D1,!.
 
-checkData( D1/M1/A1/H1 , D2/M2/A1/H2 , D/M/A1/H ):- !,M >= M1,!,M =< M2,!. 
+checkData( _/M1/A1/_ , _/M2/A1/_ , _/M/A1/_ ):- !,M >= M1,!,M =< M2,!.
 
-checkData( _ , D2/M1/A1/H2 , D/M/A1/H ):- !,M =< M2,!. 
-checkData( D1/M1/A1/H1 , _ , D/M/A1/H ):- !,M >= M1,!. 
+checkData( _ , _/M2/A1/_ , _/M/A1/_ ):- !,M =< M2,!.
+checkData( _/M1/A1/_ , _ , _/M/A1/_ ):- !,M >= M1,!.
 
-checkData( D1/M1/A1/H1 , D2/M2/A2/H2 , D/M/A/H ):- !,A >= A1,!,A =< A2,!. 
+checkData( _/_/A1/_ , _/_/A2/_ , _/_/A/_ ):- !,A >= A1,!,A =< A2,!. 
 
 %-----------------------------------------------
-% Extensao do predicado len , que calcula o comprimento de uma lista : Lista, Comprimento 
+% Extensao do predicado checkPeriodo , que verifica se o periodo é válido: Data1,Data2 -> {V,F}
+checkPeriodo(D1/M1/A1/H1 , D1/M1/A1/H2) :- !,H1 =< H2,!.
+checkPeriodo(D1/M1/A1/_ , D2/M1/A1/_) :- !,D1 < D2,!.
+checkPeriodo(_/M1/A1/_ , _/M2/A1/_) :- !,M1 < M2,!.
+checkPeriodo(_/_/A1/_ , _/_/A2/_) :- !,A1 < A2,!.
 
-len(Xs,L) :- len(Xs,0,L) .
-len( []     , L , L ) .
-len( [_|Xs] , T , L ) :-
-  T1 is T+1 ,
-  len(Xs,T1,L).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 
