@@ -5,7 +5,7 @@
 %----------------Elementos do Grupo -----------------------------
 %------- Ricardo Miguel Santos Gomes, A93785
 %------- Pedro Aquino Martins de Araújo, A90614
-%-------
+%------- Rui Pedro Gomes Coelho, A58898
 %-------
 %-----------------------------------------------------------------
 %
@@ -320,25 +320,19 @@ calculaValor([(V, P, KM)|T], R) :- custoTransporte(V, P, KM, Custo),
 
 
 
-% 5) Extensao do predicado
+% 5) identificar quais as zonas (e.g., rua ou freguesia) com maior volume de entregas por parte da Green Distribution
+%volumeZona(Res).
 
+volumeZona(Res) :- findall(Zone,entrega(_, _, _, _, _, _, _, _, Zone, _, _, _), Zones),
+				   countVol(Zones,Aux),
+				   sort(2,@>=,Aux, Aux1),
+				   head(Aux1,Res).
 
+countVol(List, Occ):-
+	findall([X,L], (bagof(true,member(X,List),Xs), length(Xs,L)), Occ).
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+head([], Res ).
+head([H|_], Res) :- Res = H.
 
 
 
