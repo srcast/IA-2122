@@ -376,7 +376,7 @@ round(X,Y,D) :- Z is X * 10^D, round(Z, ZA), Y is ZA / 10^D.
 % identificar o número total de entregas pelos diferentes meios de transporte, num determinado intervalo de tempo;
 % 7) Extensao do predicado
 
-%veiculos(R) :- findall(V, entrega(_,V,_,_,_,_,_,_,_,_), L), retiraDup(L, [], R).
+%veiculos(R) :- findall(V, entrega(_,V,_,_,_,_,_,_,_,_,_), L), retiraDup(L, [], R).
 
 %totalDifEntrega(Data1,Data2,Nentregas):- data(Data1),data(Data2),checkPeriodo(Data1,Data2),veiculos(Veiculos),calculaDifEntrega(Data1,Data2,[],Veiculos, Nentregas).
  
@@ -386,7 +386,7 @@ calculaDifEntrega(Data1,Data2, N , [Vatual,Vprox|Outros] , Nentregas) :- Novo = 
 						                         						 calculaVentrega(Vatual,X,Data1,Data2),
                                                                          calculaDifEntrega(Data1,Data2,Novo,[Vprox|Outros],Nentregas).
 
-%calculaVentrega(Veiculo,N,D1,D2):- findall(_,(entrega(_,Veiculo,_,_,_,_,_,_,_,D),checkData(D1,D2,D)),L), length(L,N).
+%calculaVentrega(Veiculo,N,D1,D2):- findall(_,(entrega(_,Veiculo,_,_,_,_,_,_,_,_,D),checkData(D1,D2,D)),L), length(L,N).
 
 
 
@@ -402,7 +402,7 @@ calculaDifEntrega(Data1,Data2, N , [Vatual,Vprox|Outros] , Nentregas) :- Novo = 
 
 
 
-%estafetas(R) :- findall(E, entrega(E,_,_,_,_,_,_,_,_,_), L), retiraDup(L, [], R).
+%estafetas(R) :- findall(E, entrega(E,_,_,_,_,_,_,_,_,_,_), L), retiraDup(L, [], R).
 
 %totalEntregasEstafetas(Data1,Data2,Nentregas):- data(Data1),data(Data2), checkPeriodo(Data1,Data2),estafetas(Estafetas), calculaEntregas(Data1,Data2,[],Estafetas, Nentregas).
  
@@ -415,7 +415,7 @@ calculaDifEntrega(Data1,Data2, N , [Vatual,Vprox|Outros] , Nentregas) :- Novo = 
 %																		  calculaEentrega(Eatual,X,Data1,Data2),
 %																		  calculaEntregas(Data1,Data2,Novo,[Eprox|Outros],Nentregas).
 
-%calculaEentrega(E,N,D1,D2):- findall(_,(entrega(E,_,_,_,_,_,_,_,_,D),checkData(D1,D2,D)),L), length(L,N).
+%calculaEentrega(E,N,D1,D2):- findall(_,(entrega(E,_,_,_,_,_,_,_,_,_,D),checkData(D1,D2,D)),L), length(L,N).
 
 
 
