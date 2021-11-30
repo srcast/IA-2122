@@ -120,7 +120,7 @@ veiculo(carro, P, V) :-
 % Extensao do predicado classificacao: classificacao -> {V,F}
 
 classificacao(C) :-
-	pertence(C, [0,1,2,3,4,5]).
+	member(C, [0,1,2,3,4,5]).
 
 
 % Extensao do predicado morada: cliente, rua -> {V, F}
@@ -139,25 +139,25 @@ data(D/2/A/H) :-
 	A mod 4 =:= 0,
 	D >= 1,
 	D =< 29,
-	pertence(H, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]).
+	member(H, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]).
 data(D/M/A/H) :-
 	A >= 0,
-    pertence(M, [1,3,5,7,8,10,12]),
+    member(M, [1,3,5,7,8,10,12]),
 	D >= 1,
 	D =< 31,
-	pertence(H, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]).
+	member(H, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]).
 data(D/M/A/H) :-
 	A >= 0,
-    pertence(M, [4,6,9,11]),
+    member(M, [4,6,9,11]),
 	D >= 1,
 	D =< 30,
-	pertence(H, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]).
+	member(H, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]).
 data(D/2/A/H) :-
 	A >= 0,
     A mod 4 =\= 0, 
 	D >= 1,
 	D =< 28,
-	pertence(H, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]).
+	member(H, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]).
 
 
 
@@ -257,7 +257,7 @@ todasEntregas(C, T, R) :- todasEntregasDup(C, T, D),
 retiraDup([], [], nenhum).
 retiraDup([H|T], [], R) :- retiraDup(T, [H], R), !.
 
-retiraDup([H|T], A, R) :- pertence(H, A),
+retiraDup([H|T], A, R) :- member(H, A),
 						retiraDup(T, A, R), !.
 
 retiraDup([H|T], [HA|TA], R) :- retiraDup(T, [H, HA|TA], R), !.
@@ -546,15 +546,6 @@ concatenar([H1|T1], [H2|T2], [H1|L]) :-
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
-% Extensao do predicado pertence: Elemento,Lista -> {V,F}
-
-pertence( X,[X|L] ).
-pertence( X,[Y|L] ) :-
-    X \= Y,
-    pertence( X,L ).
-
-
-%--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Extensao do meta-predicado nao: Questao -> {V,F}
 
 nao( Questao ) :-
@@ -596,7 +587,7 @@ checkPeriodo(_/_/A1/_ , _/_/A2/_) :- !,A1 < A2,!.
 
 
 quantosIguais([], 0).
-quantosIguais([H|T], N) :- pertence(H,T),
+quantosIguais([H|T], N) :- member(H,T),
 	quantosIguais(T,N1),
 	N is N1 + 1.
 quantosIguais([H|T], 1).
