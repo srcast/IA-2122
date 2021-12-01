@@ -98,29 +98,29 @@ estafetaRanking(manuel, 4.5).
 
 
 
-%entregaValida(E, V, KM, T, P, Pr, Vel, C, R, Cla, Denc, Dent) :-
-%	veiculo(V, P, Vel),
-%	classificacao(Cla),
-%	morada(C, R, KM),
-%	data(Denc),
-%	data(Dent).
+entregaValida(E, V, KM, T, P, Pr, Vel, C, R, Cla, Denc, Dent) :- entrega(E, V, KM, T, P, Pr, Vel, C, R, Cla, Denc, Dent),
+	veiculo(V, P, Vel),
+	classificacao(Cla),
+	morada(C, R, KM),
+	data(Denc),
+	data(Dent).
 
 % Extensao do predicado veiculo: veiculo, peso, velocidade -> {V,F}
 veiculo(bicicleta, P, V) :-
-	integer(P) =< 5, 
-	V =:= 10.
+	integer(P) =< 5, !, 
+	V =:= 10, !.
 veiculo(mota, P, V) :-
-	integer(P) =< 20,
-	V =:= 35.
+	integer(P) =< 20, !,
+	V =:= 35, !.
 veiculo(carro, P, V) :-
-	integer(P) =< 100,
-	V =:= 25.
+	integer(P) =< 100, !,
+	V =:= 25, !.
 
 
 % Extensao do predicado classificacao: classificacao -> {V,F}
 
 classificacao(C) :-
-	member(C, [0,1,2,3,4,5]).
+	member(C, [0,1,2,3,4,5]), !.
 
 
 % Extensao do predicado morada: cliente, rua -> {V, F}
@@ -135,29 +135,29 @@ morada(cristina, 'travessa da igreja, famalicao', 23).
 
 %data, mes, ano, hora
 data(D/2/A/H) :-
-    A >= 0,
-	A mod 4 =:= 0,
-	D >= 1,
-	D =< 29,
-	member(H, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]).
+    A >= 0, !,
+	A mod 4 =:= 0, !,
+	D >= 1, !,
+	D =< 29, !,
+	member(H, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]), !.
 data(D/M/A/H) :-
-	A >= 0,
-    member(M, [1,3,5,7,8,10,12]),
-	D >= 1,
-	D =< 31,
-	member(H, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]).
+	A >= 0, !,
+    member(M, [1,3,5,7,8,10,12]), !,
+	D >= 1, !,
+	D =< 31, !,
+	member(H, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]), !.
 data(D/M/A/H) :-
-	A >= 0,
-    member(M, [4,6,9,11]),
-	D >= 1,
-	D =< 30,
-	member(H, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]).
+	A >= 0, !,
+    member(M, [4,6,9,11]), !,
+	D >= 1, !,
+	D =< 30, !,
+	member(H, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]), !.
 data(D/2/A/H) :-
-	A >= 0,
-    A mod 4 =\= 0, 
-	D >= 1,
-	D =< 28,
-	member(H, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]).
+	A >= 0, !,
+    A mod 4 =\= 0, !,
+	D >= 1, !,
+	D =< 28, !,
+	member(H, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]), !.
 
 
 
@@ -166,13 +166,13 @@ data(D/2/A/H) :-
 
 % Extensao do predicado estafetaMaisVezesTransp: Veiculo, Estafeta -> {V,F}
 
-aux(V, E) :- entrega(E, V, _, _, _, _, _, _, _, _, _, _).
 
-estafetaMaisVezesTransp(V, R) :- findall(E, entrega(E, V, _, _, _, _, _, _, _, _, _, _), [H|T]),
-								%contaEstafetas(L, [], R).
+%predicado para procurar todas as entregas feitas por determinado veiculo e guardar o nome do estafeta numa lista
+estafetaMaisVezesTransp(V, R) :- findall(E, entregaValida(E, V, KM, T, P, Pr, Vel, C, R, Cla, Denc, Dent), [H|T]),
 								maior(H, 1, [H|T], R).
 
 
+%predicado para verificar qual o nome do estafeta aparece mais vezes numa lista
 maior(Nome, N, [], Nome).
 
 maior(Nome, N, [H|T], R) :- quantosIguais([H|T], N1),
@@ -189,45 +189,6 @@ maior(H, N1, [H|T], R) :- quantosIguais([H|T], N1),
 
 
 
-%contaEstafetas([], [], nenhum). %talvez não seja necessário
-
-%contaEstafetas([H|T], [], R) :- contaEstafetas(T, [(H, 1)], R).
-
-%contaEstafetas([H|T], [(HC, NC)|TC], R) :- pertenceC(H, [(HC, NC)|TC]),1
-%											%atualizaEstafeta(H, [(HC, NC)|TC], A).
-%											NC is N + 1, 
-											contaEstafetas(T, A, R). 
-
-%contaEstafetas([H|T], [(HC, NC)|TC], R) :- nao(pertenceC(H, [(HC, NC)|TC])),
-%											contaEstafetas(T, [(H, 1),(HC, NC)|TC], R).
-
-
-%contaEstafetas([], [(HC, NC)|TC], R) :- maiorEstafeta((HC, NC), TC, R).
-
-
-%atualizaEstafeta(ana, [(andre, 1), (bruno, 2), (ana, 4), (maria, 1)], R)
-
-%atualizaEstafeta(H, [], []).
-%atualizaEstafeta(H, [(H, NC)|TC], [(H, N)|A]) :- N is NC + 1,
-%												atualizaEstafeta(H, TC, A).
-%atualizaEstafeta(H, [(HC, NC)|TC], [(HC, NC)|A]) :- H \= HC, 
-%										atualizaEstafeta(H, TC, A).
-
-
-
-
-%maiorEstafeta((H, N), [], H).
-%maiorEstafeta((H, N), [(H2, N2)|T], R) :- N2 > N,
-%									maiorEstafeta((H2, N2), T, R).
-
-%maiorEstafeta((H, N), [(H2, N2)|T], R) :- maiorEstafeta((H, N), T, R).
-
-
-
-
-
-
-
 
 
 % 2) identificar que estafetas entregaram determinada(s) encomenda(s) a um determinado cliente;
@@ -235,17 +196,16 @@ maior(H, N1, [H|T], R) :- quantosIguais([H|T], N1),
 % Extensao do predicado estafetasEntregasCliente: Cliente, Lista encomendas, Lista de estafetas -> {V,F}
 
 
-% -------------- se consideramos apenas um tipo de encomenda -------------------------- 
+%verifica se a entrega é valida e devolve o estafeta
+estafetasEntregaClienteValida(C, T, E) :- entregaValida(E, V, KM, T, P, Pr, Vel, C, R, Cla, Denc, Dent).
 
-
-estafetasEntregaClienteValida(C, T, E) :- entrega(E, _, _, T, _, _, _, C, _, _, _, _).
-
-
+%devolve uma lista com os estafetas que entregaram um tipo de encomenda a um determinado cliente
 estafetasEntregaCliente(C, T, R) :- findall(E, estafetasEntregaClienteValida(C, T, E), L),
 									retiraDup(L, [], R).
 
 todasEntregasDup(C, [], []).
 
+%concatena todas as listas que airem de estafetasEntregaCliente
 todasEntregasDup(C, [T|Tail], R) :- estafetasEntregaCliente(C, T, Temp),
 								concatenar(Temp, Temp1, R),
 								todasEntregasDup(C, Tail, Temp1).
@@ -254,6 +214,7 @@ todasEntregasDup(C, [T|Tail], R) :- estafetasEntregaCliente(C, T, Temp),
 todasEntregas(C, T, R) :- todasEntregasDup(C, T, D),
 						retiraDup(D, [], R), !.
 
+%retira os duplicados presentes numa lista
 retiraDup([], [], nenhum).
 retiraDup([H|T], [], R) :- retiraDup(T, [H], R), !.
 
@@ -276,7 +237,7 @@ retiraDup([], L, L).
 % Extensao do predicado clientesServidosEstafeta: Estafeta, Lista Clientes -> {V,F}
 
 
-clientesServidosEstafeta(E, Clientes) :- findall(C, entrega(E, _, _, _, _, _, _, C, _, _, _, _), L),
+clientesServidosEstafeta(E, Clientes) :- findall(C, entregaValida(E, V, KM, T, P, Pr, Vel, C, R, Cla, Denc, Dent), L),
 										retiraDup(L, [], Clientes), !.
 
 
@@ -295,14 +256,15 @@ custoTransporte(mota, P, KM, Custo) :- Custo is ((4 * P) + (0.35 * KM)).
 custoTransporte(carro, P, KM, Custo) :- Custo is ((8 * P) + (0.50 * KM)).
 
 
-encontraValores(D/M/A/_, (V, P, KM)) :- entrega(_, V, KM, _, P, _, _, _, _, _, _, D/M/A/_).
+%devolve o veiculo, o peso e a distancia das entregas validas
+encontraValores(D/M/A/_, (V, P, KM)) :- entregaValida(E, V, KM, T, P, Pr, Vel, C, R, Cla, Denc, D/M/A/_).
 
 
 %executar
 valorFaturado(D/M/A/_, R) :- findall((V, P, KM), encontraValores(D/M/A/_, (V, P, KM)), L),
 							calculaValor(L, R).
 
-
+%calcula o valor presente em cada triplo da lista e devolve o total
 calculaValor([], 0).
 calculaValor([(V, P, KM)|T], R) :- custoTransporte(V, P, KM, Custo),
 									calculaValor(T, Custo2),
@@ -323,7 +285,7 @@ calculaValor([(V, P, KM)|T], R) :- custoTransporte(V, P, KM, Custo),
 % 5) identificar quais as zonas (e.g., rua ou freguesia) com maior volume de entregas por parte da Green Distribution
 %volumeZona(Res).
 
-volumeZona(Res) :- findall(Zone,entrega(_, _, _, _, _, _, _, _, Zone, _, _, _), Zones),
+volumeZona(Res) :- findall(Zone,entregaValida(E, V, KM, T, P, Pr, Vel, C, Zone, Cla, Denc, Dent), Zones),
 				   countVol(Zones,Aux),
 				   sort(2,@>=,Aux, Aux1),
 				   head(Aux1,Res).
@@ -341,10 +303,11 @@ head([H|_], Res) :- Res = H.
 
 % 6) calcular a classificação média de satisfação de cliente para um determinado estafeta
 
-classificacaoMedia(E, R) :- findall(Class, entrega(E, _, _, _, _, _, _, _, _, Class, _, _), L),
+classificacaoMedia(E, R) :- findall(Class, entregaValida(E, V, KM, T, P, Pr, Vel, C, Zone, Class, Denc, Dent), L),
 							calculaMedia(L, R).
 
 
+%devolve a média de classificações atribuidas pelos clientes a um determinado estafeta
 calculaMedia(L, R) :- somatorio(L, S),
 						comprimento(L, C),
 						C > 0,
@@ -352,7 +315,7 @@ calculaMedia(L, R) :- somatorio(L, S),
 						round(R1, R, 1).
 
 
-%arredonda para D casas decimais
+%arredonda para X para D casas decimais e devolve o resultado Y
 round(X,Y,D) :- Z is X * 10^D, round(Z, ZA), Y is ZA / 10^D.
 
 
@@ -369,22 +332,26 @@ round(X,Y,D) :- Z is X * 10^D, round(Z, ZA), Y is ZA / 10^D.
 
 % identificar o número total de entregas pelos diferentes meios de transporte, num determinado intervalo de tempo;
 % 7) Extensao do predicado
-totalVeiculoEntrega(Data1,Data2,Nentregas):- data(Data1),data(Data2),checkPeriodo(Data1,Data2),veiculos(Veiculos),calculaVDifEntrega(Data1,Data2,[],Veiculos, Nentregas).
+totalVeiculoEntrega(Data1,Data2,Nentregas):- data(Data1),
+											data(Data2),
+											checkPeriodo(Data1,Data2),
+											veiculos(Veiculos),
+											calculaVDifEntrega(Data1,Data2,[],Veiculos, Nentregas), !.
 
 % coloca em R a lista  de todos veículos
-veiculos(R) :- findall(V, entrega(_,V,_,_,_,_,_,_,_,_,_,_), L), retiraDup(L, [], R).
+veiculos(R) :- findall(V, entregaValida(E, V, KM, T, P, Pr, Vel, C, Zone, Class, Denc, Dent), L), retiraDup(L, [], R).
 
 % função auxiliar que utiliza outra lista (N) para colocar os novos tuplos ((Veiculo,nº de entregas feitas pelo veículo no período))    
-calculaVDifEntrega(Data1,Data2,N,[Vult],Nentregas):- Nentregas= [(Vult,X)|N],calculaVentrega(Vult,X,Data1,Data2).
+calculaVDifEntrega(Data1,Data2,N,[Vult],Nentregas):- Nentregas= [(Vult,X)|N],
+													calculaVentrega(Vult,X,Data1,Data2).
 
 calculaVDifEntrega(Data1,Data2, N , [Vatual,Vprox|Outros] , Nentregas) :- Novo = [(Vatual,X)|N],
 						                         						 calculaVentrega(Vatual,X,Data1,Data2),
                                                                          calculaVDifEntrega(Data1,Data2,Novo,[Vprox|Outros],Nentregas).
 
 % função auxiliar que calcula o número total de entregas feitas por um veículo dentro do período D1 / D2    
-calculaVentrega(Veiculo,N,D1,D2):- findall(_,(entrega(_,Veiculo,_,_,_,_,_,_,_,_,_,D),checkData(D1,D2,D)),L), length(L,N).
-
-
+calculaVentrega(Veiculo,N,D1,D2):- findall(_,(entregaValida(E, Veiculo, KM, T, P, Pr, Vel, C, Zone, Class, Denc, D),checkData(D1,D2,D)),L), 
+									length(L,N).
 
 
 
@@ -396,10 +363,14 @@ calculaVentrega(Veiculo,N,D1,D2):- findall(_,(entrega(_,Veiculo,_,_,_,_,_,_,_,_,
 %identificar o número total de entregas pelos estafetas, num determinado intervalo de tempo;
 % 8) Extensao do predicado
 
-totalEntregasEstafetas(Data1,Data2,Nentregas):- data(Data1),data(Data2), checkPeriodo(Data1,Data2),estafetas(Estafetas), calculaEstafEntregas(Data1,Data2,[],Estafetas, Nentregas).
+totalEntregasEstafetas(Data1,Data2,Nentregas):- data(Data1),
+												data(Data2), 
+												checkPeriodo(Data1,Data2),
+												estafetas(Estafetas), 
+												calculaEstafEntregas(Data1,Data2,[],Estafetas, Nentregas), !.
 
 % coloca em R a lista  de todas estafetas
-estafetas(R) :- findall(E, entrega(E,_,_,_,_,_,_,_,_,_,_,_), L), retiraDup(L, [], R).
+estafetas(R) :- findall(E, entregaValida(E, V, KM, T, P, Pr, Vel, C, Zone, Class, Denc, Dent), L), retiraDup(L, [], R).
 
  
 % função auxiliar que utiliza outra lista (N) para colocar os novos tuplos ((Estafeta,nº de entregas realizada no período))   
@@ -414,7 +385,7 @@ calculaEstafEntregas(Data1,Data2, N , [Eatual,Eprox|Outros] , Nentregas) :-
 
 
 % função auxiliar que calcula o número total de entregas feitas por uma estafeta dentro do período D1 / D2    
-calculaEentrega(E,N,D1,D2):- findall(_,(entrega(E,_,_,_,_,_,_,_,_,_,_,D),checkData(D1,D2,D)),L), length(L,N).
+calculaEentrega(E,N,D1,D2):- findall(_,(entregaValida(E, V, KM, T, P, Pr, Vel, C, Zone, Class, Denc, D),checkData(D1,D2,D)),L), length(L,N).
 
 
 
@@ -477,14 +448,15 @@ calculaEentrega(E,N,D1,D2):- findall(_,(entrega(E,_,_,_,_,_,_,_,_,_,_,D),checkDa
 
 % 10) calcular o peso total transportado por estafeta num determinado dia
 
+% devolve um tuplo com o estafeta e o peso transportado num determinado dia
+pesoTransEstafeta(D/M/A/_, (E, P)) :- entregaValida(E, V, KM, T, P, Pr, Vel, C, Zone, Class, Denc, D/M/A/_).
 
-pesoTransEstafeta(D/M/A/_, (E, P)) :- entrega(E,_,_,_,P,_,_,_,_,_, _, D/M/A/_).
-									
+%executar esta						
 pesoTransEstafetaDia(D/M/A/_, R) :- findall((E, P), pesoTransEstafeta(D/M/A/_, (E, P)), L),
 									agrupa(L, [], R).
 
 
-
+%agrupa em tuplos os estafetas repetidos, somando os valores transportados
 agrupa([], R, R).
 agrupa([H|T], [], R) :- agrupa(T, [H], R), !.
 
@@ -496,7 +468,7 @@ agrupa([H1|T1], [H2|T2], R) :- agrupa(T1, [H1, H2|T2], R), !.
 
 
 
-
+%soma os valores transportados se os estafetas presentes nos tuplos forem iguais
 atualizaPesos(X, [], []).
 atualizaPesos((Nome1, Peso1), [(Nome1, Peso2)|T2], [(Nome1, PesoTotal)|A]) :-  PesoTotal is Peso1 + Peso2,
 																				atualizaPesos((Nome1, Peso1), T2, A), !.
@@ -504,17 +476,6 @@ atualizaPesos((Nome1, Peso1), [(Nome1, Peso2)|T2], [(Nome1, PesoTotal)|A]) :-  P
 atualizaPesos((Nome1, Peso1), [(Nome2, Peso2)|T2], [(Nome2, Peso2)|A]) :- Nome1 \= Nome2,
 																			atualizaPesos((Nome1, Peso1), T2, A), !.
 
-
-
-
-
-estafetas(R) :- findall(E, entrega(E,_,_,_,_,_,_,_,_,_,_), L),
-				retiraDup(L, [], R).
-
-
-%somaValores(E, [], 0).
-%somaValores(E, [H|T], (E, R)) :- somaValores(E, T, R1),
-%						R is H + R1.
 
 
 
