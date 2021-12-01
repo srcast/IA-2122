@@ -369,17 +369,19 @@ round(X,Y,D) :- Z is X * 10^D, round(Z, ZA), Y is ZA / 10^D.
 
 % identificar o número total de entregas pelos diferentes meios de transporte, num determinado intervalo de tempo;
 % 7) Extensao do predicado
+totalVeiculoEntrega(Data1,Data2,Nentregas):- data(Data1),data(Data2),checkPeriodo(Data1,Data2),veiculos(Veiculos),calculaVDifEntrega(Data1,Data2,[],Veiculos, Nentregas).
 
+% coloca em R a lista  de todos veículos
 veiculos(R) :- findall(V, entrega(_,V,_,_,_,_,_,_,_,_,_,_), L), retiraDup(L, [], R).
 
-totalVeiculoEntrega(Data1,Data2,Nentregas):- data(Data1),data(Data2),checkPeriodo(Data1,Data2),veiculos(Veiculos),calculaVDifEntrega(Data1,Data2,[],Veiculos, Nentregas).
- 
+% função auxiliar que utiliza outra lista (N) para colocar os novos tuplos ((Veiculo,nº de entregas feitas pelo veículo no período))    
 calculaVDifEntrega(Data1,Data2,N,[Vult],Nentregas):- Nentregas= [(Vult,X)|N],calculaVentrega(Vult,X,Data1,Data2).
 
 calculaVDifEntrega(Data1,Data2, N , [Vatual,Vprox|Outros] , Nentregas) :- Novo = [(Vatual,X)|N],
 						                         						 calculaVentrega(Vatual,X,Data1,Data2),
                                                                          calculaVDifEntrega(Data1,Data2,Novo,[Vprox|Outros],Nentregas).
 
+% função auxiliar que calcula o número total de entregas feitas por um veículo dentro do período D1 / D2    
 calculaVentrega(Veiculo,N,D1,D2):- findall(_,(entrega(_,Veiculo,_,_,_,_,_,_,_,_,_,D),checkData(D1,D2,D)),L), length(L,N).
 
 
@@ -394,12 +396,13 @@ calculaVentrega(Veiculo,N,D1,D2):- findall(_,(entrega(_,Veiculo,_,_,_,_,_,_,_,_,
 %identificar o número total de entregas pelos estafetas, num determinado intervalo de tempo;
 % 8) Extensao do predicado
 
+totalEntregasEstafetas(Data1,Data2,Nentregas):- data(Data1),data(Data2), checkPeriodo(Data1,Data2),estafetas(Estafetas), calculaEstafEntregas(Data1,Data2,[],Estafetas, Nentregas).
 
-
+% coloca em R a lista  de todas estafetas
 estafetas(R) :- findall(E, entrega(E,_,_,_,_,_,_,_,_,_,_,_), L), retiraDup(L, [], R).
 
-totalEntregasEstafetas(Data1,Data2,Nentregas):- data(Data1),data(Data2), checkPeriodo(Data1,Data2),estafetas(Estafetas), calculaEstafEntregas(Data1,Data2,[],Estafetas, Nentregas).
  
+% função auxiliar que utiliza outra lista (N) para colocar os novos tuplos ((Estafeta,nº de entregas realizada no período))   
 calculaEstafEntregas(Data1,Data2,N,[Eult],Nentregas):-  
 											Nentregas = [(Eult,X)|N],
 											calculaEentrega(Eult,X,Data1,Data2).
@@ -409,6 +412,8 @@ calculaEstafEntregas(Data1,Data2, N , [Eatual,Eprox|Outros] , Nentregas) :-
 																		  calculaEentrega(Eatual,X,Data1,Data2),
 																		  calculaEstafEntregas(Data1,Data2,Novo,[Eprox|Outros],Nentregas).
 
+
+% função auxiliar que calcula o número total de entregas feitas por uma estafeta dentro do período D1 / D2    
 calculaEentrega(E,N,D1,D2):- findall(_,(entrega(E,_,_,_,_,_,_,_,_,_,_,D),checkData(D1,D2,D)),L), length(L,N).
 
 
