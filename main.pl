@@ -101,7 +101,7 @@ totalEntregasEstafetas(Data1,Data2,Nentregas):-
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % 9) Calcular o número de encomendas entregues e não entregues pela Green Distribution, num determinado período de tempo
-% Extensão do predicado numEncomendas: data1, data2, encomendas, resultado  -> {V,F}
+% Extensão do predicado numEncomendas: data1, data2, encomendasEntregues, encomendasNentregues  -> {V,F}
 numEncomendas(D1, D2, Ent, NEnt) :-
 		findall((Tent, TNent),(verificaPeriodo(D1, D2, (P, DEnc, DEnt)),periodoEmHoras((DEnc,DEnt),P2) ,foiEntregue((P,P2),Tent,TNent)), L),
 		contaEncomendas(L,0,0,Ent, NEnt).

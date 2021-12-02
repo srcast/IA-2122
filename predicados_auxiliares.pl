@@ -2,6 +2,8 @@
 %---------------	     Predicados auxiliares         	------------------
 %-------------------------------------------------------------------------
 
+:- set_prolog_flag( single_var_warnings,off ).
+:- style_check(-singleton).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Extensão do predicado entregaValida: estafeta, veiculo, km, tipoEncomenda, pesoEnc, prazo, velocidade, cliente, rua, classificacao, data encomenda, data entrega -> {V,F}
@@ -84,8 +86,8 @@ maior(H, N1, [H|T], R) :-
 todasEntregasDup(C, [], []).
 todasEntregasDup(C, [T|Tail], R) :-
         estafetasEntregaCliente(C, T, Temp),
-		concatenar(Temp, Temp1, R),
-		todasEntregasDup(C, Tail, Temp1).
+	concatenar(Temp, Temp1, R),
+	todasEntregasDup(C, Tail, Temp1).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
@@ -93,7 +95,7 @@ todasEntregasDup(C, [T|Tail], R) :-
 % Devolve uma lista com os estafetas que entregaram um tipo de encomenda a um determinado cliente
 estafetasEntregaCliente(C, T, R) :-
         findall(E, estafetasEntregaClienteValida(C, T, E), L),
-		retiraDup(L, [], R).
+	retiraDup(L, [], R).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
@@ -158,7 +160,7 @@ encontraValores(D/M/A/_, (V, P, KM)) :-
 % Predicado auxiliar usado na query 5
 group([], []).
 group(List, Agg):-
-        findall((Element,Size), (setof(_,member(Element,List),Xs), length(Xs,Size)), Agg).
+        findall((Element,Size), (bagof(_,member(Element,List),Xs), length(Xs,Size)), Agg).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
@@ -300,7 +302,7 @@ periodoEmHoras((DEnc,DEnt),X) :-
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   - 
-% Extensão do predicado foiEntregue: _________  -> {V,F}
+% Extensão do predicado foiEntregue: prazoEntrega, tempoEntrega, totalEntregue, totalNentregue -> {V,F}
 % Função auxiliar para verificar quais  entregas passaram do prazo e quais foram entregue a tempo
 foiEntregue((P,P2),Tent,Nent) :-
         P2 > P ,
@@ -311,7 +313,7 @@ foiEntregue(_,Tent,Nent) :-
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   - 
-% Extensão do predicado foiEntregue: _________  -> {V,F}
+% Extensão do predicado contaEncomendas: lista, accEntregues, accNentregues, entregues, nEntregues -> {V,F}
 % Função auxiliar para contabilizar o número total de entregas e não entregas
 contaEncomendas([], Ent, NEnt, Ent, NEnt).
 contaEncomendas([(E,_)|T], AcEnt, AcNEnt, Ent, NEnt) :-
@@ -367,7 +369,7 @@ atualizaPesos((Nome1, Peso1), [(Nome2, Peso2)|T2], [(Nome2, Peso2)|A]) :-
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
-% Extensão do predicado pertenceC: __________ -> {V,F}
+% Extensão do predicado pertenceC: tupo, lista -> {V,F}
 % 
 pertenceC( (X, P),[(X, N)|L] ).
 pertenceC( (X, P),[(Y, N)|L] ) :-
