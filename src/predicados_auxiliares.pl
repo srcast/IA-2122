@@ -128,7 +128,8 @@ calculaValor([], 0).
 calculaValor([(V, P, KM)|T], R) :-
         custoTransporte(V, P, KM, Custo),
 	calculaValor(T, Custo2),
-	R is Custo + Custo2, !.
+	R1 is Custo + Custo2,
+	round(R1, R, 1).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
