@@ -283,18 +283,17 @@ calculaValor([(V, P, KM)|T], R) :- custoTransporte(V, P, KM, Custo),
 
 
 % 5) identificar quais as zonas (e.g., rua ou freguesia) com maior volume de entregas por parte da Green Distribution
-%volumeZona(Res).
 
-volumeZona(Res) :- findall(Zone,entregaValida(E, V, KM, T, P, Pr, Vel, C, Zone, Cla, Denc, Dent), Zones),
-				   countVol(Zones,Aux),
-				   sort(2,@>=,Aux, Aux1),
-				   head(Aux1,Res).
+volumeZona(Res) :- findall(Zone,entregaValida(_, _, _, _, _, _, _, _, Zone, _, _, _), Zones), % lista com todas as zonas
+				   group(Zones,Aux), % agrupa o número de zonas iguais indicando a zona e o número de repetições
+				   sort(2,@>=,Aux, Aux1), % ordenar a lista em função do número de encomendas 
+				   nth0(0,Aux1,Res,Tail). % selecionar a cabeça da lista
 
-countVol(List, Occ):-
-	findall([X,L], (bagof(true,member(X,List),Xs), length(Xs,L)), Occ).
 
-head([], Res ).
-head([H|_], Res) :- Res = H.
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Extensao do predicado group: Lista,ListaAgrupada -> {V,F}
+group([], []).
+group(List, Agg):- findall((Element,Size), (setof(_,member(Element,List),Xs), length(Xs,Size)), Agg).
 
 
 
