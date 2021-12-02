@@ -15,7 +15,7 @@
 %	fabio							carro ------------> no máximo 100 kg a 25 km/h
 %	marco
 %
-% clientes:						tipoEncomenda:					
+% clientes:						tipoEncomenda:
 %	maria							roupa
 %	ana								comida
 %	filipa							moveis
@@ -27,7 +27,7 @@
 %	24h																		rua direita
 %	6h																		rua de campelo
 %	1 dia -> 24h															travessa da igreja
-%	...		
+%	...
 %
 %
 % data:
@@ -85,7 +85,7 @@ entrega(marco, carro, 23, movel, 89, 23, 25, cristina, 'travessa da igreja, fama
 
 
 
-:-dynamic estafetaRanking/2. 
+:-dynamic estafetaRanking/2.
 
 %classificação dos estafetas na empresa ----> serve para as penalizações
 estafetaRanking(jose, 4.3).
@@ -107,7 +107,7 @@ entregaValida(E, V, KM, T, P, Pr, Vel, C, R, Cla, Denc, Dent) :- entrega(E, V, K
 
 % Extensao do predicado veiculo: veiculo, peso, velocidade -> {V,F}
 veiculo(bicicleta, P, V) :-
-	integer(P) =< 5, !, 
+	integer(P) =< 5, !,
 	V =:= 10, !.
 veiculo(mota, P, V) :-
 	integer(P) =< 20, !,
@@ -311,7 +311,7 @@ classificacaoMedia(E, R) :- findall(Class, entregaValida(E, V, KM, T, P, Pr, Vel
 calculaMedia(L, R) :- somatorio(L, S),
 						comprimento(L, C),
 						C > 0,
-						R1 is S / C, 
+						R1 is S / C,
 						round(R1, R, 1).
 
 
@@ -332,6 +332,8 @@ round(X,Y,D) :- Z is X * 10^D, round(Z, ZA), Y is ZA / 10^D.
 
 % identificar o número total de entregas pelos diferentes meios de transporte, num determinado intervalo de tempo;
 % 7) Extensao do predicado
+
+% função principal
 totalVeiculoEntrega(Data1,Data2,Nentregas):- data(Data1),
 											data(Data2),
 											checkPeriodo(Data1,Data2),
@@ -341,16 +343,16 @@ totalVeiculoEntrega(Data1,Data2,Nentregas):- data(Data1),
 % coloca em R a lista  de todos veículos
 veiculos(R) :- findall(V, entregaValida(E, V, KM, T, P, Pr, Vel, C, Zone, Class, Denc, Dent), L), retiraDup(L, [], R).
 
-% função auxiliar que utiliza outra lista (N) para colocar os novos tuplos ((Veiculo,nº de entregas feitas pelo veículo no período))    
+% função auxiliar que utiliza outra lista (N) para colocar os novos tuplos ((Veiculo,nº de entregas feitas pelo veículo no período))
 calculaVDifEntrega(Data1,Data2,N,[Vult],Nentregas):- Nentregas= [(Vult,X)|N],
 													calculaVentrega(Vult,X,Data1,Data2).
 
 calculaVDifEntrega(Data1,Data2, N , [Vatual,Vprox|Outros] , Nentregas) :- Novo = [(Vatual,X)|N],
-						                         						 calculaVentrega(Vatual,X,Data1,Data2),
+															 calculaVentrega(Vatual,X,Data1,Data2),
                                                                          calculaVDifEntrega(Data1,Data2,Novo,[Vprox|Outros],Nentregas).
 
-% função auxiliar que calcula o número total de entregas feitas por um veículo dentro do período D1 / D2    
-calculaVentrega(Veiculo,N,D1,D2):- findall(_,(entregaValida(E, Veiculo, KM, T, P, Pr, Vel, C, Zone, Class, Denc, D),checkData(D1,D2,D)),L), 
+% função auxiliar que calcula o número total de entregas feitas por um veículo dentro do período D1 / D2
+calculaVentrega(Veiculo,N,D1,D2):- findall(_,(entregaValida(E, Veiculo, KM, T, P, Pr, Vel, C, Zone, Class, Denc, D),checkData(D1,D2,D)),L),
 									length(L,N).
 
 
@@ -363,28 +365,29 @@ calculaVentrega(Veiculo,N,D1,D2):- findall(_,(entregaValida(E, Veiculo, KM, T, P
 %identificar o número total de entregas pelos estafetas, num determinado intervalo de tempo;
 % 8) Extensao do predicado
 
+% função principal
 totalEntregasEstafetas(Data1,Data2,Nentregas):- data(Data1),
-												data(Data2), 
+												data(Data2),
 												checkPeriodo(Data1,Data2),
-												estafetas(Estafetas), 
+												estafetas(Estafetas),
 												calculaEstafEntregas(Data1,Data2,[],Estafetas, Nentregas), !.
 
 % coloca em R a lista  de todas estafetas
 estafetas(R) :- findall(E, entregaValida(E, V, KM, T, P, Pr, Vel, C, Zone, Class, Denc, Dent), L), retiraDup(L, [], R).
 
- 
-% função auxiliar que utiliza outra lista (N) para colocar os novos tuplos ((Estafeta,nº de entregas realizada no período))   
-calculaEstafEntregas(Data1,Data2,N,[Eult],Nentregas):-  
+
+% função auxiliar que utiliza outra lista (N) para colocar os novos tuplos ((Estafeta,nº de entregas realizada no período))
+calculaEstafEntregas(Data1,Data2,N,[Eult],Nentregas):-
 											Nentregas = [(Eult,X)|N],
 											calculaEentrega(Eult,X,Data1,Data2).
-											 
-calculaEstafEntregas(Data1,Data2, N , [Eatual,Eprox|Outros] , Nentregas) :- 
+
+calculaEstafEntregas(Data1,Data2, N , [Eatual,Eprox|Outros] , Nentregas) :-
 																		  Novo = [(Eatual,X)|N],
 																		  calculaEentrega(Eatual,X,Data1,Data2),
 																		  calculaEstafEntregas(Data1,Data2,Novo,[Eprox|Outros],Nentregas).
 
 
-% função auxiliar que calcula o número total de entregas feitas por uma estafeta dentro do período D1 / D2    
+% função auxiliar que calcula o número total de entregas feitas por uma estafeta dentro do período D1 / D2
 calculaEentrega(E,N,D1,D2):- findall(_,(entregaValida(E, V, KM, T, P, Pr, Vel, C, Zone, Class, Denc, D),checkData(D1,D2,D)),L), length(L,N).
 
 
@@ -400,35 +403,41 @@ calculaEentrega(E,N,D1,D2):- findall(_,(entregaValida(E, V, KM, T, P, Pr, Vel, C
 
 % 9)  calcular o número de encomendas entregues e não entregues pela Green Distribution, num determinado período de tempo;
 
+% Verifica a entrega está dentro do período estipulado
+verificaPeriodo(D1, D2, (P, DEnc, DEnt)) :- entrega(_,_,_,_,_,P,_,_,_,_,DEnc, DEnt),checkData(D1, D2, DEnt).
 
 
-%verificaPeriodo(D1, D2, (P, DEnc, DEnt)) :- entrega((_,_,_,_,P,_,_,_,_,_, DEnc, DEnt)),
-%												checkData(D1, D2, DEnt).
+% Função principal
+numEncomendas(D1, D2, Ent, NEnt) :- findall((Tent, TNent),(verificaPeriodo(D1, D2, (P, DEnc, DEnt)),periodoEmHoras((DEnc,DEnt),P2) ,foiEntregue((P,P2),Tent,TNent)), L),contaEncomendas(L,0,0,Ent, NEnt).
 
 
-%numEncomendas(D1, D2, Ent, NEnt) :- findall((P, DEnc, DEnt), verificaPeriodo(D1, D2, (P, DEnc, DEnt)), L),
-%									contaEncomendas(L, Ent, NEnt).
+% calcula as horas de uma data
+calculaHoras(D/2/A/H,X) :- A mod 4 =:= 0,calculaHorasDia(D,W), calculaHorasDia(29,Y), calculaHorasDia(366,Z), X is (Y*2) + (Z*A) + W + H,!.
+calculaHoras(D/2/A/H,X) :- calculaHorasDia(D,W),calculaHorasDia(28,Y) ,calculaHorasDia(365,Z), X is (Y*2) + (Z*A) + W + H,!.
+calculaHoras(D/M/A/H,X):- member(M, [1,3,5,7,8,10,12]),calculaHorasDia(D,W), calculaHorasDia(31,Y), calculaHorasDia(365,Z), X is (Y*M) + (Z*A) + H + W,!.
+calculaHoras(D/M/A/H,X):- calculaHorasDia(D,W),calculaHorasDia(30,Y), calculaHorasDia(365,Z), X is (Y*M) + (Z*A) +W+ H,!.
 
 
-%entrega dentro de prazo
-%verificaPrazos((P, D1/M1/A1/H1, D2/M1/A1/H2), Ent, NEnt) :- Ndias is P // 24,
-%															D1 + Ndias =< D2,
-%															Nhoras is P mod 24,
-%															H1 + Nhoras <= H2
-%															Ent is 0 + 1,
-%															NEnt is 0 + 0.
+% calcula horas do dia
+calculaHorasDia(D,X) :- X is D * 24.
 
-%entega fora de prazo
-%verificaPrazos((P, D1/M1/A1/H1, D2/M1/A1/H2), Ent, NEnt) :- Ent is 0 + 0,
-%															NEnt is 0 + 1.
-
-
-%verificaPrazos((P, D1/M1/A1/H1, D2/M2/A1/H2), Ent, NEnt) :- Ndias is P // 24,
+% Faz a diferença de horas entre duas datas
+periodoEmHoras((DEnc,DEnt),X):- calculaHoras(DEnt,Tent), calculaHoras(DEnc,Tenc), X is Tent - Tenc.
 
 
 
+% Verifica aquelas entregas que passaram do prazo e as que não
+foiEntregue((P,P2),Tent,Nent):- P2 > P , Tent is 0 , Nent is 1,!.
+foiEntregue(_,Tent,Nent):- Tent is 1 , Nent is 0.
 
-%contaEncomendas([H|T], Ent, NEnt) :- 
+
+
+
+
+% Contabiliza o número total de entregas e não entregas
+contaEncomendas([], Ent, NEnt, Ent, NEnt).
+contaEncomendas([(E,_)|T], AcEnt, AcNEnt, Ent, NEnt) :- E =:= 1 , NewEnt is AcEnt + 1, contaEncomendas(T,NewEnt,AcNEnt,Ent,NEnt),!.
+contaEncomendas([_|T], AcEnt, AcNEnt, Ent, NEnt) :- NewNEnt is AcNEnt + 1, contaEncomendas(T,AcEnt,NewNEnt,Ent,NEnt).
 
 
 
@@ -451,7 +460,7 @@ calculaEentrega(E,N,D1,D2):- findall(_,(entregaValida(E, V, KM, T, P, Pr, Vel, C
 % devolve um tuplo com o estafeta e o peso transportado num determinado dia
 pesoTransEstafeta(D/M/A/_, (E, P)) :- entregaValida(E, V, KM, T, P, Pr, Vel, C, Zone, Class, Denc, D/M/A/_).
 
-%executar esta						
+%executar esta
 pesoTransEstafetaDia(D/M/A/_, R) :- findall((E, P), pesoTransEstafeta(D/M/A/_, (E, P)), L),
 									agrupa(L, [], R).
 
@@ -536,7 +545,7 @@ checkData( _/M1/A1/_ , _/M2/A1/_ , _/M/A1/_ ):- !,M >= M1,!,M =< M2,!.
 checkData( _ , _/M2/A1/_ , _/M/A1/_ ):- !,M =< M2,!.
 checkData( _/M1/A1/_ , _ , _/M/A1/_ ):- !,M >= M1,!.
 
-checkData( _/_/A1/_ , _/_/A2/_ , _/_/A/_ ):- !,A >= A1,!,A =< A2,!. 
+checkData( _/_/A1/_ , _/_/A2/_ , _/_/A/_ ):- !,A >= A1,!,A =< A2,!.
 
 %-----------------------------------------------
 % Extensao do predicado checkPeriodo , que verifica se o periodo é válido: Data1,Data2 -> {V,F}
