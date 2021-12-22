@@ -52,6 +52,8 @@ move(tadim,nogueira,3,7).
 move(tadim,greenDistribution,4,9).
 move(celeiros,nogueira,1,3).
 
+move(Origem,Destino,D,T) :- move(Destino,Origem,D,T).
+
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Extensão do predicado estima: Localidade, EstimaDistancia, EstimaTempo -> {V,F}
