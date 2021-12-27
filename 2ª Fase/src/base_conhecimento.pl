@@ -52,7 +52,7 @@ move(tadim,nogueira,3,7).
 move(tadim,greenDistribution,4,9).
 move(celeiros,nogueira,1,3).
 
-move(Origem,Destino,D,T) :- move(Destino,Origem,D,T).
+adjacente(Origem,Destino,D,T) :- adjacente(Destino,Origem,D,T).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
@@ -102,3 +102,9 @@ morada(maria, 'crespos').
 morada(ana, 'nogueira').
 morada(filipa, 'tadim').
 morada(cristina, 'adaufe').
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Extensão do predicado calcula_tempo: cliente, freguesia -> {V, F}
+calcula_tempo(bicicleta,Distancia,PesoEnc, Tempo) :- VelMed is (20 - (0.7 * PesoEnc)), Tempo is Distancia / VelMed. 
+calcula_tempo(mota,Distancia,PesoEnc, Tempo) :- VelMed is (60 - (0.5 * PesoEnc)), Tempo is Distancia / VelMed. 
+calcula_tempo(carro,Distancia,PesoEnc, Tempo) :- VelMed is (70 - (0.1 * PesoEnc)), Tempo is Distancia / VelMed. 
