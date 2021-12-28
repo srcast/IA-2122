@@ -105,6 +105,6 @@ morada(cristina, 'adaufe').
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Extensão do predicado calcula_tempo: cliente, freguesia -> {V, F}
-calcula_tempo(bicicleta,Distancia,PesoEnc, Tempo) :- VelMed is (20 - (0.7 * PesoEnc)), Tempo is Distancia / VelMed. 
-calcula_tempo(mota,Distancia,PesoEnc, Tempo) :- VelMed is (60 - (0.5 * PesoEnc)), Tempo is Distancia / VelMed. 
-calcula_tempo(carro,Distancia,PesoEnc, Tempo) :- VelMed is (70 - (0.1 * PesoEnc)), Tempo is Distancia / VelMed. 
+calcula_tempo(bicicleta,Distancia,PesoEnc, Tempo) :- VelMed is (10 - (0.7 * PesoEnc)), Tempo is Distancia / VelMed. 
+calcula_tempo(mota,Distancia,PesoEnc, Tempo) :- VelMed is (35 - (0.5 * PesoEnc)), Tempo is Distancia / VelMed. 
+calcula_tempo(carro,Distancia,PesoEnc, Tempo) :- VelMed is (25 - (0.1 * PesoEnc)), Tempo is Distancia / VelMed. 
