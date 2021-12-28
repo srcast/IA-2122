@@ -51,7 +51,7 @@ move(crespos,tadim,7,3).
 move(tadim,greenDistribution,4,9).
 %move(celeirosDup,nogueira,1,3).
 
-adjacente(Origem,Destino,D,T) :- adjacente(Destino,Origem,D,T).
+%adjacente(Origem,Destino,D,T) :- adjacente(Destino,Origem,D,T).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
@@ -115,25 +115,46 @@ calcula_tempo(carro,Distancia,PesoEnc, Tempo) :- VelMed is (25 - (0.1 * PesoEnc)
 
 %----------------------- Profundidade ---------------------------------------------------------------------------------------------------------
 
-profundidade(Nodo, [Nodo|Caminho], C) :- profundidadeprimeiro(Nodo, [Nodo], Caminho, C).
+%profundidade(Nodo, [Nodo|Caminho], C) :- profundidadeprimeiro(Nodo, [Nodo], Caminho, C).
+%
+%
+%profundidadeprimeiro(Nodo,_, [], 0) :- objetivo(Nodo).
+%
+%profundidadeprimeiro(Nodo, Historico, [ProxNodo|Caminho], C) :- adjacente(Nodo, ProxNodo, C1),
+%    															nao(membro(ProxNodo, Historico)),
+%																profundidadeprimeiro(ProxNodo, [ProxNodo|Historico], Caminho, C2), 
+%																C is C1 + C2.	
 
 
-profundidadeprimeiro(Nodo,_, [], 0) :- objetivo(Nodo).
 
-profundidadeprimeiro(Nodo, Historico, [ProxNodo|Caminho], C) :- adjacente(Nodo, ProxNodo, C1),
-    															nao(membro(ProxNodo, Historico)),
-																profundidadeprimeiro(ProxNodo, [ProxNodo|Historico], Caminho, C2), 
-																C is C1 + C2.	
+
+profundidade(NodoObjetivo, Caminho, C) :- inicial(Inicio),
+										profundidadeprimeiroInicial(NodoObjetivo, Inicio, [Inicio], Caminho, C).
+
+%coloca a greenDistribution no inicio
+profundidadeprimeiroInicial(NodoObjetivo, Inicio, Historico, [Inicio, ProxNodo|Caminho], C) :- adjacente(Inicio, ProxNodo, C1),
+																								nao(membro(ProxNodo, Historico)),
+																								profundidadeprimeiro(NodoObjetivo, ProxNodo, [ProxNodo|Historico], Caminho, C2), 
+																								C is C1 + C2.	
+
+profundidadeprimeiro(NodoObjetivo, NodoAtual, Historico, [NodoObjetivo], C1) :- adjacente(NodoAtual, NodoObjetivo, C1), !.
+
+profundidadeprimeiro(NodoObjetivo, NodoAtual, Historico, [ProxNodo|Caminho], C) :- adjacente(NodoAtual, ProxNodo, C1),
+    																				nao(membro(ProxNodo, Historico)),
+																					profundidadeprimeiro(NodoObjetivo, ProxNodo, [ProxNodo|Historico], Caminho, C2), 
+																					C is C1 + C2.	
+
 
 
 adjacente(Nodo, ProxNodo, C) :- move(Nodo, ProxNodo, C, _).
 adjacente(Nodo, ProxNodo, C) :- move(ProxNodo, Nodo, C, _).
 
 
+
 %executar esta
-melhorProfundidade(Nodo, Caminho, Custo) :- findall((SS, CC), profundidade(Nodo, SS, CC), L), 
-							minimo(L, (CaminhoInverso, Custo)), 
-							inverso(CaminhoInverso, Caminho).
+melhorProfundidade(NodoObjetivo, Caminho, Custo) :- findall((SS, CC), profundidade(NodoObjetivo, SS, CC), L), 
+													minimo(L, (Caminho, Custo)), !. 
+
 
 minimo([(P,X)],(P,X)).
 minimo([(Px,X)|L],(Py,Y)):- minimo(L,(Py,Y)), X>Y. 
@@ -142,25 +163,53 @@ minimo([(Px,X)|L],(Px,X)):- minimo(L,(Py,Y)), X=<Y.
 %>
 
 
+
 %----------------------- Profundidade Com Limite ---------------------------------------------------------------------------------------------------------
 
-profundidadeLimite(Nodo, Limite, [Nodo|Caminho], C) :- profundidadeprimeiroLimite(Nodo, Limite, [Nodo], Caminho, C).
+profundidadeLimite(NodoObjetivo, Limite, Caminho, C) :- inicial(Inicio),
+														profundidadeprimeiroLimiteInicial(NodoObjetivo, Limite, Inicio, [Inicio], Caminho, C).
 
 
-profundidadeprimeiroLimite(Nodo, _, _, [], 0) :- objetivo(Nodo).
 
-profundidadeprimeiroLimite(Nodo, Limite, Historico, [ProxNodo|Caminho], C) :- adjacente(Nodo, ProxNodo, C1),
+%coloca a greenDistribution no inicio
+profundidadeprimeiroLimiteInicial(NodoObjetivo, Limite, Inicio, Historico, [Inicio, ProxNodo|Caminho], C) :- adjacente(Inicio, ProxNodo, C1),
+																								nao(membro(ProxNodo, Historico)),
+																								length([Inicio, ProxNodo|Caminho], Tam),
+    																							Tam - 1 < Limite + 1,
+																								profundidadeprimeiroLimite(NodoObjetivo, Limite, ProxNodo, [ProxNodo|Historico], Caminho, C2), 
+																								C is C1 + C2.	
+
+
+
+profundidadeprimeiroLimite(NodoObjetivo, NodoAtual, Historico, [NodoObjetivo], C1) :- adjacente(NodoAtual, NodoObjetivo, C1), !.
+
+profundidadeprimeiroLimite(NodoObjetivo, Limite, ProxNodo, Historico, [ProxNodo|Caminho], C) :- adjacente(Nodo, ProxNodo, C1),
     															nao(membro(ProxNodo, Historico)),
     															length([ProxNodo|Historico], Tam),
     															Tam - 1 < Limite + 1,  % é o mesmo que ter <=, o limite continua a ser respeitado
-																profundidadeprimeiroLimite(ProxNodo, Limite, [ProxNodo|Historico], Caminho, C2), 
+																profundidadeprimeiroLimite(NodoObjetivo, ProxNodo, Limite, [ProxNodo|Historico], Caminho, C2), 
 																C is C1 + C2.	
 
 %executar esta
-melhorProfundidadeLimite(Nodo, Limite, Caminho, Custo) :- findall((SS, CC), profundidadeLimite(Nodo, Limite, SS, CC), L), 
+melhorProfundidadeLimite(NodoObjetivo, Limite, Caminho, Custo) :- findall((SS, CC), profundidadeLimite(NodoObjetivo, Limite, SS, CC), L), 
 							minimo(L, (CaminhoInverso, Custo)), 
 							inverso(CaminhoInverso, Caminho).
 
+
+
+
+
+%profundidadeLimite(Nodo, Limite, [Nodo|Caminho], C) :- profundidadeprimeiroLimite(Nodo, Limite, [Nodo], Caminho, C).
+%
+%
+%profundidadeprimeiroLimite(Nodo, _, _, [], 0) :- objetivo(Nodo).
+%
+%profundidadeprimeiroLimite(Nodo, Limite, Historico, [ProxNodo|Caminho], C) :- adjacente(Nodo, ProxNodo, C1),
+%   															nao(membro(ProxNodo, Historico)),
+%    															length([ProxNodo|Historico], Tam),
+%   															Tam - 1 < Limite + 1,  % é o mesmo que ter <=, o limite continua a ser respeitado
+%																profundidadeprimeiroLimite(ProxNodo, Limite, [ProxNodo|Historico], Caminho, C2), 
+%																C is C1 + C2.	
 
 
 %>
