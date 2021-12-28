@@ -27,12 +27,12 @@ move(gondizalves,greenDistribution,2,9).
 move(adaufe,gualtar,9,3).
 %move(adaufe,greenDistribution,5,5).
 move(mireDeTibaes,saoVitor,2,3).
-%move(gualtar,saoVitor,6,4).
+move(gualtar,saoVitor,6,4).
 move(gualtar,greenDistribution,1,9).
 move(saoVitor,semelhe,3,1).
 move(semelhe,trandeiras,8,7).
-move(trandeiras,real,2,3).
-%move(real,saoVicente,5,9).
+%move(trandeiras,real,2,3).
+move(real,saoVicente,5,9).
 move(real,greenDistribution,8,2).
 move(saoVicente,pedralva,6,2).
 %move(saoVicente,tenoes,4,1).
@@ -40,17 +40,16 @@ move(pedralva,priscos,7,4).
 move(tenoes,cividade,2,8).
 %move(tenoes,priscos,1,1).
 move(priscos,padimDaGraca,4,8).
-%move(cividade,crespos,9,4).
+move(cividade,crespos,9,4).
 move(cividade,greenDistribution,3,5).
-move(priscos,padimDaGraca,4,8).
 move(padimDaGraca,crespos,2,4).
 %move(padimDaGraca,ferreiros,3,2).
 move(crespos,tadim,7,3).
 %move(ferreiros,tadim,5,5).
-move(ferreiros,celeirosDup,1,9).
+%move(ferreiros,celeirosDup,1,9).
 %move(tadim,nogueira,3,7).
 move(tadim,greenDistribution,4,9).
-move(celeirosDup,nogueira,1,3).
+%move(celeirosDup,nogueira,1,3).
 
 adjacente(Origem,Destino,D,T) :- adjacente(Destino,Origem,D,T).
 
