@@ -16,41 +16,41 @@ objetivo(greenDistribution).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Extensão do predicado move: LocalidadeOigem, LocalidadeDestino, CustoDistancia, CustoTempo -> {V,F}
-move(fraiao,maximinos,2,3).
-move(fraiao,celeiros,6,5).
+%move(fraiao,maximinos,2,3).
+%move(fraiao,celeiros,6,5).
 move(fraiao,palmeira,4,3).
 move(maximinos,celeiros,1,1).
 move(celeiros,gondizalves,1,3).
 move(palmeira,gondizalves,9,7).
 move(gondizalves,greenDistribution,2,9).
-move(adaufe,mireDeTibaes,5,2).
+%move(adaufe,mireDeTibaes,5,2).
 move(adaufe,gualtar,9,3).
-move(adaufe,greenDistribution,5,5).
+%move(adaufe,greenDistribution,5,5).
 move(mireDeTibaes,saoVitor,2,3).
-move(gualtar,saoVitor,6,4).
+%move(gualtar,saoVitor,6,4).
 move(gualtar,greenDistribution,1,9).
 move(saoVitor,semelhe,3,1).
 move(semelhe,trandeiras,8,7).
 move(trandeiras,real,2,3).
-move(real,saoVicente,5,9).
+%move(real,saoVicente,5,9).
 move(real,greenDistribution,8,2).
 move(saoVicente,pedralva,6,2).
-move(saoVicente,tenoes,4,1).
+%move(saoVicente,tenoes,4,1).
 move(pedralva,priscos,7,4).
 move(tenoes,cividade,2,8).
-move(tenoes,priscos,1,1).
+%move(tenoes,priscos,1,1).
 move(priscos,padimDaGraca,4,8).
-move(cividade,crespos,9,4).
+%move(cividade,crespos,9,4).
 move(cividade,greenDistribution,3,5).
 move(priscos,padimDaGraca,4,8).
 move(padimDaGraca,crespos,2,4).
-move(padimDaGraca,ferreiros,3,2).
+%move(padimDaGraca,ferreiros,3,2).
 move(crespos,tadim,7,3).
-move(ferreiros,tadim,5,5).
-move(ferreiros,celeiros,1,9).
-move(tadim,nogueira,3,7).
+%move(ferreiros,tadim,5,5).
+move(ferreiros,celeirosDup,1,9).
+%move(tadim,nogueira,3,7).
 move(tadim,greenDistribution,4,9).
-move(celeiros,nogueira,1,3).
+move(celeirosDup,nogueira,1,3).
 
 adjacente(Origem,Destino,D,T) :- adjacente(Destino,Origem,D,T).
 
@@ -108,3 +108,105 @@ morada(cristina, 'adaufe').
 calcula_tempo(bicicleta,Distancia,PesoEnc, Tempo) :- VelMed is (10 - (0.7 * PesoEnc)), Tempo is Distancia / VelMed. 
 calcula_tempo(mota,Distancia,PesoEnc, Tempo) :- VelMed is (35 - (0.5 * PesoEnc)), Tempo is Distancia / VelMed. 
 calcula_tempo(carro,Distancia,PesoEnc, Tempo) :- VelMed is (25 - (0.1 * PesoEnc)), Tempo is Distancia / VelMed. 
+
+
+%----------------------------------------------------------------------------------------------------------------------------------------------
+%----------------------------------------------------------- Distancia ------------------------------------------------------------------------
+%----------------------------------------------------------------------------------------------------------------------------------------------
+
+%----------------------- Profundidade ---------------------------------------------------------------------------------------------------------
+
+profundidade(Nodo, [Nodo|Caminho], C) :- profundidadeprimeiro(Nodo, [Nodo], Caminho, C).
+
+
+profundidadeprimeiro(Nodo,_, [], 0) :- objetivo(Nodo).
+
+profundidadeprimeiro(Nodo, Historico, [ProxNodo|Caminho], C) :- adjacente(Nodo, ProxNodo, C1),
+    															nao(membro(ProxNodo, Historico)),
+																profundidadeprimeiro(ProxNodo, [ProxNodo|Historico], Caminho, C2), 
+																C is C1 + C2.	
+
+
+adjacente(Nodo, ProxNodo, C) :- move(Nodo, ProxNodo, C, _).
+adjacente(Nodo, ProxNodo, C) :- move(ProxNodo, Nodo, C, _).
+
+
+%executar esta
+melhorProfundidade(Nodo, Caminho, Custo) :- findall((SS, CC), profundidade(Nodo, SS, CC), L), 
+							minimo(L, (CaminhoInverso, Custo)), 
+							inverso(CaminhoInverso, Caminho).
+
+minimo([(P,X)],(P,X)).
+minimo([(Px,X)|L],(Py,Y)):- minimo(L,(Py,Y)), X>Y. 
+minimo([(Px,X)|L],(Px,X)):- minimo(L,(Py,Y)), X=<Y.
+
+%>
+
+
+%----------------------- Profundidade Com Limite ---------------------------------------------------------------------------------------------------------
+
+profundidadeLimite(Nodo, Limite, [Nodo|Caminho], C) :- profundidadeprimeiroLimite(Nodo, Limite, [Nodo], Caminho, C).
+
+
+profundidadeprimeiroLimite(Nodo, _, _, [], 0) :- objetivo(Nodo).
+
+profundidadeprimeiroLimite(Nodo, Limite, Historico, [ProxNodo|Caminho], C) :- adjacente(Nodo, ProxNodo, C1),
+    															nao(membro(ProxNodo, Historico)),
+    															length([ProxNodo|Historico], Tam),
+    															Tam - 1 < Limite + 1,  % é o mesmo que ter <=, o limite continua a ser respeitado
+																profundidadeprimeiroLimite(ProxNodo, Limite, [ProxNodo|Historico], Caminho, C2), 
+																C is C1 + C2.	
+
+%executar esta
+melhorProfundidadeLimite(Nodo, Limite, Caminho, Custo) :- findall((SS, CC), profundidadeLimite(Nodo, Limite, SS, CC), L), 
+							minimo(L, (CaminhoInverso, Custo)), 
+							inverso(CaminhoInverso, Caminho).
+
+
+
+%>
+
+%----------------------- Largura ---------------------------------------------------------------------------------------------------------
+
+%largura(Nodo, [Nodo|Caminho], C) :- larguraprimeiro(Nodo, [Nodo], Caminho, C).
+%
+%
+%larguraprimeiro(Nodo,_, [], 0) :- objetivo(Nodo).
+%
+%larguraprimeiro(Nodo, Historico, [ProxNodo|Caminho], C) :- adjacente(Nodo, ProxNodo, C1),
+%    														nao(membro(ProxNodo, Historico)),
+%															larguraprimeiro(ProxNodo, [ProxNodo|Historico], Caminho, C2), 
+%															C is C1 + C2.	
+
+
+
+%executar esta
+%melhorLargura(Nodo, Caminho, Custo) :- findall((SS, CC), largura(Nodo, SS, CC), L), 
+%							minimo(L, (CaminhoInverso, Custo)), 
+%							inverso(CaminhoInverso, Caminho).
+
+
+%>
+
+%--------------------------------- predicados auxiliares
+
+inverso(Xs, Ys):-
+	inverso(Xs, [], Ys).
+
+inverso([], Xs, Xs).
+inverso([X|Xs],Ys, Zs):-
+	inverso(Xs, [X|Ys], Zs).
+
+seleciona(E, [E|Xs], Xs).
+seleciona(E, [X|Xs], [X|Ys]) :- seleciona(E, Xs, Ys).
+
+nao( Questao ) :-
+    Questao, !, fail.
+nao( Questao ).
+
+membro(X, [X|_]).
+membro(X, [_|Xs]):-
+	membro(X, Xs).		
+
+escrever([]).
+escrever([X|L]):- write(X), nl, escrever(L).
