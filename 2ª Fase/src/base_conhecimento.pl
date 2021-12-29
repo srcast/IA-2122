@@ -97,16 +97,29 @@ entrega(marco, carro, 23, movel, 89, 23, 25, cristina, 'adaufe', 5, 15/10/2021/1
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Extensão do predicado morada: cliente, freguesia -> {V, F}
-morada(maria, 'crespos').
+morada(maria, 'crespos'). 
 morada(ana, 'nogueira').
 morada(filipa, 'tadim').
 morada(cristina, 'adaufe').
 
-%--------------------------------- - - - - - - - - - -  -  -  -  -   -
-% Extensão do predicado calcula_tempo: cliente, freguesia -> {V, F}
-calcula_tempo(bicicleta,Distancia,PesoEnc, Tempo) :- VelMed is (10 - (0.7 * PesoEnc)), Tempo is Distancia / VelMed. 
-calcula_tempo(mota,Distancia,PesoEnc, Tempo) :- VelMed is (35 - (0.5 * PesoEnc)), Tempo is Distancia / VelMed. 
-calcula_tempo(carro,Distancia,PesoEnc, Tempo) :- VelMed is (25 - (0.1 * PesoEnc)), Tempo is Distancia / VelMed. 
+%--------------------------------- Predicados relacionados ao veículo - - - - - - - - - -  -  -  -  -   -
+
+verifica_peso(bicicleta, Peso):- Peso =< 5.
+verifica_peso(mota, Peso):- Peso =< 20.
+verifica_peso(carro, Peso):- Peso =< 100.
+
+
+velMed(bicicleta, V):- V is 10.
+velMed(mota, V):- V is 35.
+velMed(carro, V):- V is 25.
+
+desconto_velocidade(bicicleta, Vel, Peso) :- Vel is Vel - (0.7*PesoEnc).
+desconto_velocidade(mota, Vel, Peso) :- Vel is Vel - (0.5*PesoEnc).
+desconto_velocidade(carro, Vel, Peso) :- Vel is Vel - (0.1*PesoEnc).
+
+
+% Extensão do predicado calcula_tempo: veiculo, distancia, peso , tempo -> {V, F}
+calcula_tempo(Veiculo,Distancia,PesoEnc, Tempo) :-  velMed(Veiculo,Vel),desconto_velocidade(Veiculo,Vel,PesoEnc), Tempo is Distancia / Vel. 
 
 
 %----------------------------------------------------------------------------------------------------------------------------------------------
