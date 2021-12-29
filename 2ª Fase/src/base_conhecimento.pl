@@ -166,6 +166,7 @@ minimo([(Px,X)|L],(Px,X)):- minimo(L,(Py,Y)), X=<Y.
 
 %----------------------- Profundidade Com Limite ---------------------------------------------------------------------------------------------------------
 
+%executar esta para testar os diferentes limites
 profundidadeLimite(NodoObjetivo, Limite, Caminho, C) :- inicial(Inicio),
 														profundidadeprimeiroLimiteInicial(NodoObjetivo, Limite, Inicio, [Inicio], Caminho, C).
 
@@ -174,26 +175,25 @@ profundidadeLimite(NodoObjetivo, Limite, Caminho, C) :- inicial(Inicio),
 %coloca a greenDistribution no inicio
 profundidadeprimeiroLimiteInicial(NodoObjetivo, Limite, Inicio, Historico, [Inicio, ProxNodo|Caminho], C) :- adjacente(Inicio, ProxNodo, C1),
 																								nao(membro(ProxNodo, Historico)),
-																								length([Inicio, ProxNodo|Caminho], Tam),
-    																							Tam - 1 < Limite + 1,
+																								length([ProxNodo|Historico], Tam),
+    																							Tam - 1 < Limite,
 																								profundidadeprimeiroLimite(NodoObjetivo, Limite, ProxNodo, [ProxNodo|Historico], Caminho, C2), 
 																								C is C1 + C2.	
 
 
 
-profundidadeprimeiroLimite(NodoObjetivo, NodoAtual, Historico, [NodoObjetivo], C1) :- adjacente(NodoAtual, NodoObjetivo, C1), !.
+profundidadeprimeiroLimite(NodoObjetivo, _, NodoAtual, _, [NodoObjetivo], C1) :- adjacente(NodoAtual, NodoObjetivo, C1), !.
 
-profundidadeprimeiroLimite(NodoObjetivo, Limite, ProxNodo, Historico, [ProxNodo|Caminho], C) :- adjacente(Nodo, ProxNodo, C1),
+profundidadeprimeiroLimite(NodoObjetivo, Limite, NodoAtual, Historico, [ProxNodo|Caminho], C) :- adjacente(NodoAtual, ProxNodo, C1),
     															nao(membro(ProxNodo, Historico)),
     															length([ProxNodo|Historico], Tam),
-    															Tam - 1 < Limite + 1,  % é o mesmo que ter <=, o limite continua a ser respeitado
-																profundidadeprimeiroLimite(NodoObjetivo, ProxNodo, Limite, [ProxNodo|Historico], Caminho, C2), 
+    															Tam - 1 < Limite,  % é o mesmo que ter <=, o limite continua a ser respeitado
+																profundidadeprimeiroLimite(NodoObjetivo, Limite, ProxNodo, [ProxNodo|Historico], Caminho, C2), 
 																C is C1 + C2.	
 
 %executar esta
 melhorProfundidadeLimite(NodoObjetivo, Limite, Caminho, Custo) :- findall((SS, CC), profundidadeLimite(NodoObjetivo, Limite, SS, CC), L), 
-							minimo(L, (CaminhoInverso, Custo)), 
-							inverso(CaminhoInverso, Caminho).
+							minimo(L, (Caminho, Custo)), !.
 
 
 
