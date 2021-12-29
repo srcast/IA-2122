@@ -196,24 +196,6 @@ melhorProfundidadeLimite(NodoObjetivo, Limite, Caminho, Custo) :- findall((SS, C
 							minimo(L, (Caminho, Custo)), !.
 
 
-
-
-
-%profundidadeLimite(Nodo, Limite, [Nodo|Caminho], C) :- profundidadeprimeiroLimite(Nodo, Limite, [Nodo], Caminho, C).
-%
-%
-%profundidadeprimeiroLimite(Nodo, _, _, [], 0) :- objetivo(Nodo).
-%
-%profundidadeprimeiroLimite(Nodo, Limite, Historico, [ProxNodo|Caminho], C) :- adjacente(Nodo, ProxNodo, C1),
-%   															nao(membro(ProxNodo, Historico)),
-%    															length([ProxNodo|Historico], Tam),
-%   															Tam - 1 < Limite + 1,  % é o mesmo que ter <=, o limite continua a ser respeitado
-%																profundidadeprimeiroLimite(ProxNodo, Limite, [ProxNodo|Historico], Caminho, C2), 
-%																C is C1 + C2.	
-
-
-%>
-
 %----------------------- Largura ---------------------------------------------------------------------------------------------------------
 
 %largura(Nodo, [Nodo|Caminho], C) :- larguraprimeiro(Nodo, [Nodo], Caminho, C).
