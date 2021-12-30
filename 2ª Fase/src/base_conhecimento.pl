@@ -104,10 +104,14 @@ morada(cristina, 'adaufe').
 
 %--------------------------------- Predicados relacionados ao veículo - - - - - - - - - -  -  -  -  -   -
 
-verifica_peso(bicicleta, Peso):- Peso =< 5.
-verifica_peso(mota, Peso):- Peso =< 20.
-verifica_peso(carro, Peso):- Peso =< 100.
+% escolhe veículo mais ecológico repeitando as restrições e prazo de tempo
+escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo):- Peso =< 5 , calcula_tempo(bicicleta, Distancia, Peso, Tempo) , Tempo =< Prazo , Veiculo is bicicleta, !.
+escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo):- Peso =< 20 , calcula_tempo(mota, Distancia, Peso, Tempo) , Tempo =< Prazo, Veiculo is mota, !.
+escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo):- Peso =< 100 , calcula_tempo(carro, Distancia, Peso, Tempo) , Tempo =< Prazo, Veiculo is carro.
 
+
+% Extensão do predicado calcula_tempo: veiculo, distancia, peso , tempo -> {V, F}
+calcula_tempo(Veiculo,Distancia,PesoEnc, Tempo) :-  velMed(Veiculo,Vel),desconto_velocidade(Veiculo,Vel,PesoEnc), Tempo is Distancia / Vel. 
 
 velMed(bicicleta, V):- V is 10.
 velMed(mota, V):- V is 35.
@@ -118,8 +122,6 @@ desconto_velocidade(mota, Vel, Peso) :- Vel is Vel - (0.5*PesoEnc).
 desconto_velocidade(carro, Vel, Peso) :- Vel is Vel - (0.1*PesoEnc).
 
 
-% Extensão do predicado calcula_tempo: veiculo, distancia, peso , tempo -> {V, F}
-calcula_tempo(Veiculo,Distancia,PesoEnc, Tempo) :-  velMed(Veiculo,Vel),desconto_velocidade(Veiculo,Vel,PesoEnc), Tempo is Distancia / Vel. 
 
 
 %----------------------------------------------------------------------------------------------------------------------------------------------
@@ -230,6 +232,36 @@ melhorProfundidadeLimite(NodoObjetivo, Limite, Caminho, Custo) :- findall((SS, C
 
 
 %>
+
+
+%---------------------------- Calculo dos circuitos --------------------------------------- 
+% ----> [(nome da estafeta, veiculo utilizado, distancia do circuito, tempo do circuito,[Caminho]), ...] <---------
+
+
+calcula_circuitos_profundidade(Circuitos):- findall(
+(Estafeta,Veiculo,Distancia,Tempo,Caminho),
+(entrega(Estafeta, _ , _, _ , Peso, Prazo, _ , _ , NodoObjetivo, _ , _ , _ ),
+melhorProfundidade(NodoObjetivo,Caminho,Distancia),
+escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo)),Circuitos).
+
+calcula_circuitos_largura(Circuitos):- findall(
+(Estafeta,Veiculo,Distancia,Tempo,Caminho),
+(entrega(Estafeta, _ , _, _ , Peso, Prazo, _ , _ , NodoObjetivo, _ , _ , _ ),
+melhorLargura(NodoObjetivo,Caminho,Distancia),
+escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo)),Circuitos).
+
+
+% calcula_circuitos_profundidadeLimite(Circuitos):- findall(
+% (Estafeta,Veiculo,Distancia,Tempo,Caminho),
+% (entrega(Estafeta, _ , _, _ , Peso, Prazo, _ , _ , NodoObjetivo, _ , _ , _ ),
+% melhorProfundidadeLimite(NodoObjetivo,3,Caminho,Distancia),
+% scolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo)),Circuitos).
+
+
+
+
+
+
 
 %--------------------------------- predicados auxiliares
 
