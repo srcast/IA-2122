@@ -97,16 +97,31 @@ entrega(marco, carro, 23, movel, 89, 23, 25, cristina, 'adaufe', 5, 15/10/2021/1
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Extensão do predicado morada: cliente, freguesia -> {V, F}
-morada(maria, 'crespos').
+morada(maria, 'crespos'). 
 morada(ana, 'nogueira').
 morada(filipa, 'tadim').
 morada(cristina, 'adaufe').
 
-%--------------------------------- - - - - - - - - - -  -  -  -  -   -
-% Extensão do predicado calcula_tempo: cliente, freguesia -> {V, F}
-calcula_tempo(bicicleta,Distancia,PesoEnc, Tempo) :- VelMed is (10 - (0.7 * PesoEnc)), Tempo is Distancia / VelMed. 
-calcula_tempo(mota,Distancia,PesoEnc, Tempo) :- VelMed is (35 - (0.5 * PesoEnc)), Tempo is Distancia / VelMed. 
-calcula_tempo(carro,Distancia,PesoEnc, Tempo) :- VelMed is (25 - (0.1 * PesoEnc)), Tempo is Distancia / VelMed. 
+%--------------------------------- Predicados relacionados ao veículo - - - - - - - - - -  -  -  -  -   -
+
+% escolhe veículo mais ecológico repeitando as restrições e prazo de tempo
+escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo):- Peso =< 5 , calcula_tempo(bicicleta, Distancia, Peso, Tempo) , Tempo =< Prazo , Veiculo is bicicleta, !.
+escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo):- Peso =< 20 , calcula_tempo(mota, Distancia, Peso, Tempo) , Tempo =< Prazo, Veiculo is mota, !.
+escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo):- Peso =< 100 , calcula_tempo(carro, Distancia, Peso, Tempo) , Tempo =< Prazo, Veiculo is carro.
+
+
+% Extensão do predicado calcula_tempo: veiculo, distancia, peso , tempo -> {V, F}
+calcula_tempo(Veiculo,Distancia,PesoEnc, Tempo) :-  velMed(Veiculo,Vel),desconto_velocidade(Veiculo,Vel,PesoEnc), Tempo is Distancia / Vel. 
+
+velMed(bicicleta, V):- V is 10.
+velMed(mota, V):- V is 35.
+velMed(carro, V):- V is 25.
+
+desconto_velocidade(bicicleta, Vel, Peso) :- Vel is Vel - (0.7*PesoEnc).
+desconto_velocidade(mota, Vel, Peso) :- Vel is Vel - (0.5*PesoEnc).
+desconto_velocidade(carro, Vel, Peso) :- Vel is Vel - (0.1*PesoEnc).
+
+
 
 
 %----------------------------------------------------------------------------------------------------------------------------------------------
@@ -228,6 +243,36 @@ melhorLargura(NodoObjetivo, Caminho, Custo) :- findall((SS, CC), largura(NodoObj
 
 
 
+
+
+
+
+
+
+
+
+%---------------------------- Calculo dos circuitos --------------------------------------- 
+% ----> [(nome da estafeta, veiculo utilizado, distancia do circuito, tempo do circuito,[Caminho]), ...] <---------
+
+
+calcula_circuitos_profundidade(Circuitos):- findall(
+(Estafeta,Veiculo,Distancia,Tempo,Caminho),
+(entrega(Estafeta, _ , _, _ , Peso, Prazo, _ , _ , NodoObjetivo, _ , _ , _ ),
+melhorProfundidade(NodoObjetivo,Caminho,Distancia),
+escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo)),Circuitos).
+
+calcula_circuitos_largura(Circuitos):- findall(
+(Estafeta,Veiculo,Distancia,Tempo,Caminho),
+(entrega(Estafeta, _ , _, _ , Peso, Prazo, _ , _ , NodoObjetivo, _ , _ , _ ),
+melhorLargura(NodoObjetivo,Caminho,Distancia),
+escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo)),Circuitos).
+
+
+% calcula_circuitos_profundidadeLimite(Circuitos):- findall(
+% (Estafeta,Veiculo,Distancia,Tempo,Caminho),
+% (entrega(Estafeta, _ , _, _ , Peso, Prazo, _ , _ , NodoObjetivo, _ , _ , _ ),
+% melhorProfundidadeLimite(NodoObjetivo,3,Caminho,Distancia),
+% scolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo)),Circuitos).
 
 
 
