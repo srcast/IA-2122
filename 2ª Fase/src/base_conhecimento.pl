@@ -131,6 +131,9 @@ calcula_tempo(carro,Distancia,PesoEnc, Tempo) :- VelMed is (25 - (0.1 * PesoEnc)
 profundidade(NodoObjetivo, Caminho, C) :- inicial(Inicio),
 										profundidadeprimeiroInicial(NodoObjetivo, Inicio, [Inicio], Caminho, C).
 
+
+profundidadeprimeiroInicial(NodoObjetivo, Inicio, Historico, [Inicio, NodoObjetivo], C) :- adjacente(Inicio, NodoObjetivo, C).
+
 %coloca a greenDistribution no inicio
 profundidadeprimeiroInicial(NodoObjetivo, Inicio, Historico, [Inicio, ProxNodo|Caminho], C) :- adjacente(Inicio, ProxNodo, C1),
 																								nao(membro(ProxNodo, Historico)),
@@ -170,7 +173,7 @@ minimo([(Px,X)|L],(Px,X)):- minimo(L,(Py,Y)), X=<Y.
 profundidadeLimite(NodoObjetivo, Limite, Caminho, C) :- inicial(Inicio),
 														profundidadeprimeiroLimiteInicial(NodoObjetivo, Limite, Inicio, [Inicio], Caminho, C).
 
-
+profundidadeprimeiroLimiteInicial(NodoObjetivo, Limite, Inicio, Historico, [Inicio, NodoObjetivo], C) :- adjacente(Inicio, NodoObjetivo, C).
 
 %coloca a greenDistribution no inicio
 profundidadeprimeiroLimiteInicial(NodoObjetivo, Limite, Inicio, Historico, [Inicio, ProxNodo|Caminho], C) :- adjacente(Inicio, ProxNodo, C1),
@@ -198,25 +201,39 @@ melhorProfundidadeLimite(NodoObjetivo, Limite, Caminho, Custo) :- findall((SS, C
 
 %----------------------- Largura ---------------------------------------------------------------------------------------------------------
 
-%largura(Nodo, [Nodo|Caminho], C) :- larguraprimeiro(Nodo, [Nodo], Caminho, C).
-%
-%
-%larguraprimeiro(Nodo,_, [], 0) :- objetivo(Nodo).
-%
-%larguraprimeiro(Nodo, Historico, [ProxNodo|Caminho], C) :- adjacente(Nodo, ProxNodo, C1),
-%    														nao(membro(ProxNodo, Historico)),
-%															larguraprimeiro(ProxNodo, [ProxNodo|Historico], Caminho, C2), 
-%															C is C1 + C2.	
+largura(NodoObjetivo, Caminho, C) :- inicial(Inicio),
+									larguraprimeiroInicial(NodoObjetivo, Inicio, [Inicio], Caminho, C).
+
+larguraprimeiroInicial(NodoObjetivo, Inicio, Historico, [Inicio, NodoObjetivo], C) :- adjacente(Inicio, NodoObjetivo, C).
+
+%coloca a greenDistribution no inicio
+larguraprimeiroInicial(NodoObjetivo, Inicio, Historico, [Inicio, ProxNodo|Caminho], C) :- adjacente(Inicio, ProxNodo, C1),
+																							nao(membro(ProxNodo, Historico)),
+																							larguraprimeiro(NodoObjetivo, ProxNodo, [ProxNodo|Historico], Caminho, C2), 
+																							C is C1 + C2.	
+
+larguraprimeiro(NodoObjetivo, NodoAtual, Historico, [NodoObjetivo], C1) :- adjacente(NodoAtual, NodoObjetivo, C1), !.
+
+larguraprimeiro(NodoObjetivo, NodoAtual, Historico, [ProxNodo|Caminho], C) :- adjacente(NodoAtual, ProxNodo, C1),
+    																			nao(membro(ProxNodo, Historico)),
+																				larguraprimeiro(NodoObjetivo, ProxNodo, [ProxNodo|Historico], Caminho, C2), 
+																				C is C1 + C2.	
+
 
 
 
 %executar esta
-%melhorLargura(Nodo, Caminho, Custo) :- findall((SS, CC), largura(Nodo, SS, CC), L), 
-%							minimo(L, (CaminhoInverso, Custo)), 
-%							inverso(CaminhoInverso, Caminho).
+melhorLargura(NodoObjetivo, Caminho, Custo) :- findall((SS, CC), largura(NodoObjetivo, SS, CC), L), 
+													minimo(L, (Caminho, Custo)), !. 
 
 
-%>
+
+
+
+
+
+
+
 
 %--------------------------------- predicados auxiliares
 
