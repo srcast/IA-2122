@@ -142,9 +142,9 @@ desconto_velocidade(carro, Vel, Peso) :- Vel is Vel - (0.1*PesoEnc).
 
 
 
-
+%executar esta
 profundidade(NodoObjetivo, Caminho, C) :- inicial(Inicio),
-										profundidadeprimeiroInicial(NodoObjetivo, Inicio, [Inicio], Caminho, C).
+										profundidadeprimeiroInicial(NodoObjetivo, Inicio, [Inicio], Caminho, C), !.
 
 
 profundidadeprimeiroInicial(NodoObjetivo, Inicio, Historico, [Inicio, NodoObjetivo], C) :- adjacente(Inicio, NodoObjetivo, C).
@@ -169,7 +169,7 @@ adjacente(Nodo, ProxNodo, C) :- move(ProxNodo, Nodo, C, _).
 
 
 
-%executar esta
+
 melhorProfundidade(NodoObjetivo, Caminho, Custo) :- findall((SS, CC), profundidade(NodoObjetivo, SS, CC), L), 
 													minimo(L, (Caminho, Custo)), !. 
 
@@ -184,9 +184,10 @@ minimo([(Px,X)|L],(Px,X)):- minimo(L,(Py,Y)), X=<Y.
 
 %----------------------- Profundidade Com Limite ---------------------------------------------------------------------------------------------------------
 
+%executar esta
 %executar esta para testar os diferentes limites
 profundidadeLimite(NodoObjetivo, Limite, Caminho, C) :- inicial(Inicio),
-														profundidadeprimeiroLimiteInicial(NodoObjetivo, Limite, Inicio, [Inicio], Caminho, C).
+														profundidadeprimeiroLimiteInicial(NodoObjetivo, Limite, Inicio, [Inicio], Caminho, C), !.
 
 profundidadeprimeiroLimiteInicial(NodoObjetivo, Limite, Inicio, Historico, [Inicio, NodoObjetivo], C) :- adjacente(Inicio, NodoObjetivo, C).
 
@@ -209,44 +210,43 @@ profundidadeprimeiroLimite(NodoObjetivo, Limite, NodoAtual, Historico, [ProxNodo
 																profundidadeprimeiroLimite(NodoObjetivo, Limite, ProxNodo, [ProxNodo|Historico], Caminho, C2), 
 																C is C1 + C2.	
 
-%executar esta
+
 melhorProfundidadeLimite(NodoObjetivo, Limite, Caminho, Custo) :- findall((SS, CC), profundidadeLimite(NodoObjetivo, Limite, SS, CC), L), 
 							minimo(L, (Caminho, Custo)), !.
 
 
 %----------------------- Largura ---------------------------------------------------------------------------------------------------------
 
-largura(NodoObjetivo, Caminho, C) :- inicial(Inicio),
-									larguraprimeiroInicial(NodoObjetivo, Inicio, [Inicio], Caminho, C).
 
-larguraprimeiroInicial(NodoObjetivo, Inicio, Historico, [Inicio, NodoObjetivo], C) :- adjacente(Inicio, NodoObjetivo, C).
+largura(Destino,Caminho, Custos) :- inicial(Inicio),
+					largura2(Destino,[[Inicio/0]],Cam),
+					somaCustos(Cam, Custos),
+					retiraCustos(Cam, Caminho).
 
-%coloca a greenDistribution no inicio
-larguraprimeiroInicial(NodoObjetivo, Inicio, Historico, [Inicio, ProxNodo|Caminho], C) :- adjacente(Inicio, ProxNodo, C1),
-																							nao(membro(ProxNodo, Historico)),
-																							larguraprimeiro(NodoObjetivo, ProxNodo, [ProxNodo|Historico], Caminho, C2), 
-																							C is C1 + C2.	
+largura2(Destino,[[Destino/Cus|T],_],[Destino/Cus|T]).
 
-larguraprimeiro(NodoObjetivo, NodoAtual, Historico, [NodoObjetivo], C1) :- adjacente(NodoAtual, NodoObjetivo, C1), !.
+largura2(Destino,[LA|Outros],Cam):- LA = [Act|_],
+								Act = Atual/Cus,
+    							findall([ProxNodo/C|LA],(Destino\== Atual,adjacente(Atual,ProxNodo, C),nao(membroCustos(ProxNodo,LA))), Novos),
+    							append(Outros,Novos,Todos),
+    							largura2(Destino,Todos,Cam).
 
-larguraprimeiro(NodoObjetivo, NodoAtual, Historico, [ProxNodo|Caminho], C) :- adjacente(NodoAtual, ProxNodo, C1),
-    																			nao(membro(ProxNodo, Historico)),
-																				larguraprimeiro(NodoObjetivo, ProxNodo, [ProxNodo|Historico], Caminho, C2), 
-																				C is C1 + C2.	
+somaCustos([], 0).
+somaCustos([_/Custo|Resto], Custos) :- somaCustos(Resto, Custos2),
+												Custos is Custo + Custos2.
 
-
-
-
-%executar esta
-melhorLargura(NodoObjetivo, Caminho, Custo) :- findall((SS, CC), largura(NodoObjetivo, SS, CC), L), 
-													minimo(L, (Caminho, Custo)), !. 
+retiraCustos([], []).
+retiraCustos([Localidade/_|Resto], [Localidade|Outras]) :- retiraCustos(Resto, Outras). 
 
 
+membroCustos(Local, [Local/Cus|Resto]).
+membroCustos(Local, [Nodo/Cus|Resto]) :- membroCustos(Local, Resto).
 
 
-
-
-
+auxiliar([LA|Outros], Todos) :- LA = [Atual|_],
+					Atual = Act/Cus,
+					findall([ProxNodo/C1|LA],(adjacente(Act,ProxNodo, C1),\+member(ProxNodo,LA)), Novos),
+    				append(Outros,Novos,Todos).
 
 
 
