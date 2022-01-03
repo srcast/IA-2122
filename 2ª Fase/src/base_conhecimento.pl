@@ -264,15 +264,15 @@ escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo)),Circuitos).
 calcula_circuitos_largura(Circuitos):- findall(
 (Estafeta,Veiculo,Distancia,Tempo,Caminho),
 (entrega(Estafeta, _ , _, _ , Peso, Prazo, _ , _ , NodoObjetivo, _ , _ , _ ),
-melhorLargura(NodoObjetivo,Caminho,Distancia),
+largura(NodoObjetivo,Caminho,Distancia),
 escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo)),Circuitos).
 
 
-% calcula_circuitos_profundidadeLimite(Circuitos):- findall(
-% (Estafeta,Veiculo,Distancia,Tempo,Caminho),
-% (entrega(Estafeta, _ , _, _ , Peso, Prazo, _ , _ , NodoObjetivo, _ , _ , _ ),
-% melhorProfundidadeLimite(NodoObjetivo,3,Caminho,Distancia),
-% scolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo)),Circuitos).
+calcula_circuitos_profundidadeLimite(Circuitos):- findall(
+(Estafeta,Veiculo,Distancia,Tempo,Caminho),
+(entrega(Estafeta, _ , _, _ , Peso, Prazo, _ , _ , NodoObjetivo, _ , _ , _ ),
+melhorProfundidadeLimite(NodoObjetivo,3,Caminho,Distancia),
+escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo)),Circuitos).
 
 
 
