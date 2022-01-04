@@ -46,10 +46,10 @@ move(padimDaGraca,crespos,2).
 move(padimDaGraca,ferreiros,3).
 move(crespos,tadim,7).
 move(ferreiros,tadim,5).
-move(ferreiros,celeirosDup,1).
+move(ferreiros,espinho,1).
 move(tadim,nogueira,3).
 move(tadim,greenDistribution,4).
-move(celeirosDup,nogueira,1).
+move(espinho,nogueira,1).
 
 adjacente(Nodo, ProxNodo, C) :- move(Nodo, ProxNodo, C).
 adjacente(Nodo, ProxNodo, C) :- move(ProxNodo, Nodo, C).
