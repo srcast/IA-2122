@@ -78,7 +78,7 @@ estima(cividade, 2).
 estima(crespos, 10).
 estima(padimDaGraca, 11).
 estima(ferreiros, 7).
-estima(celeirosDup, 7).
+estima(espinho, 7).
 estima(nogueira, 6).
 estima(tadim, 3).
 estima(greenDistribution, 0).
