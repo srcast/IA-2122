@@ -1,5 +1,5 @@
 %-------------------------------------------------------------------------
-%---------------        Base de conhecimento         	------------------
+%---------------        Base de conhecimento		------------------
 %-------------------------------------------------------------------------
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
@@ -85,17 +85,17 @@ estima(greenDistribution, 0).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
-% Extensão do predicado entrega: estafeta, veiculo, distancia, tipoEncomenda, pesoEnc, prazo, velocidade, cliente, rua, classificacao, dataEncomenda, dataEntrega -> {V, F}
+% Extensão do predicado entrega: estafeta, tipoEncomenda, pesoEnc, prazo,cliente, rua, classificacao, dataEncomenda, dataEntrega -> {V, F}
 
 % retirei veiculo, distancia e velocidade
 
 entrega(manuel, comida, 2, 1, maria, 'crespos', 4, 11/10/2021/10, 11/10/2021/11).
-entrega(manuel, comida, 2, 1, maria, 'crespos', 4, 11/10/2021/13, 11/10/2021/14).
-entrega(manuel, comida, 2, 1, maria, 'crespos', 4, 11/10/2021/16, 11/10/2021/18).
-entrega(manuel, comida, 2, 1, maria, 'crespos', 4, 11/10/2021/12, 11/10/2021/13).
+%entrega(manuel, comida, 2, 1, maria, 'crespos', 4, 11/10/2021/13, 11/10/2021/14).
+%entrega(manuel, comida, 2, 1, maria, 'crespos', 4, 11/10/2021/16, 11/10/2021/18).
+%entrega(manuel, comida, 2, 1, maria, 'crespos', 4, 11/10/2021/12, 11/10/2021/13).
 entrega(jose, comida, 4, 1, ana, 'nogueira', 5, 11/10/2021/12, 11/10/2021/13).
 entrega(fabio, roupa, 12, 24, filipa, 'tadim', 5, 12/10/2021/13, 12/10/2021/19).
-entrega(marco, movel, 80, 48, cristina, 'adaufe', 3, 11/10/2021/17, 14/10/2021/10).
+entrega(marco, movel, 2, 48, cristina, 'adaufe', 3, 11/10/2021/17, 14/10/2021/10).
 entrega(jose, comida, 4, 1, ana, 'nogueira', 5, 11/10/2021/20, 11/10/2021/21).
 entrega(manuel, comida, 1, 1, ana, 'nogueira', 5, 11/10/2021/19, 11/10/2021/20).
 entrega(fabio, comida, 2, 1, ana, 'nogueira', 3, 12/10/2021/21, 12/10/2021/22).
@@ -123,7 +123,7 @@ entrega(marco, movel, 89, 23, cristina, 'adaufe', 5, 15/10/2021/14, 19/10/2021/1
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Extensão do predicado morada: cliente, freguesia -> {V, F}
-morada(maria, 'crespos'). 
+morada(maria, 'crespos').
 morada(ana, 'nogueira').
 morada(filipa, 'tadim').
 morada(cristina, 'adaufe').
@@ -147,21 +147,21 @@ getMostEco(Lista,X):- member((_,_,_,carro),Lista), getV(carro,Lista,X).
 
 
 % escolhe veículo mais ecológico repeitando as restrições e prazo de tempo
-escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo):- Peso =< 5 , calcula_tempo(bicicleta, Distancia, Peso, Tempo) , Tempo =< Prazo , Veiculo is bicicleta, !.
-escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo):- Peso =< 20 , calcula_tempo(mota, Distancia, Peso, Tempo) , Tempo =< Prazo, Veiculo is mota, !.
-escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo):- Peso =< 100 , calcula_tempo(carro, Distancia, Peso, Tempo) , Veiculo is carro.
+escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo):- Peso =< 5 , calcula_tempo(bicicleta, Distancia, Peso, Tempo) , Tempo =< Prazo , Veiculo = bicicleta, !.
+escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo):- Peso =< 20 , calcula_tempo(mota, Distancia, Peso, Tempo) , Tempo =< Prazo, Veiculo = mota, !.
+escolheVeiculo(Peso,Distancia,Veiculo,_,Tempo):- Peso =< 100 , calcula_tempo(carro, Distancia, Peso, Tempo) , Veiculo = carro.
 
 
 % Extensão do predicado calcula_tempo: veiculo, distancia, peso , tempo -> {V, F}
-calcula_tempo(Veiculo,Distancia,PesoEnc, Tempo) :-  velMed(Veiculo,Vel),VelDesconto is Vel, desconto_velocidade(Veiculo,VelDesconto,PesoEnc), Tempo is (Distancia / VelDesconto) + (Distancia / Vel). 
+calcula_tempo(Veiculo,Distancia,PesoEnc, Tempo) :-  velMed(Veiculo,Vel),desconto_velocidade(Veiculo,Vel,PesoEnc, VelDesconto), Tempo is (Distancia / VelDesconto) + (Distancia / Vel).
 
 velMed(bicicleta, V):- V is 10.
 velMed(mota, V):- V is 35.
 velMed(carro, V):- V is 25.
 
-desconto_velocidade(bicicleta, Vel, Peso) :- Vel is Vel - (0.7*PesoEnc).
-desconto_velocidade(mota, Vel, Peso) :- Vel is Vel - (0.5*PesoEnc).
-desconto_velocidade(carro, Vel, Peso) :- Vel is Vel - (0.1*PesoEnc).
+desconto_velocidade(bicicleta, Vel, Peso, NewVel) :- NewVel is Vel - (0.7*Peso).
+desconto_velocidade(mota, Vel, Peso, NewVel) :- NewVel is Vel - (0.5*Peso).
+desconto_velocidade(carro, Vel, Peso, NewVel) :- NewVel is Vel - (0.1*Peso).
 
 
 
@@ -178,9 +178,9 @@ desconto_velocidade(carro, Vel, Peso) :- Vel is Vel - (0.1*PesoEnc).
 %profundidadeprimeiro(Nodo,_, [], 0) :- objetivo(Nodo).
 %
 %profundidadeprimeiro(Nodo, Historico, [ProxNodo|Caminho], C) :- adjacente(Nodo, ProxNodo, C1),
-%    															nao(membro(ProxNodo, Historico)),
-%																profundidadeprimeiro(ProxNodo, [ProxNodo|Historico], Caminho, C2), 
-%																C is C1 + C2.	
+%															nao(membro(ProxNodo, Historico)),
+%																profundidadeprimeiro(ProxNodo, [ProxNodo|Historico], Caminho, C2),
+%																C is C1 + C2.
 
 
 
@@ -191,44 +191,41 @@ profundidade(NodoObjetivo, CaminhoTodo, C) :- inicial(Inicio),
 										C is C2 * 2.
 
 
-profundidadeprimeiroInicial(NodoObjetivo, Inicio, Historico, [Inicio, NodoObjetivo], C) :- adjacente(Inicio, NodoObjetivo, C).
+profundidadeprimeiroInicial(NodoObjetivo, Inicio,_, [Inicio, NodoObjetivo], C) :- adjacente(Inicio, NodoObjetivo, C).
 
 %coloca a greenDistribution no inicio
 profundidadeprimeiroInicial(NodoObjetivo, Inicio, Historico, [Inicio, ProxNodo|Caminho], C) :- adjacente(Inicio, ProxNodo, C1),
 																								nao(membro(ProxNodo, Historico)),
-																								profundidadeprimeiro(NodoObjetivo, ProxNodo, [ProxNodo|Historico], Caminho, C2), 
-																								C is C1 + C2.	
+																								profundidadeprimeiro(NodoObjetivo, ProxNodo, [ProxNodo|Historico], Caminho, C2),
+																								C is C1 + C2.
 
-profundidadeprimeiro(NodoObjetivo, NodoAtual, Historico, [NodoObjetivo], C1) :- adjacente(NodoAtual, NodoObjetivo, C1), !.
+profundidadeprimeiro(NodoObjetivo, NodoAtual, _ , [NodoObjetivo], C1) :- adjacente(NodoAtual, NodoObjetivo, C1), !.
 
 profundidadeprimeiro(NodoObjetivo, NodoAtual, Historico, [ProxNodo|Caminho], C) :- adjacente(NodoAtual, ProxNodo, C1),
-    																				nao(membro(ProxNodo, Historico)),
-																					profundidadeprimeiro(NodoObjetivo, ProxNodo, [ProxNodo|Historico], Caminho, C2), 
-																					C is C1 + C2.	
+																				nao(membro(ProxNodo, Historico)),
+																					profundidadeprimeiro(NodoObjetivo, ProxNodo, [ProxNodo|Historico], Caminho, C2),
+																					C is C1 + C2.
 
 
-geraCaminhosProfundidade(NodoObjetivo,Lista):- findall((Caminhos,Custos), profundidade(NodoAtual,Caminhos,Custos),Lista).
-
-
-
-
-melhorProfundidade(NodoObjetivo, Caminho, Custo) :- findall((Caminhos, Custos), profundidade(NodoObjetivo, Caminhos, Custos), L), 
-													minimo(L, (Caminho, Custo)), !. 
+geraCaminhosProfundidade(NodoObjetivo,Lista):- findall((Caminhos,Custos), profundidade(NodoObjetivo,Caminhos,Custos),Lista).
 
 
 
-minimo([(P,X)],(P,X)).
-minimo([(Px,X)|L],(Py,Y)):- minimo(L,(Py,Y)), X>Y. 
-minimo([(Px,X)|L],(Px,X)):- minimo(L,(Py,Y)), X=<Y.
 
-%>
+melhorProfundidade(NodoObjetivo, Caminho, Custo) :- findall((Caminhos, Custos), profundidade(NodoObjetivo, Caminhos, Custos), L),
+													minimo(L, (Caminho, Custo)), !.
+
+
+
+
+
 
 
 duplicaCaminho(Caminho, CaminhoTodo) :- duplicaCaminhoAuxiliar(Caminho, [], CaminhoInverso),
 										append(Caminho, CaminhoInverso, CaminhoTodo).
 
 % devolve o caminho reverso sem o nodo objetivo
-duplicaCaminhoAuxiliar([], [H|T], T).
+duplicaCaminhoAuxiliar([], [_|T], T).
 duplicaCaminhoAuxiliar([H|T], Aux, CaminhoInverso) :- duplicaCaminhoAuxiliar(T, [H|Aux], CaminhoInverso).
 
 
@@ -241,40 +238,48 @@ profundidadeLimite(NodoObjetivo, Limite, CaminhoTodo, C) :- inicial(Inicio),
 														duplicaCaminho(Caminho, CaminhoTodo),
 														C is C2 * 2.
 
-profundidadeprimeiroLimiteInicial(NodoObjetivo, Limite, Inicio, Historico, [Inicio, NodoObjetivo], C) :- adjacente(Inicio, NodoObjetivo, C).
+profundidadeprimeiroLimiteInicial(NodoObjetivo,_, Inicio,_, [Inicio, NodoObjetivo], C) :- adjacente(Inicio, NodoObjetivo, C).
 
 %coloca a greenDistribution no inicio
 profundidadeprimeiroLimiteInicial(NodoObjetivo, Limite, Inicio, Historico, [Inicio, ProxNodo|Caminho], C) :- adjacente(Inicio, ProxNodo, C1),
 																								nao(membro(ProxNodo, Historico)),
 																								length([ProxNodo|Historico], Tam),
-    																							Tam - 1 < Limite,
-																								profundidadeprimeiroLimite(NodoObjetivo, Limite, ProxNodo, [ProxNodo|Historico], Caminho, C2), 
-																								C is C1 + C2.	
+																							Tam - 1 < Limite,
+																								profundidadeprimeiroLimite(NodoObjetivo, Limite, ProxNodo, [ProxNodo|Historico], Caminho, C2),
+																								C is C1 + C2.
 
 
 
 profundidadeprimeiroLimite(NodoObjetivo, _, NodoAtual, _, [NodoObjetivo], C1) :- adjacente(NodoAtual, NodoObjetivo, C1), !.
 
 profundidadeprimeiroLimite(NodoObjetivo, Limite, NodoAtual, Historico, [ProxNodo|Caminho], C) :- adjacente(NodoAtual, ProxNodo, C1),
-    															nao(membro(ProxNodo, Historico)),
-    															length([ProxNodo|Historico], Tam),
-    															Tam - 1 < Limite,  % é o mesmo que ter <=, o limite continua a ser respeitado
-																profundidadeprimeiroLimite(NodoObjetivo, Limite, ProxNodo, [ProxNodo|Historico], Caminho, C2), 
-																C is C1 + C2.	
+															nao(membro(ProxNodo, Historico)),
+															length([ProxNodo|Historico], Tam),
+															Tam - 1 < Limite,  % é o mesmo que ter <=, o limite continua a ser respeitado
+																profundidadeprimeiroLimite(NodoObjetivo, Limite, ProxNodo, [ProxNodo|Historico], Caminho, C2),
+																C is C1 + C2.
 
 
-melhorProfundidadeLimite(NodoObjetivo, Limite, Caminho, Custo) :- findall((SS, CC), profundidadeLimite(NodoObjetivo, Limite, SS, CC), L), 
+geraAllProfundidadeLimite(NodoObjetivo,Limite,Lista):- findall((SS, CC), profundidadeLimite(NodoObjetivo, Limite, SS, CC), Lista).
+
+melhorProfundidadeLimite(NodoObjetivo, Limite, Caminho, Custo) :- findall((SS, CC), profundidadeLimite(NodoObjetivo, Limite, SS, CC), L),
 							minimo(L, (Caminho, Custo)), !.
 
 
 %----------------------- Largura ---------------------------------------------------------------------------------------------------------
 
 
+geraAllLargura(NodoObjetivo,Lista):- findall((Caminhos,Custos), largura(NodoObjetivo,Caminhos,Custos),Lista).
+
+melhorLargura(NodoObjetivo, Caminho, Custo) :- findall((Caminhos, Custos), largura(NodoObjetivo, Caminhos, Custos), L),
+													minimo(L, (Caminho, Custo)), !.
+
+
 largura(Dest, Caminho, Custos):- inicial(Orig),
 							largura2(Dest,[[Orig/0]],Cam), !,
 							somaCustos(Cam, Custos2),
 							retiraCustos(Cam, [NodoRetirar|Resto]),
-							inverso([NodoRetirar|Resto], CaminhoIncompleto), 
+							inverso([NodoRetirar|Resto], CaminhoIncompleto),
 							append(CaminhoIncompleto, Resto, Caminho), % duplica o caminho sem o NodoObjetivo duplicado
 							Custos is Custos2 * 2.
 
@@ -292,7 +297,7 @@ somaCustos([_/Custo|Resto], Custos) :- somaCustos(Resto, Custos2),
 												Custos is Custo + Custos2.
 
 retiraCustos([], []).
-retiraCustos([Localidade/_|Resto], [Localidade|Outras]) :- retiraCustos(Resto, Outras). 
+retiraCustos([Localidade/_|Resto], [Localidade|Outras]) :- retiraCustos(Resto, Outras).
 
 
 membroCustos(Local, [Local/Cus|Resto]).
@@ -321,14 +326,14 @@ agulosa_distancia(Caminhos, SolucaoCaminho) :- obtem_melhor_distancia(Caminhos, 
 												seleciona(MelhorCaminho, Caminhos, OutrosCaminhos),
 												expande_agulosa_distancia(MelhorCaminho, ExpCaminhos),
 												append(OutrosCaminhos, ExpCaminhos, NovoCaminhos),
-        										agulosa_distancia(NovoCaminhos, SolucaoCaminho).	
+											agulosa_distancia(NovoCaminhos, SolucaoCaminho).
 
 obtem_melhor_distancia([Caminho], Caminho) :- !.
 obtem_melhor_distancia([Caminho1/Custo1/Est1,_/Custo2/Est2|Caminhos], MelhorCaminho) :- Est1 =< Est2, !,                                 %>
-																		obtem_melhor_distancia([Caminho1/Custo1/Est1|Caminhos], MelhorCaminho). 
+																		obtem_melhor_distancia([Caminho1/Custo1/Est1|Caminhos], MelhorCaminho).
 
 obtem_melhor_distancia([_|Caminhos], MelhorCaminho) :- obtem_melhor_distancia(Caminhos, MelhorCaminho).
-	
+
 
 expande_agulosa_distancia(Caminho, ExpCaminhos) :- findall(NovoCaminho, adjacente_distancia(Caminho,NovoCaminho), ExpCaminhos).
 
@@ -342,7 +347,7 @@ adjacente_distancia([Nodo|Caminho]/Custo/_, [ProxNodo,Nodo|Caminho]/NovoCusto/Es
 
 %-----------------------  A* ---------------------------------------------------------------------------------------------------------
 
-resolve_aestrela(Nodo, Caminho, Custo) :- estima(Nodo, Estima), 
+resolve_aestrela(Nodo, Caminho, Custo) :- estima(Nodo, Estima),
 										aestrela([[Nodo]/0/Estima], [GD|T]/Custo2/_), !,
 										inverso([GD|T], [NodoRetirar|CaminhoInverso]),
 										append([GD|T], CaminhoInverso, Caminho), %junta sem o NodoObjetivo duplicado
@@ -356,12 +361,12 @@ aestrela(Caminhos, SolucaoCaminho) :- obtem_melhor(Caminhos, MelhorCaminho),
 									seleciona(MelhorCaminho, Caminhos, OutrosCaminhos),
 									expande_aestrela(MelhorCaminho, ExpCaminhos),
 									append(OutrosCaminhos, ExpCaminhos, NovoCaminhos),
-									aestrela(NovoCaminhos, SolucaoCaminho).	
+									aestrela(NovoCaminhos, SolucaoCaminho).
 
 obtem_melhor([Caminho], Caminho) :- !.
 
 obtem_melhor([Caminho1/Custo1/Est1,_/Custo2/Est2|Caminhos], MelhorCaminho) :- Custo1 + Est1 =< Custo2 + Est2, !,     %>
-																			obtem_melhor([Caminho1/Custo1/Est1|Caminhos], MelhorCaminho). 
+																			obtem_melhor([Caminho1/Custo1/Est1|Caminhos], MelhorCaminho).
 
 obtem_melhor([_|Caminhos], MelhorCaminho) :- obtem_melhor(Caminhos, MelhorCaminho).
 
@@ -375,53 +380,16 @@ expande_aestrela(Caminho, ExpCaminhos) :- findall(NovoCaminho, adjacente_distanc
 
 
 
-%---------------------------- Escolha do circuito mais rápido (distância) --------------------------------------- 
+%---------------------------- Escolha do circuito mais rápido (distância) ---------------------------------------
 % ----> [(nome da estafeta, veiculo utilizado, distancia do circuito, tempo do circuito,[Caminho]), ...] <---------
 
 
-faster_circuit_depth(Circuitos):- findall(
-(Estafeta,Veiculo,Distancia,Tempo,Caminho),
-(entrega(Estafeta, _ , Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
-melhorProfundidade(NodoObjetivo,Caminho,Distancia),
-escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo)),Circuitos).
-
-faster_circuit_breadth(Circuitos):- findall(
-(Estafeta,Veiculo,Distancia,Tempo,Caminho),
-(entrega(Estafeta, _ , Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
-melhorLargura(NodoObjetivo,Caminho,Distancia),
-escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo)),Circuitos).
 
 
-faster_circuit_limitDepth(Circuitos):- findall(
-(Estafeta,Veiculo,Distancia,Tempo,Caminho),
-(entrega(Estafeta, _ , Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
-melhorProfundidadeLimite(NodoObjetivo,3,Caminho,Distancia),
-escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo)),Circuitos).
-
-
-%---------------------------- Escolha do circuito mais ecológico  --------------------------------------- 
+%---------------------------- Escolha do circuito mais ecológico  ---------------------------------------
 % ----> [(nome da estafeta, veiculo utilizado, distancia do circuito, tempo do circuito,[Caminho]), ...] <---------
 
-ecologic_circuit_depth(Circuitos):- findall(
-(Estafeta,Veiculo,Distancia,Tempo,Caminho),
-(entrega(Estafeta, Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
-geraCaminhosProfundidade(NodoObjetivo,Lista),
-geraVeiculos(Lista,Peso,Prazo,[],Veiculos),
-getMostEco(Veiculos,(Tempo,Distancia,Caminho,Veiculo))),Circuitos).
 
-
-%ecologic_circuit_breadth(Circuitos):- findall(
-%(Estafeta,Veiculo,Distancia,Tempo,Caminho),
-%(entrega(Estafeta, Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
-%melhorLargura(NodoObjetivo,Caminho,Distancia),
-%escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo)),Circuitos).
-
-
-% ecologic_circuit_limitDepth(Circuitos):- findall(
-% (Estafeta,Veiculo,Distancia,Tempo,Caminho),
-% (entrega(Estafeta, Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
-% melhorProfundidadeLimite(NodoObjetivo,3,Caminho,Distancia),
-% escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo)),Circuitos).
 
 
 
@@ -483,6 +451,36 @@ identificarPorPeso([[H|T]/Peso1|Outros], Peso, Circuitos) :- Peso1 < Peso, !,
 %--------------------------------------------------------------------------------------------------------------------------------
 % Escolher o circuito mais rápido (usando o critério da distância);
 
+
+
+
+
+
+faster_circuit_depth(Circuitos):- findall(
+(Estafeta,Veiculo,Distancia,Tempo,Caminho),
+(entrega(Estafeta, _ , Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
+melhorProfundidade(NodoObjetivo,Caminho,Distancia),
+DistanciaIda is Distancia / 2,
+escolheVeiculo(Peso,DistanciaIda,Veiculo,Prazo,Tempo)),Circuitos).
+
+faster_circuit_breadth(Circuitos):- findall(
+(Estafeta,Veiculo,Distancia,Tempo,Caminho),
+(entrega(Estafeta, _ , Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
+melhorLargura(NodoObjetivo,Caminho,Distancia),
+DistanciaIda is Distancia / 2,
+escolheVeiculo(Peso,DistanciaIda,Veiculo,Prazo,Tempo)),Circuitos).
+
+
+faster_circuit_limitDepth(Circuitos):- findall(
+(Estafeta,Veiculo,Distancia,Tempo,Caminho),
+(entrega(Estafeta, _ , Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
+melhorProfundidadeLimite(NodoObjetivo,3,Caminho,Distancia),
+DistanciaIda is Distancia / 2,
+escolheVeiculo(Peso,DistanciaIda,Veiculo,Prazo,Tempo)),Circuitos).
+
+
+
+
 circuitoMaisRapidoDistancia(NodoObjetivo, Cam, Cus) :-  resolve_aestrela(NodoObjetivo, Cam, Cus).
 
 
@@ -491,6 +489,28 @@ circuitoMaisRapidoDistancia(NodoObjetivo, Cam, Cus) :-  resolve_aestrela(NodoObj
 %--------------------------------------------------------------------------------------------------------------------------------
 % Escolher o circuito mais ecológico (usando um critério de tempo);
 
+ecologic_circuit_depth(Circuitos):- findall(
+(Estafeta,Veiculo,Distancia,Tempo,Caminho),
+(entrega(Estafeta,_, Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
+geraCaminhosProfundidade(NodoObjetivo,Lista),
+geraVeiculos(Lista,Peso,Prazo,[],Veiculos),
+getMostEco(Veiculos,(Tempo,Distancia,Caminho,Veiculo))),Circuitos).
+
+
+ecologic_circuit_breadth(Circuitos):- findall(
+(Estafeta,Veiculo,Distancia,Tempo,Caminho),
+(entrega(Estafeta,_, Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
+geraAllLargura(NodoObjetivo,Lista),
+geraVeiculos(Lista,Peso,Prazo,[],Veiculos),
+getMostEco(Veiculos,(Tempo,Distancia,Caminho,Veiculo))),Circuitos).
+
+
+ecologic_circuit_limitDepth(Circuitos):- findall(
+(Estafeta,Veiculo,Distancia,Tempo,Caminho),
+(entrega(Estafeta,_,Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
+geraAllProfundidadeLimite(NodoObjetivo,3,Lista),
+geraVeiculos(Lista,Peso,Prazo,[],Veiculos),
+getMostEco(Veiculos,(Tempo,Distancia,Caminho,Veiculo))),Circuitos).
 
 
 
@@ -517,10 +537,14 @@ nao( Questao ).
 
 membro(X, [X|_]).
 membro(X, [_|Xs]):-
-	membro(X, Xs).		
+	membro(X, Xs).
 
 escrever([]).
 escrever([X|L]):- write(X), nl, escrever(L).
+
+minimo([(P,X)],(P,X)).
+minimo([(Px,X)|L],(Py,Y)):- minimo(L,(Py,Y)), X>Y.
+minimo([(Px,X)|L],(Px,X)):- minimo(L,(Py,Y)), X=<Y.
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
