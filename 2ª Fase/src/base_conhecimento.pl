@@ -16,50 +16,72 @@ objetivo(greenDistribution).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Extensão do predicado move: LocalidadeOigem, LocalidadeDestino, CustoDistancia, CustoTempo -> {V,F}
-move(fraiao,maximinos,2,3).
-move(fraiao,celeiros,6,5).
-move(fraiao,palmeira,4,3).
-move(maximinos,celeiros,1,1).
-move(celeiros,gondizalves,1,3).
-move(palmeira,gondizalves,9,7).
-move(gondizalves,greenDistribution,2,9).
-move(adaufe,mireDeTibaes,5,2).
-move(adaufe,gualtar,9,3).
-move(adaufe,greenDistribution,5,5).
-move(mireDeTibaes,saoVitor,2,3).
-move(gualtar,saoVitor,6,4).
-move(gualtar,greenDistribution,1,9).
-move(saoVitor,semelhe,3,1).
-move(semelhe,trandeiras,8,7).
-move(trandeiras,real,2,3).
-move(real,saoVicente,5,9).
-move(real,greenDistribution,8,2).
-move(saoVicente,pedralva,6,2).
-move(saoVicente,tenoes,4,1).
-move(pedralva,priscos,7,4).
-move(tenoes,cividade,2,8).
-move(tenoes,priscos,1,1).
-move(priscos,padimDaGraca,4,8).
-move(cividade,crespos,9,4).
-move(cividade,greenDistribution,3,5).
-move(padimDaGraca,crespos,2,4).
-move(padimDaGraca,ferreiros,3,2).
-move(crespos,tadim,7,3).
-move(ferreiros,tadim,5,5).
-move(ferreiros,celeirosDup,1,9).
-move(tadim,nogueira,3,7).
-move(tadim,greenDistribution,4,9).
-move(celeirosDup,nogueira,1,3).
+move(fraiao,maximinos,2).
+move(fraiao,celeiros,6).
+move(fraiao,palmeira,4).
+move(maximinos,celeiros,1).
+move(celeiros,gondizalves,1).
+move(palmeira,gondizalves,9).
+move(gondizalves,greenDistribution,2).
+move(adaufe,mireDeTibaes,5).
+move(adaufe,gualtar,9).
+move(adaufe,greenDistribution,5).
+move(mireDeTibaes,saoVitor,2).
+move(gualtar,saoVitor,6).
+move(gualtar,greenDistribution,1).
+move(saoVitor,semelhe,3).
+move(semelhe,trandeiras,8).
+move(trandeiras,real,2).
+move(real,saoVicente,5).
+move(real,greenDistribution,8).
+move(saoVicente,pedralva,6).
+move(saoVicente,tenoes,4).
+move(pedralva,priscos,7).
+move(tenoes,cividade,2).
+move(tenoes,priscos,1).
+move(priscos,padimDaGraca,4).
+move(cividade,crespos,9).
+move(cividade,greenDistribution,3).
+move(padimDaGraca,crespos,2).
+move(padimDaGraca,ferreiros,3).
+move(crespos,tadim,7).
+move(ferreiros,tadim,5).
+move(ferreiros,celeirosDup,1).
+move(tadim,nogueira,3).
+move(tadim,greenDistribution,4).
+move(celeirosDup,nogueira,1).
 
-adjacente(Nodo, ProxNodo, C) :- move(Nodo, ProxNodo, C, _).
-adjacente(Nodo, ProxNodo, C) :- move(ProxNodo, Nodo, C, _).
+adjacente(Nodo, ProxNodo, C) :- move(Nodo, ProxNodo, C).
+adjacente(Nodo, ProxNodo, C) :- move(ProxNodo, Nodo, C).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
-% Extensão do predicado estima: Localidade, EstimaDistancia, EstimaTempo -> {V,F}
+% Extensão do predicado estima: Localidade, EstimaDistancia -> {V,F}
 
-%estima(elvas,270, 150).
-%estima(lisboa,0, 0).
+estima(fraiao, 9).
+estima(maximinos, 5).
+estima(palmeira, 10).
+estima(celeiros, 4).
+estima(gondizalves, 2).
+estima(adaufe, 4).
+estima(mireDeTibaes, 9).
+estima(saoVitor, 8).
+estima(gualtar, 1).
+estima(semelhe, 11).
+estima(trandeiras, 9).
+estima(real, 6).
+estima(saoVicente, 12).
+estima(pedralva, 14).
+estima(priscos, 11).
+estima(tenoes, 5).
+estima(cividade, 2).
+estima(crespos, 10).
+estima(padimDaGraca, 11).
+estima(ferreiros, 7).
+estima(celeirosDup, 7).
+estima(nogueira, 6).
+estima(tadim, 3).
+estima(greenDistribution, 0).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
@@ -110,7 +132,8 @@ morada(cristina, 'adaufe').
 
 % irá gerar => [(Veiculo,Tempo,Distancia),...]
 geraVeiculos([],_,_,L,L):-!.
-geraVeiculos([(Caminho,Distancia)|Caminhos], Peso, Prazo, Lista, Veiculos):- escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo),geraVeiculos(Caminhos,Peso,Prazo,[(Tempo,Distancia,Caminho,Veiculo)|Lista], Veiculos).
+geraVeiculos([(Caminho,Distancia)|Caminhos], Peso, Prazo, Lista, Veiculos):- escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo),
+																geraVeiculos(Caminhos,Peso,Prazo,[(Tempo,Distancia,Caminho,Veiculo)|Lista], Veiculos).
 
 
 
@@ -162,8 +185,10 @@ desconto_velocidade(carro, Vel, Peso) :- Vel is Vel - (0.1*PesoEnc).
 
 
 %executar esta
-profundidade(NodoObjetivo, Caminho, C) :- inicial(Inicio),
-										profundidadeprimeiroInicial(NodoObjetivo, Inicio, [Inicio], Caminho, C).
+profundidade(NodoObjetivo, CaminhoTodo, C) :- inicial(Inicio),
+										profundidadeprimeiroInicial(NodoObjetivo, Inicio, [Inicio], Caminho, C2), !,
+										duplicaCaminho(Caminho, CaminhoTodo),
+										C is C2 * 2.
 
 
 profundidadeprimeiroInicial(NodoObjetivo, Inicio, Historico, [Inicio, NodoObjetivo], C) :- adjacente(Inicio, NodoObjetivo, C).
@@ -191,6 +216,7 @@ melhorProfundidade(NodoObjetivo, Caminho, Custo) :- findall((Caminhos, Custos), 
 													minimo(L, (Caminho, Custo)), !. 
 
 
+
 minimo([(P,X)],(P,X)).
 minimo([(Px,X)|L],(Py,Y)):- minimo(L,(Py,Y)), X>Y. 
 minimo([(Px,X)|L],(Px,X)):- minimo(L,(Py,Y)), X=<Y.
@@ -198,13 +224,22 @@ minimo([(Px,X)|L],(Px,X)):- minimo(L,(Py,Y)), X=<Y.
 %>
 
 
+duplicaCaminho(Caminho, CaminhoTodo) :- duplicaCaminhoAuxiliar(Caminho, [], CaminhoInverso),
+										append(Caminho, CaminhoInverso, CaminhoTodo).
+
+% devolve o caminho reverso sem o nodo objetivo
+duplicaCaminhoAuxiliar([], [H|T], T).
+duplicaCaminhoAuxiliar([H|T], Aux, CaminhoInverso) :- duplicaCaminhoAuxiliar(T, [H|Aux], CaminhoInverso).
+
 
 %----------------------- Profundidade Com Limite ---------------------------------------------------------------------------------------------------------
 
 %executar esta
 %executar esta para testar os diferentes limites
-profundidadeLimite(NodoObjetivo, Limite, Caminho, C) :- inicial(Inicio),
-														profundidadeprimeiroLimiteInicial(NodoObjetivo, Limite, Inicio, [Inicio], Caminho, C), !.
+profundidadeLimite(NodoObjetivo, Limite, CaminhoTodo, C) :- inicial(Inicio),
+														profundidadeprimeiroLimiteInicial(NodoObjetivo, Limite, Inicio, [Inicio], Caminho, C2), !,
+														duplicaCaminho(Caminho, CaminhoTodo),
+														C is C2 * 2.
 
 profundidadeprimeiroLimiteInicial(NodoObjetivo, Limite, Inicio, Historico, [Inicio, NodoObjetivo], C) :- adjacente(Inicio, NodoObjetivo, C).
 
@@ -235,18 +270,22 @@ melhorProfundidadeLimite(NodoObjetivo, Limite, Caminho, Custo) :- findall((SS, C
 %----------------------- Largura ---------------------------------------------------------------------------------------------------------
 
 
-largura(Destino,Caminho, Custos) :- inicial(Inicio),
-					largura2(Destino,[[Inicio/0]],Cam),
-					somaCustos(Cam, Custos),
-					retiraCustos(Cam, Caminho).
+largura(Dest, Caminho, Custos):- inicial(Orig),
+							largura2(Dest,[[Orig/0]],Cam), !,
+							somaCustos(Cam, Custos2),
+							retiraCustos(Cam, [NodoRetirar|Resto]),
+							inverso([NodoRetirar|Resto], CaminhoIncompleto), 
+							append(CaminhoIncompleto, Resto, Caminho), % duplica o caminho sem o NodoObjetivo duplicado
+							Custos is Custos2 * 2.
 
-largura2(Destino,[[Destino/Cus|T],_],[Destino/Cus|T]).
+largura2(Dest,[[Dest/Cus|T]|_],[Dest/Cus|T]).
 
-largura2(Destino,[LA|Outros],Cam):- LA = [Act|_],
-								Act = Atual/Cus,
-    							findall([ProxNodo/C|LA],(Destino\== Atual,adjacente(Atual,ProxNodo, C),nao(membroCustos(ProxNodo,LA))), Novos),
-    							append(Outros,Novos,Todos),
-    							largura2(Destino,Todos,Cam).
+largura2(Dest,[LA|Outros],Cam):- LA=[Act|_],
+							Act = Atual/Cus,
+							findall([X/C|LA], (Dest\==Atual,adjacente(Atual,X, C),\+membroCustos(X,LA)),Novos),
+							append(Outros,Novos,Todos),
+							largura2(Dest,Todos,Cam).
+
 
 somaCustos([], 0).
 somaCustos([_/Custo|Resto], Custos) :- somaCustos(Resto, Custos2),
@@ -260,10 +299,78 @@ membroCustos(Local, [Local/Cus|Resto]).
 membroCustos(Local, [Nodo/Cus|Resto]) :- membroCustos(Local, Resto).
 
 
-auxiliar([LA|Outros], Todos) :- LA = [Atual|_],
-					Atual = Act/Cus,
-					findall([ProxNodo/C1|LA],(adjacente(Act,ProxNodo, C1),\+member(ProxNodo,LA)), Novos),
-    				append(Outros,Novos,Todos).
+
+
+
+
+
+
+%----------------------- Gulosa ---------------------------------------------------------------------------------------------------------
+
+resolve_gulosa_distancia(Nodo, CaminhoDistancia, CustoDist) :- estima(Nodo, EstimaD),
+															agulosa_distancia([[Nodo]/0/EstimaD], [GD|T]/CustoDist2/_), !,
+															inverso([GD|T], [NodoRetirar|CaminhoInverso]),
+															append([GD|T], CaminhoInverso, CaminhoDistancia), %junta sem o NodoObjetivo duplicado
+															CustoDist is CustoDist2 * 2.
+
+agulosa_distancia(Caminhos, Caminho) :- obtem_melhor_distancia(Caminhos, Caminho),
+										Caminho = [Nodo|_]/_/_,
+										inicial(Nodo).
+
+agulosa_distancia(Caminhos, SolucaoCaminho) :- obtem_melhor_distancia(Caminhos, MelhorCaminho),
+												seleciona(MelhorCaminho, Caminhos, OutrosCaminhos),
+												expande_agulosa_distancia(MelhorCaminho, ExpCaminhos),
+												append(OutrosCaminhos, ExpCaminhos, NovoCaminhos),
+        										agulosa_distancia(NovoCaminhos, SolucaoCaminho).	
+
+obtem_melhor_distancia([Caminho], Caminho) :- !.
+obtem_melhor_distancia([Caminho1/Custo1/Est1,_/Custo2/Est2|Caminhos], MelhorCaminho) :- Est1 =< Est2, !,                                 %>
+																		obtem_melhor_distancia([Caminho1/Custo1/Est1|Caminhos], MelhorCaminho). 
+
+obtem_melhor_distancia([_|Caminhos], MelhorCaminho) :- obtem_melhor_distancia(Caminhos, MelhorCaminho).
+	
+
+expande_agulosa_distancia(Caminho, ExpCaminhos) :- findall(NovoCaminho, adjacente_distancia(Caminho,NovoCaminho), ExpCaminhos).
+
+
+adjacente_distancia([Nodo|Caminho]/Custo/_, [ProxNodo,Nodo|Caminho]/NovoCusto/EstDist) :- move(Nodo, ProxNodo, PassoCustoDist),
+																						\+ member(ProxNodo, Caminho),
+																						NovoCusto is Custo + PassoCustoDist,
+																						estima(ProxNodo, EstDist).
+
+
+
+%-----------------------  A* ---------------------------------------------------------------------------------------------------------
+
+resolve_aestrela(Nodo, Caminho, Custo) :- estima(Nodo, Estima), 
+										aestrela([[Nodo]/0/Estima], [GD|T]/Custo2/_), !,
+										inverso([GD|T], [NodoRetirar|CaminhoInverso]),
+										append([GD|T], CaminhoInverso, Caminho), %junta sem o NodoObjetivo duplicado
+										Custo is Custo2 * 2.
+
+aestrela(Caminhos, Caminho) :- obtem_melhor(Caminhos, Caminho),
+								Caminho = [Nodo|_]/_/_,
+								inicial(Nodo).
+
+aestrela(Caminhos, SolucaoCaminho) :- obtem_melhor(Caminhos, MelhorCaminho),
+									seleciona(MelhorCaminho, Caminhos, OutrosCaminhos),
+									expande_aestrela(MelhorCaminho, ExpCaminhos),
+									append(OutrosCaminhos, ExpCaminhos, NovoCaminhos),
+									aestrela(NovoCaminhos, SolucaoCaminho).	
+
+obtem_melhor([Caminho], Caminho) :- !.
+
+obtem_melhor([Caminho1/Custo1/Est1,_/Custo2/Est2|Caminhos], MelhorCaminho) :- Custo1 + Est1 =< Custo2 + Est2, !,     %>
+																			obtem_melhor([Caminho1/Custo1/Est1|Caminhos], MelhorCaminho). 
+
+obtem_melhor([_|Caminhos], MelhorCaminho) :- obtem_melhor(Caminhos, MelhorCaminho).
+
+
+expande_aestrela(Caminho, ExpCaminhos) :- findall(NovoCaminho, adjacente_distancia(Caminho,NovoCaminho), ExpCaminhos).
+
+
+
+
 
 
 
@@ -376,7 +483,7 @@ identificarPorPeso([[H|T]/Peso1|Outros], Peso, Circuitos) :- Peso1 < Peso, !,
 %--------------------------------------------------------------------------------------------------------------------------------
 % Escolher o circuito mais rápido (usando o critério da distância);
 
-
+circuitoMaisRapidoDistancia(NodoObjetivo, Cam, Cus) :-  resolve_aestrela(NodoObjetivo, Cam, Cus).
 
 
 
