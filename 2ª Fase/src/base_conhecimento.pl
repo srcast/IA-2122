@@ -501,13 +501,18 @@ getMostEco(Veiculos,(Tempo,Distancia,Caminho,Veiculo))),Circuitos).
 %--------------------------------------------------------------------------------------------------------------------------------
 % Calculo de tempo de execução;
 
-see_Stats():- statistics(walltime, [TimeSinceStart | [TimeSinceLastCall]]),
+measure_time() :- statistics(walltime, [TimeSinceStart | [TimeSinceLastCall]]),
 most_ecologic_circuit(X), % função a ser testada
 statistics(walltime, [NewTimeSinceStart | [ExecutionTime]]),
 write('Execution took '), write(ExecutionTime), write(' ms.'), nl.
 
 
-
+%--------------------------------------------------------------------------------------------------------------------------------
+% Calculo da memória de execução;
+measure_memory() :- statistics(global_stack,[M1,L1]),
+most_ecologic_circuit(X), % função a ser testada
+statistics(global_stack,[M2,L1]),
+write('Used memory '), write(Memory), write(' Kb.'), nl, Memory is M2-M1.
 
 %--------------------------------- predicados auxiliares
 
