@@ -130,35 +130,40 @@ morada(cristina, 'adaufe').
 
 %--------------------------------- Predicados relacionados ao veículo - - - - - - - - - -  -  -  -  -   -
 
-% irá gerar => [(Veiculo,Tempo,Distancia),...]
+% Predicado responsável gerar uma lista de veículos mais ecológicos para cada circuito 
+% return => [(Veiculo,Tempo,Distancia),...]
+
 geraVeiculos([],_,_,L,L):-!.
 geraVeiculos([(Caminho,Distancia)|Caminhos], Peso, Prazo, Lista, Veiculos):- DistanciaIda is Distancia / 2, escolheVeiculo(Peso,DistanciaIda,Veiculo,Prazo,Tempo),
 																geraVeiculos(Caminhos,Peso,Prazo,[(Tempo,Distancia,Caminho,Veiculo)|Lista], Veiculos).
 
 
 
-
+% Obtém da lista o componente que possui a informação associada ao veículo indicado
 getV(V, [(A1,A2,A3,V)| _] , (A1,A2,A3,V)):- !.
 getV( V , [_|CS] , X ) :- getV(V,CS,X).
 
+% Obtém da lista de veículos aquele que é mais ecológico
 getMostEco(Lista,X):- member((_,_,_,bicicleta),Lista), getV(bicicleta,Lista,X),!.
 getMostEco(Lista,X):- member((_,_,_,mota),Lista), getV(mota,Lista,X),!.
 getMostEco(Lista,X):- member((_,_,_,carro),Lista), getV(carro,Lista,X).
 
 
-% escolhe veículo mais ecológico repeitando as restrições e prazo de tempo
+% Escolhe veículo mais ecológico repeitando as restrições e prazo de tempo
 escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo):- Peso =< 5 , calcula_tempo(bicicleta, Distancia, Peso, Tempo) , Tempo =< Prazo , Veiculo = bicicleta, !.
 escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo):- Peso =< 20 , calcula_tempo(mota, Distancia, Peso, Tempo) , Tempo =< Prazo, Veiculo = mota, !.
 escolheVeiculo(Peso,Distancia,Veiculo,_,Tempo):- Peso =< 100 , calcula_tempo(carro, Distancia, Peso, Tempo) , Veiculo = carro.
 
 
-% Extensão do predicado calcula_tempo: veiculo, distancia, peso , tempo -> {V, F}
+% Calcula o tempo de acordo com o veículo e suas restrições de velocidade 
 calcula_tempo(Veiculo,Distancia,PesoEnc, Tempo) :-  velMed(Veiculo,Vel),desconto_velocidade(Veiculo,Vel,PesoEnc, VelDesconto), Tempo is (Distancia / VelDesconto) + (Distancia / Vel).
 
+% Velocidade media de cada veículo
 velMed(bicicleta, V):- V is 10.
 velMed(mota, V):- V is 35.
 velMed(carro, V):- V is 25.
 
+% Calcula a Velocidade descontando o peso
 desconto_velocidade(bicicleta, Vel, Peso, NewVel) :- NewVel is Vel - (0.7*Peso).
 desconto_velocidade(mota, Vel, Peso, NewVel) :- NewVel is Vel - (0.5*Peso).
 desconto_velocidade(carro, Vel, Peso, NewVel) :- NewVel is Vel - (0.1*Peso).
@@ -268,11 +273,6 @@ melhorProfundidadeLimite(NodoObjetivo, Limite, Caminho, Custo) :- findall((SS, C
 
 %----------------------- Largura ---------------------------------------------------------------------------------------------------------
 
-
-
-
-melhorLargura(NodoObjetivo, Caminho, Custo) :- findall((Caminhos, Custos), largura(NodoObjetivo, Caminhos, Custos), L),
-													minimo(L, (Caminho, Custo)), !.
 
 
 largura(Dest, Caminho, Custos):- inicial(Orig),
@@ -454,9 +454,6 @@ identificarPorPeso([[H|T]/Peso1|Outros], Peso, Circuitos) :- Peso1 < Peso, !,
 
 
 
-
-
-
 faster_circuit_depth(Circuitos):- findall(
 (Estafeta,Veiculo,Distancia,Tempo,Caminho),
 (entrega(Estafeta, _ , Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
@@ -467,7 +464,7 @@ escolheVeiculo(Peso,DistanciaIda,Veiculo,Prazo,Tempo)),Circuitos).
 faster_circuit_breadth(Circuitos):- findall(
 (Estafeta,Veiculo,Distancia,Tempo,Caminho),
 (entrega(Estafeta, _ , Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
-melhorLargura(NodoObjetivo,Caminho,Distancia),
+largura(NodoObjetivo,Caminho,Distancia),
 DistanciaIda is Distancia / 2,
 escolheVeiculo(Peso,DistanciaIda,Veiculo,Prazo,Tempo)),Circuitos).
 
