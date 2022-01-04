@@ -1,3 +1,7 @@
+%COLOCAR NA MAIN DEPOIS
+:- set_prolog_flag( single_var_warnings,off ).
+:- style_check(-singleton).
+
 %-------------------------------------------------------------------------
 %---------------        Base de conhecimento		------------------
 %-------------------------------------------------------------------------
@@ -511,7 +515,7 @@ write('Execution took '), write(ExecutionTime), write(' ms.'), nl.
 % Calculo da memória de execução;
 measure_memory() :- statistics(global_stack,[M1,L1]),
 most_ecologic_circuit(X), % função a ser testada
-statistics(global_stack,[M2,L1]),
+statistics(global_stack,[M2,L2]),
 write('Used memory '), write(Memory), write(' Kb.'), nl, Memory is M2-M1.
 
 %--------------------------------- predicados auxiliares
