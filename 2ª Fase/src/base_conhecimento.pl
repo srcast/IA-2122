@@ -432,11 +432,20 @@ getMostEco(Veiculos,(Tempo,Distancia,Caminho,Veiculo))),Circuitos).
 
 %gera um circuito para um determinado local
 geraCircuito(NodoObjetivo, Caminho, C) :- inicial(Inicio),
-										profundidadeprimeiroInicial(NodoObjetivo, Inicio, [Inicio], Caminho, C).
+										profundidadeprimeiroInicial(NodoObjetivo, Inicio, [Inicio], [H|T], C2),
+										inverso([H|T], [NodoRetirar|Resto]),
+										append([H|T], Resto, Caminho),
+										C is C2 * 2.
 
 % gera todos od circuitos para um determinado local
 geraCircuitosObjetivo(NodoObjetivo, Caminhos) :- findall(Caminho,geraCircuito(NodoObjetivo, Caminho, C), Caminhos).
 
+
+
+
+
+
+geraCircuitosComCustos(NodoObjetivo, Caminhos) :- findall((Caminho/C),geraCircuito(NodoObjetivo, Caminho, C), Caminhos).
 
 %--------------------------------------------------------------------------------------------------------------------------------
 % Identificar quais os circuitos com maior número de entregas (por volume e peso);
