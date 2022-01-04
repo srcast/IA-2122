@@ -90,12 +90,12 @@ estima(greenDistribution, 0).
 % retirei veiculo, distancia e velocidade
 
 entrega(manuel, comida, 2, 1, maria, 'crespos', 4, 11/10/2021/10, 11/10/2021/11).
-entrega(manuel, comida, 2, 1, maria, 'crespos', 4, 11/10/2021/13, 11/10/2021/14).
-entrega(manuel, comida, 2, 1, maria, 'crespos', 4, 11/10/2021/16, 11/10/2021/18).
-entrega(manuel, comida, 2, 1, maria, 'crespos', 4, 11/10/2021/12, 11/10/2021/13).
+%entrega(manuel, comida, 2, 1, maria, 'crespos', 4, 11/10/2021/13, 11/10/2021/14).
+%entrega(manuel, comida, 2, 1, maria, 'crespos', 4, 11/10/2021/16, 11/10/2021/18).
+%entrega(manuel, comida, 2, 1, maria, 'crespos', 4, 11/10/2021/12, 11/10/2021/13).
 entrega(jose, comida, 4, 1, ana, 'nogueira', 5, 11/10/2021/12, 11/10/2021/13).
 entrega(fabio, roupa, 12, 24, filipa, 'tadim', 5, 12/10/2021/13, 12/10/2021/19).
-entrega(marco, movel, 80, 48, cristina, 'adaufe', 3, 11/10/2021/17, 14/10/2021/10).
+entrega(marco, movel, 2, 48, cristina, 'adaufe', 3, 11/10/2021/17, 14/10/2021/10).
 entrega(jose, comida, 4, 1, ana, 'nogueira', 5, 11/10/2021/20, 11/10/2021/21).
 entrega(manuel, comida, 1, 1, ana, 'nogueira', 5, 11/10/2021/19, 11/10/2021/20).
 entrega(fabio, comida, 2, 1, ana, 'nogueira', 3, 12/10/2021/21, 12/10/2021/22).
@@ -132,13 +132,13 @@ morada(cristina, 'adaufe').
 
 % irá gerar => [(Veiculo,Tempo,Distancia),...]
 geraVeiculos([],_,_,L,L):-!.
-geraVeiculos([(Caminho,Distancia)|Caminhos], Peso, Prazo, Lista, Veiculos):- escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo),
+geraVeiculos([(Caminho,Distancia)|Caminhos], Peso, Prazo, Lista, Veiculos):- DistanciaIda is Distancia / 2, escolheVeiculo(Peso,DistanciaIda,Veiculo,Prazo,Tempo),
 																geraVeiculos(Caminhos,Peso,Prazo,[(Tempo,Distancia,Caminho,Veiculo)|Lista], Veiculos).
 
 
 
 
-getV(V, [(A1,A2,A3,V)| _] , (A1,A2,A3,V)).
+getV(V, [(A1,A2,A3,V)| _] , (A1,A2,A3,V)):- !.
 getV( V , [_|CS] , X ) :- getV(V,CS,X).
 
 getMostEco(Lista,X):- member((_,_,_,bicicleta),Lista), getV(bicicleta,Lista,X),!.
@@ -207,7 +207,7 @@ profundidadeprimeiro(NodoObjetivo, NodoAtual, Historico, [ProxNodo|Caminho], C) 
 																					C is C1 + C2.
 
 
-geraCaminhosProfundidade(NodoObjetivo,Lista):- findall((Caminhos,Custos), profundidade(NodoObjetivo,Caminhos,Custos),Lista).
+
 
 
 
@@ -260,7 +260,7 @@ profundidadeprimeiroLimite(NodoObjetivo, Limite, NodoAtual, Historico, [ProxNodo
 																C is C1 + C2.
 
 
-geraAllProfundidadeLimite(NodoObjetivo,Limite,Lista):- findall((SS, CC), profundidadeLimite(NodoObjetivo, Limite, SS, CC), Lista).
+
 
 melhorProfundidadeLimite(NodoObjetivo, Limite, Caminho, Custo) :- findall((SS, CC), profundidadeLimite(NodoObjetivo, Limite, SS, CC), L),
 							minimo(L, (Caminho, Custo)), !.
@@ -269,7 +269,7 @@ melhorProfundidadeLimite(NodoObjetivo, Limite, Caminho, Custo) :- findall((SS, C
 %----------------------- Largura ---------------------------------------------------------------------------------------------------------
 
 
-geraAllLargura(NodoObjetivo,Lista):- findall((Caminhos,Custos), largura(NodoObjetivo,Caminhos,Custos),Lista).
+
 
 melhorLargura(NodoObjetivo, Caminho, Custo) :- findall((Caminhos, Custos), largura(NodoObjetivo, Caminhos, Custos), L),
 													minimo(L, (Caminho, Custo)), !.
@@ -380,14 +380,6 @@ expande_aestrela(Caminho, ExpCaminhos) :- findall(NovoCaminho, adjacente_distanc
 
 
 
-%---------------------------- Escolha do circuito mais rápido (distância) ---------------------------------------
-% ----> [(nome da estafeta, veiculo utilizado, distancia do circuito, tempo do circuito,[Caminho]), ...] <---------
-
-
-
-
-%---------------------------- Escolha do circuito mais ecológico  ---------------------------------------
-% ----> [(nome da estafeta, veiculo utilizado, distancia do circuito, tempo do circuito,[Caminho]), ...] <---------
 
 
 
@@ -400,11 +392,20 @@ expande_aestrela(Caminho, ExpCaminhos) :- findall(NovoCaminho, adjacente_distanc
 
 %gera um circuito para um determinado local
 geraCircuito(NodoObjetivo, Caminho, C) :- inicial(Inicio),
-										profundidadeprimeiroInicial(NodoObjetivo, Inicio, [Inicio], Caminho, C).
+										profundidadeprimeiroInicial(NodoObjetivo, Inicio, [Inicio], [H|T], C2),
+										inverso([H|T], [NodoRetirar|Resto]),
+										append([H|T], Resto, Caminho),
+										C is C2 * 2.
 
 % gera todos od circuitos para um determinado local
 geraCircuitosObjetivo(NodoObjetivo, Caminhos) :- findall(Caminho,geraCircuito(NodoObjetivo, Caminho, C), Caminhos).
 
+
+
+
+
+
+geraCircuitosComCustos(NodoObjetivo, Caminhos) :- findall((Caminho,C),geraCircuito(NodoObjetivo, Caminho, C), Caminhos).
 
 %--------------------------------------------------------------------------------------------------------------------------------
 % Identificar quais os circuitos com maior número de entregas (por volume e peso);
@@ -460,20 +461,23 @@ faster_circuit_depth(Circuitos):- findall(
 (Estafeta,Veiculo,Distancia,Tempo,Caminho),
 (entrega(Estafeta, _ , Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
 melhorProfundidade(NodoObjetivo,Caminho,Distancia),
-escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo)),Circuitos).
+DistanciaIda is Distancia / 2,
+escolheVeiculo(Peso,DistanciaIda,Veiculo,Prazo,Tempo)),Circuitos).
 
 faster_circuit_breadth(Circuitos):- findall(
 (Estafeta,Veiculo,Distancia,Tempo,Caminho),
 (entrega(Estafeta, _ , Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
 melhorLargura(NodoObjetivo,Caminho,Distancia),
-escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo)),Circuitos).
+DistanciaIda is Distancia / 2,
+escolheVeiculo(Peso,DistanciaIda,Veiculo,Prazo,Tempo)),Circuitos).
 
 
 faster_circuit_limitDepth(Circuitos):- findall(
 (Estafeta,Veiculo,Distancia,Tempo,Caminho),
 (entrega(Estafeta, _ , Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
 melhorProfundidadeLimite(NodoObjetivo,3,Caminho,Distancia),
-escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo)),Circuitos).
+DistanciaIda is Distancia / 2,
+escolheVeiculo(Peso,DistanciaIda,Veiculo,Prazo,Tempo)),Circuitos).
 
 
 
@@ -486,31 +490,16 @@ circuitoMaisRapidoDistancia(NodoObjetivo, Cam, Cus) :-  resolve_aestrela(NodoObj
 %--------------------------------------------------------------------------------------------------------------------------------
 % Escolher o circuito mais ecológico (usando um critério de tempo);
 
-ecologic_circuit_depth(Circuitos):- findall(
+most_ecologic_circuit(Circuitos):- findall(
 (Estafeta,Veiculo,Distancia,Tempo,Caminho),
 (entrega(Estafeta,_, Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
-geraCaminhosProfundidade(NodoObjetivo,Lista),
+geraCircuitosComCustos(NodoObjetivo,Lista),
 geraVeiculos(Lista,Peso,Prazo,[],Veiculos),
 getMostEco(Veiculos,(Tempo,Distancia,Caminho,Veiculo))),Circuitos).
 
 
-ecologic_circuit_breadth(Circuitos):- findall(
-(Estafeta,Veiculo,Distancia,Tempo,Caminho),
-(entrega(Estafeta,_, Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
-geraAllLargura(NodoObjetivo,Lista),
-geraVeiculos(Lista,Peso,Prazo,[],Veiculos),
-getMostEco(Veiculos,(Tempo,Distancia,Caminho,Veiculo))),Circuitos).
-
-
-ecologic_circuit_limitDepth(Circuitos):- findall(
-(Estafeta,Veiculo,Distancia,Tempo,Caminho),
-(entrega(Estafeta,_,Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
-geraAllProfundidadeLimite(NodoObjetivo,3,Lista),
-geraVeiculos(Lista,Peso,Prazo,[],Veiculos),
-getMostEco(Veiculos,(Tempo,Distancia,Caminho,Veiculo))),Circuitos).
-
-
-
+%--------------------------------------------------------------------------------------------------------------------------------
+% Calculo de tempo de execução;
 
 
 
