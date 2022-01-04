@@ -1,3 +1,7 @@
+%COLOCAR NA MAIN DEPOIS
+:- set_prolog_flag( single_var_warnings,off ).
+:- style_check(-singleton).
+
 %-------------------------------------------------------------------------
 %---------------        Base de conhecimento		------------------
 %-------------------------------------------------------------------------
@@ -46,10 +50,10 @@ move(padimDaGraca,crespos,2).
 move(padimDaGraca,ferreiros,3).
 move(crespos,tadim,7).
 move(ferreiros,tadim,5).
-move(ferreiros,celeirosDup,1).
+move(ferreiros,espinho,1).
 move(tadim,nogueira,3).
 move(tadim,greenDistribution,4).
-move(celeirosDup,nogueira,1).
+move(espinho,nogueira,1).
 
 adjacente(Nodo, ProxNodo, C) :- move(Nodo, ProxNodo, C).
 adjacente(Nodo, ProxNodo, C) :- move(ProxNodo, Nodo, C).
@@ -78,7 +82,7 @@ estima(cividade, 2).
 estima(crespos, 10).
 estima(padimDaGraca, 11).
 estima(ferreiros, 7).
-estima(celeirosDup, 7).
+estima(espinho, 7).
 estima(nogueira, 6).
 estima(tadim, 3).
 estima(greenDistribution, 0).
@@ -498,13 +502,18 @@ getMostEco(Veiculos,(Tempo,Distancia,Caminho,Veiculo))),Circuitos).
 %--------------------------------------------------------------------------------------------------------------------------------
 % Calculo de tempo de execução;
 
-see_Stats():- statistics(walltime, [TimeSinceStart | [TimeSinceLastCall]]),
+measure_time() :- statistics(walltime, [TimeSinceStart | [TimeSinceLastCall]]),
 most_ecologic_circuit(X), % função a ser testada
 statistics(walltime, [NewTimeSinceStart | [ExecutionTime]]),
 write('Execution took '), write(ExecutionTime), write(' ms.'), nl.
 
 
-
+%--------------------------------------------------------------------------------------------------------------------------------
+% Calculo da memória de execução;
+measure_memory() :- statistics(global_stack,[M1,L1]),
+most_ecologic_circuit(X), % função a ser testada
+statistics(global_stack,[M2,L2]),
+write('Used memory '), write(Memory), write(' Kb.'), nl, Memory is M2-M1.
 
 %--------------------------------- predicados auxiliares
 
