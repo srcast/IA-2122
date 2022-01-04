@@ -305,14 +305,14 @@ getMostEco(Veiculos,(Tempo,Distancia,Caminho,Veiculo))),Circuitos).
 
 %ecologic_circuit_breadth(Circuitos):- findall(
 %(Estafeta,Veiculo,Distancia,Tempo,Caminho),
-%(entrega(Estafeta, _ , Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
+%(entrega(Estafeta, Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
 %melhorLargura(NodoObjetivo,Caminho,Distancia),
 %escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo)),Circuitos).
 
 
 % ecologic_circuit_limitDepth(Circuitos):- findall(
 % (Estafeta,Veiculo,Distancia,Tempo,Caminho),
-% (entrega(Estafeta, _ , Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
+% (entrega(Estafeta, Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
 % melhorProfundidadeLimite(NodoObjetivo,3,Caminho,Distancia),
 % escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo)),Circuitos).
 
