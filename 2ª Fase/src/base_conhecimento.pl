@@ -34,7 +34,6 @@ move(mireDeTibaes,saoVitor,2).
 move(gualtar,saoVitor,6).
 move(gualtar,greenDistribution,1).
 move(saoVitor,semelhe,3).
-move(semelhe,trandeiras,8).
 move(trandeiras,real,2).
 move(real,saoVicente,5).
 move(real,greenDistribution,8).
@@ -43,8 +42,6 @@ move(saoVicente,tenoes,4).
 move(pedralva,priscos,7).
 move(tenoes,cividade,2).
 move(tenoes,priscos,1).
-move(priscos,padimDaGraca,4).
-move(cividade,crespos,9).
 move(cividade,greenDistribution,3).
 move(padimDaGraca,crespos,2).
 move(padimDaGraca,ferreiros,3).
@@ -151,7 +148,7 @@ geraVeiculosDisponiveis(_,_,_,VStats,VStats,_):-!.
 
 
 % Predicado responsável gerar uma lista de veículos mais ecológicos para cada circuito
-% return => [(Veiculo,Tempo,Distancia),...]
+% return => [(Veiculo,Tempo,Distancia),...] 
 geraVeiculos([],_,_,L,L):-!.
 geraVeiculos([(Caminho,Distancia)|Caminhos], Peso, Prazo, Lista, Veiculos):- DistanciaIda is Distancia / 2, escolheVeiculo(Peso,DistanciaIda,Veiculo,Prazo,Tempo),
 																geraVeiculos(Caminhos,Peso,Prazo,[(Tempo,Distancia,Caminho,Veiculo)|Lista], Veiculos).
@@ -173,6 +170,7 @@ escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo):- Peso =< 5 , calcula_tempo(b
 escolheVeiculo(Peso,Distancia,Veiculo,Prazo,Tempo):- Peso =< 20 , calcula_tempo(mota, Distancia, Peso, Tempo) , Tempo =< Prazo, Veiculo = mota, !.
 escolheVeiculo(Peso,Distancia,Veiculo,_,Tempo):- Peso =< 100 , calcula_tempo(carro, Distancia, Peso, Tempo) , Veiculo = carro.
 
+%>
 
 % Calcula o tempo de acordo com o veículo e suas restrições de velocidade
 calcula_tempo(Veiculo,Distancia,PesoEnc, Tempo) :-  velMed(Veiculo,Vel),desconto_velocidade(Veiculo,Vel,PesoEnc, VelDesconto), Tempo is (Distancia / VelDesconto) + (Distancia / Vel).
@@ -195,17 +193,6 @@ desconto_velocidade(carro, Vel, Peso, NewVel) :- NewVel is Vel - (0.1*Peso).
 %----------------------------------------------------------------------------------------------------------------------------------------------
 
 %----------------------- Profundidade ---------------------------------------------------------------------------------------------------------
-
-%profundidade(Nodo, [Nodo|Caminho], C) :- profundidadeprimeiro(Nodo, [Nodo], Caminho, C).
-%
-%
-%profundidadeprimeiro(Nodo,_, [], 0) :- objetivo(Nodo).
-%
-%profundidadeprimeiro(Nodo, Historico, [ProxNodo|Caminho], C) :- adjacente(Nodo, ProxNodo, C1),
-%															nao(membro(ProxNodo, Historico)),
-%																profundidadeprimeiro(ProxNodo, [ProxNodo|Historico], Caminho, C2),
-%																C is C1 + C2.
-
 
 
 %executar esta
@@ -339,7 +326,7 @@ resolve_gulosa_distancia(Nodo, CaminhoDistancia, CustoDist) :- estima(Nodo, Esti
 
 agulosa_distancia(Caminhos, Caminho) :- obtem_melhor_distancia(Caminhos, Caminho),
 										Caminho = [Nodo|_]/_/_,
-										inicial(Nodo).
+										objetivo(Nodo).
 
 agulosa_distancia(Caminhos, SolucaoCaminho) :- obtem_melhor_distancia(Caminhos, MelhorCaminho),
 												seleciona(MelhorCaminho, Caminhos, OutrosCaminhos),
@@ -361,6 +348,10 @@ adjacente_distancia([Nodo|Caminho]/Custo/_, [ProxNodo,Nodo|Caminho]/NovoCusto/Es
 																						\+ member(ProxNodo, Caminho),
 																						NovoCusto is Custo + PassoCustoDist,
 																						estima(ProxNodo, EstDist).
+
+
+
+
 
 
 
@@ -429,11 +420,12 @@ geraCircuitosComCustos(NodoObjetivo, Caminhos) :- findall((Caminho,C),geraCircui
 %--------------------------------------------------------------------------------------------------------------------------------
 % Identificar quais os circuitos com maior número de entregas (por volume e peso);
 
-
-%identificar circuitos com um minimo de Peso
-identificarCircuitos(Peso, Circuitos) :- geraCircuitosObjetivo(NodoObjetivo, Caminhos),
-										calcularPesosCircuitosTodos(Caminhos, CaminhosPesos),
-										identificarPorPeso(CaminhosPesos, Peso, Circuitos).
+%executar esta
+%identificar N circuitos com mais peso
+identificarCircuitosPeso(N, Circuitos) :- geraCircuitosObjetivo(NodoObjetivo, Caminhos),
+										calcularPesosCircuitosTodos(Caminhos, [H|T]),
+										ordenarCaminhos(T, [H], CircuitosOrd),
+										escolheN(CircuitosOrd, N, [], Circuitos).
 
 calcularPesosCircuitosTodos([], []).
 calcularPesosCircuitosTodos([Circuito1|T], [CircuitoPeso|OutrosCircuitosPeso]) :- calculaPesoCircuito(Circuito1, CircuitoPeso),
@@ -449,13 +441,67 @@ calculaPesoCircuitoAuxiliar([Freguesia|T], PesoTotal) :- findall(Peso, entrega(_
 														calculaPesoCircuitoAuxiliar(T, Peso2),
 														PesoTotal is Peso1 + Peso2.
 
-%identifica os circuitos que tem pelo menos Peso
-identificarPorPeso([], Peso, []).
-identificarPorPeso([[H|T]/Peso1|Outros], Peso, [[H|T]/Peso1|Circuitos]) :- Peso1 >= Peso, !,
-																		identificarPorPeso(Outros, Peso, Circuitos).
 
-identificarPorPeso([[H|T]/Peso1|Outros], Peso, Circuitos) :- Peso1 < Peso, !,
-																		identificarPorPeso(Outros, Peso, Circuitos).
+
+
+
+%executar esta
+%identifar os N circuitos com mais entregas
+identificarCircuitosNEntregas(N, Circuitos) :- geraCircuitosObjetivo(NodoObjetivo, Caminhos),
+														calcularNEntregasCircuitosTodos(Caminhos, [H|T]),
+														ordenarCaminhos(T, [H], CircuitosOrd),
+														escolheN(CircuitosOrd, N, [], Circuitos).
+
+calcularNEntregasCircuitosTodos([], []).
+calcularNEntregasCircuitosTodos([Circuito1|T], [CircuitoPeso|OutrosCircuitosPeso]) :- calculaNEntregasCircuito(Circuito1, CircuitoPeso),
+																				calcularNEntregasCircuitosTodos(T, OutrosCircuitosPeso).
+
+% retira a greenDistribution das contas
+calculaNEntregasCircuito([H|T], [H|T]/NEntregasTotal) :- calculaNEntregasCircuitoAuxiliar(T, NEntregasTotal).
+
+%calcula os pesos associados às freguesias do circuito
+calculaNEntregasCircuitoAuxiliar([], 0).
+calculaNEntregasCircuitoAuxiliar([Freguesia|T], Nentregas) :- findall(Freguesia, entrega(_, _, _, _, _, Freguesia, _, _, _), Lista),
+															comprimento(Lista, Nentregas1),
+															calculaNEntregasCircuitoAuxiliar(T, Nentregas2),
+															Nentregas is Nentregas1 + Nentregas2.
+
+
+
+
+
+%escolhe os N elementos da lista
+escolheN(Lista, 0, NCircuitos, Circuitos) :- reverse(NCircuitos, Circuitos), !.
+escolheN([], N, NCircuitos, Circuitos) :- reverse(NCircuitos, Circuitos), !.
+
+escolheN([H|Outros], N, NCircuitos, NCircuitosAtual) :- N2 is N - 1, 
+														adicionar(H, NCircuitos, NCircuitos2),
+ 											            escolheN(Outros, N2, NCircuitos2, NCircuitosAtual).
+
+
+
+
+%ordena do maior para o mais pequeno
+ordenarCaminhos([],CaminhoOrdenado, CaminhoOrdenado).
+ordenarCaminhos([[H|T]/Custo|Outros], CaminhoOrdenado, CaminhoFinal) :- ordenarCaminhosAuxiliar([H|T]/Custo, CaminhoOrdenado, CaminhoOrdenadoAtualizado),
+														ordenarCaminhos(Outros, CaminhoOrdenadoAtualizado, CaminhoFinal).
+
+
+%coloca o custo no sitio correto
+ordenarCaminhosAuxiliar([H|T]/Custo, [], [[H|T]/Custo]) :- !.
+
+ordenarCaminhosAuxiliar([H|T]/Custo, [[H2|T2]/Custo2|OutrosOrdenados], [[H|T]/Custo,[H2|T2]/Custo2|OutrosOrdenados]) :- Custo >= Custo2, !.
+
+ordenarCaminhosAuxiliar([H|T]/Custo, [[H2|T2]/Custo2|OutrosOrdenados2], [[H2|T2]/Custo2|OutrosOrdenados]) :- Custo < Custo2, !,
+																					ordenarCaminhosAuxiliar([H|T]/Custo, OutrosOrdenados2 ,OutrosOrdenados).
+
+
+
+
+
+
+
+
 
 
 
@@ -568,3 +614,17 @@ somatorio([], 0).
 somatorio([H|T], R) :-
         somatorio(T, R2),
 	R is H + R2.
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Extensao do predicado comprimento: Lista,Comprimento -> {V,F}
+
+comprimento( [],0 ).
+comprimento( [X|L],N ) :-
+    comprimento( L,N1 ),
+    N is N1+1.
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Extensao do predicado adicionar: Elemento,Lista,Resultado -> {V,F}
+
+adicionar(X,[],[X]) :- !.
+adicionar(X,[H|T],[X,H|T]) :- !.
