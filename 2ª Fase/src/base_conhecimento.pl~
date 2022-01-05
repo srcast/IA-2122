@@ -1,3 +1,7 @@
+%COLOCAR NA MAIN DEPOIS
+:- set_prolog_flag( single_var_warnings,off ).
+:- style_check(-singleton).
+
 %-------------------------------------------------------------------------
 %---------------        Base de conhecimento		------------------
 %-------------------------------------------------------------------------
@@ -46,10 +50,10 @@ move(padimDaGraca,crespos,2).
 move(padimDaGraca,ferreiros,3).
 move(crespos,tadim,7).
 move(ferreiros,tadim,5).
-move(ferreiros,celeirosDup,1).
+move(ferreiros,espinho,1).
 move(tadim,nogueira,3).
 move(tadim,greenDistribution,4).
-move(celeirosDup,nogueira,1).
+move(espinho,nogueira,1).
 
 adjacente(Nodo, ProxNodo, C) :- move(Nodo, ProxNodo, C).
 adjacente(Nodo, ProxNodo, C) :- move(ProxNodo, Nodo, C).
@@ -57,7 +61,6 @@ adjacente(Nodo, ProxNodo, C) :- move(ProxNodo, Nodo, C).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Extensão do predicado estima: Localidade, EstimaDistancia -> {V,F}
-
 estima(fraiao, 9).
 estima(maximinos, 5).
 estima(palmeira, 10).
@@ -78,7 +81,7 @@ estima(cividade, 2).
 estima(crespos, 10).
 estima(padimDaGraca, 11).
 estima(ferreiros, 7).
-estima(celeirosDup, 7).
+estima(espinho, 7).
 estima(nogueira, 6).
 estima(tadim, 3).
 estima(greenDistribution, 0).
@@ -130,9 +133,19 @@ morada(cristina, 'adaufe').
 
 %--------------------------------- Predicados relacionados ao veículo - - - - - - - - - -  -  -  -  -   -
 
+
+
+% Gera Veiculos e tempo associado possíveis se cumprir com o prazo estabelecido e restrições de peso 
+geraVeiculosDisponiveis(Distancia, Peso, Prazo,ListaAux,VStats, Indice):- Indice == 1 Peso =< 5 , calcula_tempo(bicicleta, Distancia, Peso, Tempo), Tempo =< Prazo, NewInd is Indice + 1, geraVeiculosDisponiveis(Distancia, Peso, Prazo,[(bicicleta,Tempo)|ListaAux],VStats, NewInd).
+geraVeiculosDisponiveis(Distancia, Peso, Prazo,ListaAux,VStats,Indice):- Indice == 2,Peso =< 20 , calcula_tempo(mota, Distancia, Peso, Tempo), Tempo =< Prazo, NewInd is Indice + 1, geraVeiculosDisponiveis(Distancia, Peso, Prazo,[(mota,Tempo)|ListaAux],VStats, NewInd).
+geraVeiculosDisponiveis(Distancia, Peso, Prazo,ListaAux,VStats,Indice):- Indice == 3,Peso =< 100 , calcula_tempo(carro, Distancia, Peso, Tempo), Tempo =< Prazo, NewInd is Indice + 1, geraVeiculosDisponiveis(Distancia, Peso, Prazo,[(carro,Tempo)|ListaAux],VStats, NewInd).
+geraVeiculosDisponiveis(_,_,_,VStats,VStats,_).
+
+
+
+
 % Predicado responsável gerar uma lista de veículos mais ecológicos para cada circuito 
 % return => [(Veiculo,Tempo,Distancia),...]
-
 geraVeiculos([],_,_,L,L):-!.
 geraVeiculos([(Caminho,Distancia)|Caminhos], Peso, Prazo, Lista, Veiculos):- DistanciaIda is Distancia / 2, escolheVeiculo(Peso,DistanciaIda,Veiculo,Prazo,Tempo),
 																geraVeiculos(Caminhos,Peso,Prazo,[(Tempo,Distancia,Caminho,Veiculo)|Lista], Veiculos).
@@ -217,7 +230,7 @@ profundidadeprimeiro(NodoObjetivo, NodoAtual, Historico, [ProxNodo|Caminho], C) 
 
 
 
-melhorProfundidade(NodoObjetivo, Caminho, Custo) :- geraCircuitosComCustos(NodoObjetivo,L).
+melhorProfundidade(NodoObjetivo, Caminho, Custo) :- findall((Caminhos, Custos), profundidade(NodoObjetivo, Caminhos, Custos), L),
 													minimo(L, (Caminho, Custo)), !.
 
 
@@ -443,7 +456,15 @@ identificarPorPeso([[H|T]/Peso1|Outros], Peso, Circuitos) :- Peso1 < Peso, !,
 %--------------------------------------------------------------------------------------------------------------------------------
 % Comparar circuitos de entrega tendo em conta os indicadores de produtividade;
 
+%compara_circuitos(NodoObjetivo,Circuitos):- geraCircuitosComCustos(NodoObjetivo,Circuitos1), compara_circuitos_aux(NodoObjetivo,Circuitos1,[],Circuitos).
 
+%compara_circuitos_aux(_, [], C, C):- !.
+%compara_circuitos_aux(NodoObjetivo,[(Caminho,Distancia)|R], Caux , C):- findall(
+%(Estafeta,NodoObjetivo,Distancia,VStats,Caminho),
+%(entrega(Estafeta,_, Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
+%DistanciaIda / 2,
+%geraVeiculosDisponiveis(DistanciaIda, Peso, Prazo,[],VStats)), CircuitoStats),
+%compara_circuitos_aux(NodoObjetivo,R,[CircuitoStats|Caux],C). 
 
 
 
@@ -455,26 +476,20 @@ identificarPorPeso([[H|T]/Peso1|Outros], Peso, Circuitos) :- Peso1 < Peso, !,
 
 
 faster_circuit_depth(Circuitos):- findall(
-(Estafeta,Veiculo,Distancia,Tempo,Caminho),
-(entrega(Estafeta, _ , Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
-melhorProfundidade(NodoObjetivo,Caminho,Distancia),
-DistanciaIda is Distancia / 2,
-escolheVeiculo(Peso,DistanciaIda,Veiculo,Prazo,Tempo)),Circuitos).
+(Estafeta,NodoObjetivo,Distancia,Caminho),
+(entrega(Estafeta, _ ,_, _, _ , NodoObjetivo, _ , _ , _ ),
+melhorProfundidade(NodoObjetivo,Caminho,Distancia)),Circuitos).
 
 faster_circuit_breadth(Circuitos):- findall(
-(Estafeta,Veiculo,Distancia,Tempo,Caminho),
-(entrega(Estafeta, _ , Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
-largura(NodoObjetivo,Caminho,Distancia),
-DistanciaIda is Distancia / 2,
-escolheVeiculo(Peso,DistanciaIda,Veiculo,Prazo,Tempo)),Circuitos).
+(Estafeta,NodoObjetivo,Distancia,Caminho),
+(entrega(Estafeta, _ ,_, _, _ , NodoObjetivo, _ , _ , _ ),
+largura(NodoObjetivo,Caminho,Distancia)),Circuitos).
 
 
 faster_circuit_limitDepth(Circuitos):- findall(
-(Estafeta,Veiculo,Distancia,Tempo,Caminho),
-(entrega(Estafeta, _ , Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
-melhorProfundidadeLimite(NodoObjetivo,3,Caminho,Distancia),
-DistanciaIda is Distancia / 2,
-escolheVeiculo(Peso,DistanciaIda,Veiculo,Prazo,Tempo)),Circuitos).
+(Estafeta,NodoObjetivo,Distancia,Caminho),
+(entrega(Estafeta, _ ,_, _, _ , NodoObjetivo, _ , _ , _ ),
+melhorProfundidadeLimite(NodoObjetivo,3,Caminho,Distancia)),Circuitos).
 
 
 
@@ -488,7 +503,7 @@ circuitoMaisRapidoDistancia(NodoObjetivo, Cam, Cus) :-  resolve_aestrela(NodoObj
 % Escolher o circuito mais ecológico (usando um critério de tempo);
 
 most_ecologic_circuit(Circuitos):- findall(
-(Estafeta,Veiculo,Distancia,Tempo,Caminho),
+(Estafeta,NodoObjetivo,Veiculo,Distancia,Tempo,Caminho),
 (entrega(Estafeta,_, Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
 geraCircuitosComCustos(NodoObjetivo,Lista),
 geraVeiculos(Lista,Peso,Prazo,[],Veiculos),
@@ -498,13 +513,18 @@ getMostEco(Veiculos,(Tempo,Distancia,Caminho,Veiculo))),Circuitos).
 %--------------------------------------------------------------------------------------------------------------------------------
 % Calculo de tempo de execução;
 
-see_Stats():- statistics(walltime, [TimeSinceStart | [TimeSinceLastCall]]),
+measure_time() :- statistics(walltime, [TimeSinceStart | [TimeSinceLastCall]]),
 most_ecologic_circuit(X), % função a ser testada
 statistics(walltime, [NewTimeSinceStart | [ExecutionTime]]),
 write('Execution took '), write(ExecutionTime), write(' ms.'), nl.
 
 
-
+%--------------------------------------------------------------------------------------------------------------------------------
+% Calculo da memória de execução;
+measure_memory() :- statistics(global_stack,[M1,L1]),
+most_ecologic_circuit(X), % função a ser testada
+statistics(global_stack,[M2,L2]),
+write('Used memory '), write(Memory), write(' Kb.'), nl, Memory is M2-M1.
 
 %--------------------------------- predicados auxiliares
 
