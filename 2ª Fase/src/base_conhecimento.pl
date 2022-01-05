@@ -61,7 +61,6 @@ adjacente(Nodo, ProxNodo, C) :- move(ProxNodo, Nodo, C).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Extensão do predicado estima: Localidade, EstimaDistancia -> {V,F}
-
 estima(fraiao, 9).
 estima(maximinos, 5).
 estima(palmeira, 10).
