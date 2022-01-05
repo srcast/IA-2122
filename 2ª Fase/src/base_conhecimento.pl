@@ -34,7 +34,7 @@ move(mireDeTibaes,saoVitor,2).
 move(gualtar,saoVitor,6).
 move(gualtar,greenDistribution,1).
 move(saoVitor,semelhe,3).
-move(semelhe,trandeiras,8).
+%move(semelhe,trandeiras,8).
 move(trandeiras,real,2).
 move(real,saoVicente,5).
 move(real,greenDistribution,8).
@@ -43,8 +43,8 @@ move(saoVicente,tenoes,4).
 move(pedralva,priscos,7).
 move(tenoes,cividade,2).
 move(tenoes,priscos,1).
-move(priscos,padimDaGraca,4).
-move(cividade,crespos,9).
+%move(priscos,padimDaGraca,4).
+%move(cividade,crespos,9).
 move(cividade,greenDistribution,3).
 move(padimDaGraca,crespos,2).
 move(padimDaGraca,ferreiros,3).
@@ -210,7 +210,7 @@ desconto_velocidade(carro, Vel, Peso, NewVel) :- NewVel is Vel - (0.1*Peso).
 
 %executar esta
 profundidade(NodoObjetivo, CaminhoTodo, C) :- inicial(Inicio),
-										profundidadeprimeiroInicial(NodoObjetivo, Inicio, [Inicio], Caminho, C2), !,
+										profundidadeprimeiroInicial(NodoObjetivo, Inicio, [Inicio], Caminho, C2),
 										duplicaCaminho(Caminho, CaminhoTodo),
 										C is C2 * 2.
 
@@ -235,9 +235,8 @@ profundidadeprimeiro(NodoObjetivo, NodoAtual, Historico, [ProxNodo|Caminho], C) 
 
 
 
-
 melhorProfundidade(NodoObjetivo, Caminho, Custo) :- findall((Caminhos, Custos), profundidade(NodoObjetivo, Caminhos, Custos), L),
-													minimo(L, (Caminho, Custo)), !.
+													minimo(L, [],(Caminho, Custo)), !.
 
 
 
@@ -287,7 +286,7 @@ profundidadeprimeiroLimite(NodoObjetivo, Limite, NodoAtual, Historico, [ProxNodo
 
 
 melhorProfundidadeLimite(NodoObjetivo, Limite, Caminho, Custo) :- findall((SS, CC), profundidadeLimite(NodoObjetivo, Limite, SS, CC), L),
-							minimo(L, (Caminho, Custo)), !.
+							minimo(L, (Caminho, [],Custo)), !.
 
 
 %----------------------- Largura ---------------------------------------------------------------------------------------------------------
@@ -480,29 +479,45 @@ compara_circuitos_aux(NodoObjetivo,R,[CircuitoStats|Caux],C).
 %--------------------------------------------------------------------------------------------------------------------------------
 % Escolher o circuito mais rápido (usando o critério da distância);
 
+% <----- Predicados principais ------->
 
+% predicado que calcula os circuitos mais rápidos ordenamente de cada destino encontrado nas entregas 
+top_faster_circuits(Circuits):- faster_circuits(Cs), retiraDestinosRepetidos(Cs,[],NewCs), sortDistances(NewCs,Circuits) .	
 
-faster_circuit_depth(Circuitos):- findall(
+% predicado que calcula o circuito mais rápido de cada entrega 
+faster_circuits(Circuitos):- findall(
 (Estafeta,NodoObjetivo,Distancia,Caminho),
 (entrega(Estafeta, _ ,_, _, _ , NodoObjetivo, _ , _ , _ ),
 melhorProfundidade(NodoObjetivo,Caminho,Distancia)),Circuitos).
 
-faster_circuit_breadth(Circuitos):- findall(
-(Estafeta,NodoObjetivo,Distancia,Caminho),
-(entrega(Estafeta, _ ,_, _, _ , NodoObjetivo, _ , _ , _ ),
-largura(NodoObjetivo,Caminho,Distancia)),Circuitos).
+
+% <---  Predicados auxiliares dos predicados principais --->
+
+sortDistances([],[]).
+sortDistances([A],[A]).
+sortDistances([A,B|R],S):-
+	split([A,B|R],L1,L2),
+	sortDistances(L1,S1),
+	sortDistances(L2,S2),
+	mergeDistance(S1,S2,S).
+
+split([],[],[]).
+split([A],[A],[]).
+split([A,B|Resto],[A|L],[B|R]):- split(Resto,L,R).
+
+mergeDistance(A,[],A).
+mergeDistance([],B,B).
+mergeDistance([(E,N,D,C)|R], [(E1,N1,D1,C1)|R1],[(E,N,D,C)|M]):-
+	D =< D1, mergeDistance(R,[(E1,N1,D1,C1)|R1],M).
+mergeDistance([(E,N,D,C)|R], [(E1,N1,D1,C1)|R1],[(E1,N1,D1,C1)|M]):-
+	D > D1, mergeDistance([(E,N,D,C)|R],R1,M).
 
 
-faster_circuit_limitDepth(Circuitos):- findall(
-(Estafeta,NodoObjetivo,Distancia,Caminho),
-(entrega(Estafeta, _ ,_, _, _ , NodoObjetivo, _ , _ , _ ),
-melhorProfundidadeLimite(NodoObjetivo,3,Caminho,Distancia)),Circuitos).
 
-
-
-
-circuitoMaisRapidoDistancia(NodoObjetivo, Cam, Cus) :-  resolve_aestrela(NodoObjetivo, Cam, Cus).
-
+retiraDestinosRepetidos([],C,C):-!.
+retiraDestinosRepetidos([(E,N,D,C)|R], [], Novo):- retiraDestinosRepetidos(R, [(E,N,D,C)], Novo) ,!.
+retiraDestinosRepetidos([(E,N,D,C)|R], X, Novo):- \+ member((_,N,_,_),X),retiraDestinosRepetidos(R, [(E,N,D,C)|X], Novo) ,!.
+retiraDestinosRepetidos([_|R], X, Novo):- retiraDestinosRepetidos(R, X, Novo).
 
 
 
@@ -556,9 +571,13 @@ membro(X, [_|Xs]):-
 escrever([]).
 escrever([X|L]):- write(X), nl, escrever(L).
 
-minimo([(P,X)],(P,X)).
-minimo([(Px,X)|L],(Py,Y)):- minimo(L,(Py,Y)), X>Y.
-minimo([(Px,X)|L],(Px,X)):- minimo(L,(Py,Y)), X=<Y.
+
+
+minimo([],[X],X):- !.
+minimo([(Cam,Custo)|R],[],X):- minimo(R,[(Cam,Custo)],X),!.
+minimo([(Cam,Custo)|R],[(Cam1,Cus1)],X):- Custo < Cus1, minimo(R,[(Cam,Custo)],X),!.
+minimo([(Cam,Custo)|R],[(Cam1,Cus1)],X):- minimo(R,[(Cam1,Cus1)],X).
+
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
