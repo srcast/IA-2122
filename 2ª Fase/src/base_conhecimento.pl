@@ -318,36 +318,36 @@ membroCustos(Local, [Nodo/Cus|Resto]) :- membroCustos(Local, Resto).
 
 %----------------------- Gulosa ---------------------------------------------------------------------------------------------------------
 
-resolve_gulosa_distancia(Nodo, CaminhoDistancia, CustoDist) :- estima(Nodo, EstimaD),
-															agulosa_distancia([[Nodo]/0/EstimaD], [GD|T]/CustoDist2/_), !,
-															inverso([GD|T], [NodoRetirar|CaminhoInverso]),
-															append([GD|T], CaminhoInverso, CaminhoDistancia), %junta sem o NodoObjetivo duplicado
-															CustoDist is CustoDist2 * 2.
+resolve_gulosa(Nodo, Caminho/Custo) :-
+	estima(Nodo, Estima),
+	agulosa([[Nodo]/0/Estima], [GD|T]/Custo2/_), !,
+	inverso([GD|T], [NodoRetirar|CaminhoInverso]),
+	append([GD|T], CaminhoInverso, Caminho), %junta sem o NodoObjetivo duplicado
+	Custo is Custo2 * 2.
 
-agulosa_distancia(Caminhos, Caminho) :- obtem_melhor_distancia(Caminhos, Caminho),
-										Caminho = [Nodo|_]/_/_,
-										objetivo(Nodo).
+agulosa(Caminhos, Caminho) :-
+	obtem_melhor_g(Caminhos, Caminho),
+	Caminho = [Nodo|_]/_/_,
+	objetivo(Nodo).
 
-agulosa_distancia(Caminhos, SolucaoCaminho) :- obtem_melhor_distancia(Caminhos, MelhorCaminho),
-												seleciona(MelhorCaminho, Caminhos, OutrosCaminhos),
-												expande_agulosa_distancia(MelhorCaminho, ExpCaminhos),
-												append(OutrosCaminhos, ExpCaminhos, NovoCaminhos),
-											agulosa_distancia(NovoCaminhos, SolucaoCaminho).
+agulosa(Caminhos, SolucaoCaminho) :-
+	obtem_melhor_g(Caminhos, MelhorCaminho),
+	seleciona(MelhorCaminho, Caminhos, OutrosCaminhos),
+	expande_gulosa(MelhorCaminho, ExpCaminhos),
+	append(OutrosCaminhos, ExpCaminhos, NovoCaminhos),
+    agulosa(NovoCaminhos, SolucaoCaminho).		
 
-obtem_melhor_distancia([Caminho], Caminho) :- !.
-obtem_melhor_distancia([Caminho1/Custo1/Est1,_/Custo2/Est2|Caminhos], MelhorCaminho) :- Est1 =< Est2, !,                                 %>
-																		obtem_melhor_distancia([Caminho1/Custo1/Est1|Caminhos], MelhorCaminho).
+obtem_melhor_g([Caminho], Caminho) :- !.
 
-obtem_melhor_distancia([_|Caminhos], MelhorCaminho) :- obtem_melhor_distancia(Caminhos, MelhorCaminho).
+obtem_melhor_g([Caminho1/Custo1/Est1,_/Custo2/Est2|Caminhos], MelhorCaminho) :-
+	Est1 =< Est2, !,      %>
+	obtem_melhor_g([Caminho1/Custo1/Est1|Caminhos], MelhorCaminho).
+	
+obtem_melhor_g([_|Caminhos], MelhorCaminho) :- 
+	obtem_melhor_g(Caminhos, MelhorCaminho).
 
-
-expande_agulosa_distancia(Caminho, ExpCaminhos) :- findall(NovoCaminho, adjacente_distancia(Caminho,NovoCaminho), ExpCaminhos).
-
-
-adjacente_distancia([Nodo|Caminho]/Custo/_, [ProxNodo,Nodo|Caminho]/NovoCusto/EstDist) :- move(Nodo, ProxNodo, PassoCustoDist),
-																						\+ member(ProxNodo, Caminho),
-																						NovoCusto is Custo + PassoCustoDist,
-																						estima(ProxNodo, EstDist).
+expande_gulosa(Caminho, ExpCaminhos) :-
+	findall(NovoCaminho, adjacente2(Caminho,NovoCaminho), ExpCaminhos).	
 
 
 
@@ -357,35 +357,43 @@ adjacente_distancia([Nodo|Caminho]/Custo/_, [ProxNodo,Nodo|Caminho]/NovoCusto/Es
 
 %-----------------------  A* ---------------------------------------------------------------------------------------------------------
 
-resolve_aestrela(Nodo, Caminho, Custo) :- estima(Nodo, Estima),
-										aestrela([[Nodo]/0/Estima], [GD|T]/Custo2/_), !,
-										inverso([GD|T], [NodoRetirar|CaminhoInverso]),
-										append([GD|T], CaminhoInverso, Caminho), %junta sem o NodoObjetivo duplicado
-										Custo is Custo2 * 2.
+resolve_aestrela(Nodo, Caminho/Custo) :-
+	estima(Nodo, Estima),
+	aestrela([[Nodo]/0/Estima], [GD|T]/Custo2/_), !,
+	inverso([GD|T], [NodoRetirar|CaminhoInverso]),
+	append([GD|T], CaminhoInverso, Caminho), %junta sem o NodoObjetivo duplicado
+	Custo is Custo2 * 2.
 
-aestrela(Caminhos, Caminho) :- obtem_melhor(Caminhos, Caminho),
-								Caminho = [Nodo|_]/_/_,
-								inicial(Nodo).
+aestrela(Caminhos, Caminho) :-
+	obtem_melhor(Caminhos, Caminho),
+	Caminho = [Nodo|_]/_/_,
+	objetivo(Nodo).
 
-aestrela(Caminhos, SolucaoCaminho) :- obtem_melhor(Caminhos, MelhorCaminho),
-									seleciona(MelhorCaminho, Caminhos, OutrosCaminhos),
-									expande_aestrela(MelhorCaminho, ExpCaminhos),
-									append(OutrosCaminhos, ExpCaminhos, NovoCaminhos),
-									aestrela(NovoCaminhos, SolucaoCaminho).
+aestrela(Caminhos, SolucaoCaminho) :-
+	obtem_melhor(Caminhos, MelhorCaminho),
+	seleciona(MelhorCaminho, Caminhos, OutrosCaminhos),
+	expande_aestrela(MelhorCaminho, ExpCaminhos),
+	append(OutrosCaminhos, ExpCaminhos, NovoCaminhos),
+    aestrela(NovoCaminhos, SolucaoCaminho).	
 
 obtem_melhor([Caminho], Caminho) :- !.
-
-obtem_melhor([Caminho1/Custo1/Est1,_/Custo2/Est2|Caminhos], MelhorCaminho) :- Custo1 + Est1 =< Custo2 + Est2, !,     %>
-																			obtem_melhor([Caminho1/Custo1/Est1|Caminhos], MelhorCaminho).
-
-obtem_melhor([_|Caminhos], MelhorCaminho) :- obtem_melhor(Caminhos, MelhorCaminho).
-
-
-expande_aestrela(Caminho, ExpCaminhos) :- findall(NovoCaminho, adjacente_distancia(Caminho,NovoCaminho), ExpCaminhos).
+obtem_melhor([Caminho1/Custo1/Est1,_/Custo2/Est2|Caminhos], MelhorCaminho) :-
+	Custo1 + Est1 =< Custo2 + Est2, !,   %>
+	obtem_melhor([Caminho1/Custo1/Est1|Caminhos], MelhorCaminho). 
+obtem_melhor([_|Caminhos], MelhorCaminho) :- 
+	           obtem_melhor(Caminhos, MelhorCaminho).
 
 
 
+expande_aestrela(Caminho, ExpCaminhos) :-
+	findall(NovoCaminho, adjacente2(Caminho,NovoCaminho), ExpCaminhos).
 
+
+adjacente2([Nodo|Caminho]/Custo/_, [ProxNodo,Nodo|Caminho]/NovoCusto/Est) :-
+	move(Nodo, ProxNodo, PassoCusto),
+	\+member(ProxNodo, Caminho),
+	NovoCusto is Custo + PassoCusto,
+	estima(ProxNodo, Est).
 
 
 
