@@ -94,7 +94,7 @@ topN_most_eco(Circuits, N) :-
 measure_performance() :-
 	statistics(runtime, [TimeSinceStart | [TimeSinceLastCall]]),
 	statistics(global_stack,[M1,L1]),
-	profundidade(fraiao,Caminho,Custo), % predicado a ser testado
+	profundidade(padimDaGraca,Caminho,Custo), % predicado a ser testado
 	statistics(runtime, [NewTimeSinceStart | [ExecutionTime]]),
 	statistics(global_stack,[M2,L2]),
 	write('Execution took '), write(ExecutionTime), write(' ms.'), nl,
