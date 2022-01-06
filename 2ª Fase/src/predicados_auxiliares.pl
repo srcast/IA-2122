@@ -123,7 +123,6 @@ geraCircuito(NodoObjetivo, Caminho, C) :-
 geraCircuitosComCustos(NodoObjetivo, Caminhos) :-
     findall((Caminho,C),geraCircuito(NodoObjetivo, Caminho, C), Caminhos).
 
-
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Extensão do predicado calcularPesosCircuitosTodos: Lista1, Lista2 -> {V,F}
 calcularPesosCircuitosTodos([], []).
@@ -146,8 +145,6 @@ calculaPesoCircuitoAuxiliar([Freguesia|T], PesoTotal) :-
     somatorio(ListaPesos, Peso1),
     calculaPesoCircuitoAuxiliar(T, Peso2),
     PesoTotal is Peso1 + Peso2.
-
-
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Extensão do predicado calcularNEntregasCircuitosTodos: Lista2, Lista2 -> {V,F}
@@ -344,7 +341,7 @@ escrever([X|L]):- write(X), nl, escrever(L).
 % Extensão do predicado minimo: Lista1, Lista2, Mínimo -> {V,F}
 minimo([],[X],X) :- !.
 minimo([(Cam,Custo)|R],[],X) :-
-minimo(R,[(Cam,Custo)],X),!.
+    minimo(R,[(Cam,Custo)],X), !.
 minimo([(Cam,Custo)|R],[(Cam1,Cus1)],X) :-
 	Custo < Cus1,
 	minimo(R,[(Cam,Custo)],X),!.
@@ -395,6 +392,7 @@ adicionar(X,[H|T],[X,H|T]) :- !.
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Extensão do predicado profundidade: Nodo, Caminho, Custo -> {V,F}
 % Determina os caminhos disponíveis com os respetivos custos através de pesquisa em profundidade
+% profundidade(fraiao,Caminho,Custo).
 profundidade(NodoObjetivo, CaminhoTodo, C) :-
     inicial(Inicio),
     profundidadeprimeiroInicial(NodoObjetivo, Inicio, [Inicio], Caminho, C2), !,
@@ -444,7 +442,7 @@ duplicaCaminhoAuxiliar([H|T], Aux, CaminhoInverso) :-
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Extensão do predicado profundidadeLimite: Nodo, Limite, Caminho, Custo -> {V,F}
 % Determina os caminhos disponíveis com os respetivos custos através de pesquisa em profundidade com limite
-% profundidadeLimite(crespos,3,Caminho,Custo).
+% profundidadeLimite(fraiao,3,Caminho,Custo).
 profundidadeLimite(NodoObjetivo, Limite, CaminhoTodo, C) :-
     inicial(Inicio),
     profundidadeprimeiroLimiteInicial(NodoObjetivo, Limite, Inicio, [Inicio], Caminho, C2), !,
@@ -475,7 +473,7 @@ profundidadeprimeiroLimite(NodoObjetivo, Limite, NodoAtual, Historico, [ProxNodo
 % Determina o melhor caminho através de pesquisa em profundidade com limite  
 melhorProfundidadeLimite(NodoObjetivo, Limite, Caminho, Custo) :-
     findall((SS, CC), profundidadeLimite(NodoObjetivo, Limite, SS, CC), L),
-    minimo(L, (Caminho, [],Custo)), !.
+    minimo(L, [],(Caminho,Custo)), !.
 
 %-------------------------------------------------------------------------
 %---------------	          Largura               	------------------
@@ -484,7 +482,7 @@ melhorProfundidadeLimite(NodoObjetivo, Limite, Caminho, Custo) :-
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Extensão do predicado largura: Nodo1, Nodo2, Custo -> {V,F}
 % Determina os caminhos disponíveis com os respetivos custos através de pesquisa em largura
-% largura(tadim,Caminho,Custo).
+% largura(fraiao,Caminho,Custo).
 largura(Dest, Caminho, Custos) :-
     inicial(Orig),
     largura2(Dest,[[Orig/0]],Cam),

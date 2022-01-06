@@ -25,7 +25,7 @@
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % 1) Gerar os circuitos de entrega, caso existam, que cubram um determinado território
 % Extensão do predicado geraCircuitosObjetivo: Nodo, Caminhos -> {V,F}
-% geraCircuitosObjetivo(saoVicente, Caminhos) 
+% geraCircuitosObjetivo(saoVicente, Caminhos).
 geraCircuitosObjetivo(NodoObjetivo, Caminhos) :-
 	findall(Caminho,geraCircuito(NodoObjetivo, Caminho, C), Caminhos).
 
@@ -53,7 +53,7 @@ identificarCircuitosNEntregas(N, Circuitos) :-
 % 3) Comparar circuitos de entrega tendo em conta os indicadores de produtividade
 % Extensão do predicado compara_circuitos: Nodo, Caminhos -> {V,F}
 % Compara os circuitos em função da distância percorrida
-% compara_circuitos_estafeta(crespos,Circuitos).
+% compara_circuitos(crespos,Circuitos).
 compara_circuitos(NodoObjetivo,Circuitos) :-
 	geraCircuitosComCustos(NodoObjetivo,Circuitos1),
 	compara_circuitos_aux2(NodoObjetivo,Circuitos1,[],Circuitos).
@@ -70,7 +70,7 @@ compara_circuitos_estafeta(NodoObjetivo,Estafeta,Circuitos) :-
 % 4) Escolher o circuito mais rápido
 % Extensão do predicado top_faster_circuits: Caminhos -> {V,F}
 % Determina os circuitos de entrega mais curtos
-% top_faster_circuits(Circuits)
+% top_faster_circuits(Circuits).
 top_faster_circuits(Circuits) :-
 	faster_circuits(Cs),
 	retiraDestinosRepetidos(Cs,[],NewCs),
@@ -90,19 +90,12 @@ topN_most_eco(Circuits, N) :-
 %-------------------------------------------------------------------------
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
-% Calculo de tempo de execução de um predicado
-measure_time() :-
-	statistics(walltime, [TimeSinceStart | [TimeSinceLastCall]]),
-	topN_most_eco(Circuits, 3), % predicado a ser testado
-	statistics(walltime, [NewTimeSinceStart | [ExecutionTime]]),
-	write('Execution took '), write(ElapsedTime), write(' ms.'), nl,
-	ElapsedTime is NewTimeSinceStart-TimeSinceStart.
-
-%--------------------------------- - - - - - - - - - -  -  -  -  -   -
-% Calculo da memória de execução de um predicado
-measure_memory() :-
+% Calculo de tempo de execução e memória utilizada por um predicado
+measure_performance() :-
+	statistics(runtime, [TimeSinceStart | [TimeSinceLastCall]]),
 	statistics(global_stack,[M1,L1]),
-	topN_most_eco(Circuits, 3), % predicado a ser testado
+	profundidade(fraiao,Caminho,Custo), % predicado a ser testado
+	statistics(runtime, [NewTimeSinceStart | [ExecutionTime]]),
 	statistics(global_stack,[M2,L2]),
-	write('Used memory '), write(Memory), write(' Kb.'), nl,
-	Memory is M2-M1.
+	write('Execution took '), write(ExecutionTime), write(' ms.'), nl,
+	write('Used memory '), write(L2), write(' Kb.'), nl.

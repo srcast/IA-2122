@@ -67,7 +67,7 @@ estima(greenDistribution, 0).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Definição das encomendas
-% Extensão do predicado entrega: estafeta, tipoEncomenda, pesoEnc, prazo,cliente, rua, classificacao, dataEncomenda, dataEntrega -> {V, F}
+% Extensão do predicado entrega: estafeta, tipoEncomenda, pesoEnc, prazo,cliente, freguesia, classificacao, dataEncomenda, dataEntrega -> {V, F}
 entrega(manuel, comida, 2, 1, maria, 'crespos', 4, 11/10/2021/10, 11/10/2021/11).
 entrega(jose, comida, 4, 1, ana, 'nogueira', 5, 11/10/2021/12, 11/10/2021/13).
 entrega(fabio, roupa, 12, 24, filipa, 'tadim', 5, 12/10/2021/13, 12/10/2021/19).
