@@ -124,12 +124,6 @@ entrega(marco, movel, 74, 30, filipa, 'tadim', 5, 13/10/2021/11, 16/10/2021/10).
 entrega(marco, movel, 89, 23, cristina, 'adaufe', 5, 15/10/2021/14, 19/10/2021/10).
 
 
-%--------------------------------- - - - - - - - - - -  -  -  -  -   -
-% Extensão do predicado morada: cliente, freguesia -> {V, F}
-morada(maria, 'crespos').
-morada(ana, 'nogueira').
-morada(filipa, 'tadim').
-morada(cristina, 'adaufe').
 
 %--------------------------------- Predicados relacionados ao veículo - - - - - - - - - -  -  -  -  -   -
 
@@ -200,7 +194,7 @@ desconto_velocidade(carro, Vel, Peso, NewVel) :- NewVel is Vel - (0.1*Peso).
 
 %executar esta
 profundidade(NodoObjetivo, CaminhoTodo, C) :- inicial(Inicio),
-										profundidadeprimeiroInicial(NodoObjetivo, Inicio, [Inicio], Caminho, C2),
+										profundidadeprimeiroInicial(NodoObjetivo, Inicio, [Inicio], Caminho, C2),!,
 										duplicaCaminho(Caminho, CaminhoTodo),
 										C is C2 * 2.
 
@@ -518,16 +512,35 @@ ordenarCaminhosAuxiliar([H|T]/Custo, [[H2|T2]/Custo2|OutrosOrdenados2], [[H2|T2]
 %--------------------------------------------------------------------------------------------------------------------------------
 % Comparar circuitos de entrega tendo em conta os indicadores de produtividade;
 
-% Gera uma lista de todas as entregas de todos circuitos para um NodoObjetivo, sendo a lista de retorno = [(Estafeta,NodoObjetivo,DistanciaTotal,[lista de veiculos disponiveis em conjunto do tempo calculado],Circuito), ...]
-compara_circuitos(NodoObjetivo,Circuitos):- geraCircuitosComCustos(NodoObjetivo,Circuitos1), compara_circuitos_aux(NodoObjetivo,Circuitos1,[],Circuitos).
+% Gera uma lista de todas as entregas de todos circuitos para um NodoObjetivo, sendo a lista de retorno = [(Estafeta,NodoObjetivo,DistanciaTotal,PesoDaEntrega,[lista de veiculos disponiveis em conjunto do tempo calculado],Circuito), ...]
+% como correr => compara_circuitos_estafeta((cidade que há entrega),Circuitos)
+% exemplo bom para correr: compara_circuitos_estafeta(crespos,C).
+compara_circuitos(NodoObjetivo,Circuitos):- geraCircuitosComCustos(NodoObjetivo,Circuitos1), compara_circuitos_aux2(NodoObjetivo,Circuitos1,[],Circuitos).
 
-compara_circuitos_aux(_, [], C, C):- !.
-compara_circuitos_aux(NodoObjetivo,[(Caminho,Distancia)|R], Caux , C):- findall(
-(Estafeta,NodoObjetivo,Distancia,VStats,Caminho),
+compara_circuitos_aux2(_, [], C, C):- !.
+compara_circuitos_aux2(NodoObjetivo,[(Caminho,Distancia)|R], Caux , C):- findall(
+(Estafeta,NodoObjetivo,Distancia,Peso,VStats,Caminho),
 (entrega(Estafeta,_, Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
 DistanciaIda is Distancia / 2,
 geraVeiculosDisponiveis(DistanciaIda, Peso, Prazo,[],VStats,1)), CircuitoStats),
-compara_circuitos_aux(NodoObjetivo,R,[CircuitoStats|Caux],C).
+compara_circuitos_aux2(NodoObjetivo,R,[CircuitoStats|Caux],C).
+
+
+% Gera uma lista de todas as entregas de todos circuitos para um NodoObjetivo que uma Estafeta específica realizou, sendo a lista de retorno = [(Estafeta,NodoObjetivo,DistanciaTotal,PesoDaEntrega,[lista de veiculos disponiveis em conjunto do tempo calculado]), ...]
+% como correr => compara_circuitos_estafeta((cidade que há entrega), (estafeta que realiza entrega à cidade),Circuitos)
+% exemplo bom para correr: compara_circuitos_estafeta(adaufe,marco,C).
+compara_circuitos_estafeta(NodoObjetivo,Estafeta,Circuitos):- geraCircuitosComCustos(NodoObjetivo,Circuitos1), compara_circuitos_aux1(NodoObjetivo,Estafeta,Circuitos1,[],Circuitos).
+
+compara_circuitos_aux1(_,_, [], C, C):- !.
+compara_circuitos_aux1(NodoObjetivo,Estafeta,[(_,Distancia)|R], Caux , C):- findall(
+(Estafeta,NodoObjetivo,Distancia,Peso,VStats),
+(entrega(Estafeta,_, Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
+DistanciaIda is Distancia / 2,
+geraVeiculosDisponiveis(DistanciaIda, Peso, Prazo,[],VStats,1)), CircuitoStats),
+compara_circuitos_aux1(NodoObjetivo,Estafeta,R,[CircuitoStats|Caux],C).
+
+
+
 
 
 
@@ -545,7 +558,7 @@ top_faster_circuits(Circuits):- faster_circuits(Cs), retiraDestinosRepetidos(Cs,
 faster_circuits(Circuitos):- findall(
 (Estafeta,NodoObjetivo,Distancia,Caminho),
 (entrega(Estafeta, _ ,_, _, _ , NodoObjetivo, _ , _ , _ ),
-melhorProfundidade(NodoObjetivo,Caminho,Distancia)),Circuitos).
+resolve_aestrela(NodoObjetivo,Caminho/Distancia)),Circuitos).
 
 
 % <---  Predicados auxiliares dos predicados principais --->
@@ -581,12 +594,43 @@ retiraDestinosRepetidos([_|R], X, Novo):- retiraDestinosRepetidos(R, X, Novo).
 %--------------------------------------------------------------------------------------------------------------------------------
 % Escolher o circuito mais ecológico (usando um critério de tempo);
 
+% --> Predicados principais <---
+
+% determina os top N circuitos mais ecológicos , retorno => [(Estafeta,cidadeObjetivo,Veiculo mais ecológico para a entrega, Distancia, Tempo feito pelo veículo,Caminho),...]
+% como correr => toN_most_eco((Circuitos a ser calculado), (número de melhores circuitos))
+% exemplo de como correr => toN_most_eco(Circuitos, 5).
+topN_most_eco(Circuits, N):- most_ecologic_circuit(Cs), get5eco(Cs,[],Circuits,N,1).
+
+
+% determina o circuito mais ecológico de cada entrega , retorno => [(Estafeta,cidadeObjetivo,Veiculo mais ecológico para a entrega, Distancia, Tempo feito pelo veículo,Caminho),...]
 most_ecologic_circuit(Circuitos):- findall(
 (Estafeta,NodoObjetivo,Veiculo,Distancia,Tempo,Caminho),
 (entrega(Estafeta,_, Peso, Prazo, _ , NodoObjetivo, _ , _ , _ ),
 geraCircuitosComCustos(NodoObjetivo,Lista),
 geraVeiculos(Lista,Peso,Prazo,[],Veiculos),
 getMostEco(Veiculos,(Tempo,Distancia,Caminho,Veiculo))),Circuitos).
+
+
+% --> Predicados auxiliares <---
+
+get5eco(_,C,C,N,_) :- N =< 0,!.
+get5eco(Lista,CAux,Circuits,Nmax,I) :-  
+Nmax > 0 , 
+veiculoIndice(V,I), 
+member((_,_,V,_,_,_),Lista), 
+getListaVeiculo(V,Lista,[],ListaV),
+expandList(CAux,Nmax,ListaV, NewL,NewN),
+NewI is I + 1,
+get5eco(Lista,NewL,Circuits,NewN,NewI),!.
+
+getListaVeiculo(_,[],L,L):-!.
+getListaVeiculo(V,[(Estafeta,NodoObjetivo,Veiculo,Distancia,Tempo,Caminho)|R],L,L1):- V == Veiculo, getListaVeiculo(V,R,[(Estafeta,NodoObjetivo,Veiculo,Distancia,Tempo,Caminho)|L],L1),!.
+getListaVeiculo(V,[(Estafeta,NodoObjetivo,Veiculo,Distancia,Tempo,Caminho)|R],L,L1):- getListaVeiculo(V,R,L,L1).
+
+veiculoIndice(bicicleta,1).
+veiculoIndice(mota,2).
+veiculoIndice(carro,3).
+
 
 
 %--------------------------------------------------------------------------------------------------------------------------------
@@ -634,6 +678,13 @@ minimo([],[X],X):- !.
 minimo([(Cam,Custo)|R],[],X):- minimo(R,[(Cam,Custo)],X),!.
 minimo([(Cam,Custo)|R],[(Cam1,Cus1)],X):- Custo < Cus1, minimo(R,[(Cam,Custo)],X),!.
 minimo([(Cam,Custo)|R],[(Cam1,Cus1)],X):- minimo(R,[(Cam1,Cus1)],X).
+
+
+expandList(CAux, Nmax,ListaV, NewL, NewN):- length(ListaV,Nacrescenta), (Nmax - Nacrescenta) =< 0 , takeNList(Nmax, ListaV, CAux,NewL), NewN is 0,!.
+expandList(CAux, Nmax,ListaV, NewL, NewN):- length(ListaV,Nacrescenta), NewN is (Nmax - Nacrescenta), takeNList(Nacrescenta, ListaV, CAux,NewL).
+
+takeNList(0,_,L,L):- !.   
+takeNList(N,[X|Xs],L,NewL):- N > 0, N1 is N - 1 , takeNList(N1,Xs,[X|L],NewL),!.   
 
 
 
